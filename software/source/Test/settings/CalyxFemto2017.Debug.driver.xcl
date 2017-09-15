@@ -1,0 +1,19 @@
+"--cpu=m128" 
+
+"--enhanced_core" 
+
+"-p" 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\Config\iom128.ddf" 
+
+"--eeprom_size" 
+
+"4096" 
+
+"-d" 
+
+"sim" 
+
+
+
+
