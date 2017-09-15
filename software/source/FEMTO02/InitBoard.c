@@ -1,4 +1,4 @@
-#include "Define.c"
+#include "Define.h"
 #include "ioport_128.c"
 #include "I2C.c"
 #include"dot_matrix_func.c"
