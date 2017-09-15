@@ -1,0 +1,11 @@
+Hex for ISP
+
+Femto_Start_0V1 :  FIR Filter(Filter2 or Filter3)를 사용할 때 입력신호가 없으면 ES9018의 출력이 나오지 않거나, 노이즈가 발생함. (해결 방법은 아래를 사용하면 됨.)
+
+Femto_Start_0V1_DA1D664F_100 : 100번 소비자가 필터2 또는 필터3를 사용하다가 문제가 발생하여, IIR Filter만 사용함. Femto_Start_0V1의 문제점 보완 PGM임.
+
+Femto_Start_0V2 : Femto_Start_0V1_DA1D664F_100.hex를 여러 조건에서 청취 실험시 문제가 발생하지 않아서 파일 이름만 변경함(내용은 Femto_Start_0V1_DA1D664F_100와 동일함)
+
+0V2_DA1D985F_114_DPLL_HighestBW_for NAIM : NAIM을 사용하는 소비자가 S/PDIF에서 음이 끊어지는 현상이 발생하여 ES9018의 Reg#11, Med-High Bandwidth --> Highest Bandwidth로 변경함.
+                                           Reg#11을 변경전 BANN Audio로 연결하여 3일동안 테스트하였지만, 음이 끊어지는 현상이 발생하지 않았음. 하지만, 사장님과 의논하여
+                                           ES9018의 Reg#11, Med-High Bandwidth --> Highest Bandwidth 로 변경하고, BANN Audio도 테스트함.(NAIM과 테스트는 실시하지 못함.)

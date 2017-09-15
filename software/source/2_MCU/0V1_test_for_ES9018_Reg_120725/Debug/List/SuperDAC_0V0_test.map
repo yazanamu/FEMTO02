@@ -1,0 +1,2477 @@
+################################################################################
+#                                                                              #
+#      IAR Universal Linker V6.4.4.85                                          #
+#                                                                              #
+#           Link time     =  06/Sep/2017  20:23:59                             #
+#           Target CPU    =  A90                                               #
+#           List file     =  D:\workspace\Femto2\software\source\2_MCU\0V1_tes #
+#                            t_for_ES9018_Reg_120725\Debug\List\SuperDAC_0V0_t #
+#                            est.map                                           #
+#           Output file 1 =  D:\workspace\Femto2\software\source\2_MCU\0V1_tes #
+#                            t_for_ES9018_Reg_120725\Debug\Exe\SuperDAC_0V0_te #
+#                            st.hex                                            #
+#                            Format: ubrof10                                   #
+#                            UBROF version 10.0.6                              #
+#                            Using library modules for C-SPY (-rt)             #
+#           Command line  =  D:\workspace\Femto2\software\source\2_MCU\0V1_tes #
+#                            t_for_ES9018_Reg_120725\Debug\Obj\App_0V1_start2. #
+#                            r90                                               #
+#                            -o                                                #
+#                            D:\workspace\Femto2\software\source\2_MCU\0V1_tes #
+#                            t_for_ES9018_Reg_120725\Debug\Exe\SuperDAC_0V0_te #
+#                            st.hex                                            #
+#                            -l                                                #
+#                            D:\workspace\Femto2\software\source\2_MCU\0V1_tes #
+#                            t_for_ES9018_Reg_120725\Debug\List\SuperDAC_0V0_t #
+#                            est.map                                           #
+#                            -xms                                              #
+#                            "-IC:\Program Files (x86)\IAR Systems\Embedded Wo #
+#                            rkbench 7.4\avr\LIB\"                             #
+#                            -f                                                #
+#                            "C:\Program Files (x86)\IAR Systems\Embedded Work #
+#                            bench 7.4\avr\src\template\cfgm128.xcl"           #
+#                            (-D_..X_INTVEC_SIZE=8C -D_..X_FLASH_NEND=FFFF     #
+#                            -D_..X_FLASH_END=1FFFF -D_..X_SRAM_BASE=100       #
+#                            -D_..X_SRAM_TBASE=0 -D_..X_SRAM_TSIZE=0           #
+#                            -D_..X_SRAM_END=10FF -D_..X_EEPROM_END=FFF        #
+#                            -D_..X_EEPROM_START=0) -D_..X_HEAP_SIZE=10        #
+#                            -D_..X_TINY_HEAP_SIZE=0 -D_..X_NEAR_HEAP_SIZE=0   #
+#                            -D_..X_FAR_HEAP_SIZE=0 -D_..X_HUGE_HEAP_SIZE=0    #
+#                            -D_..X_CSTACK_SIZE=20 -D_..X_RSTACK_SIZE=20       #
+#                            -D_..X_FLASH_CODE_END=1FFFF -f                    #
+#                            "C:\Program Files (x86)\IAR Systems\Embedded Work #
+#                            bench 7.4\avr\src\template\cfg3soim.xcl"          #
+#                            (-ca90 -w29                                       #
+#                            -Z(CODE)INTVEC=0-(_..X_INTVEC_SIZE-1)             #
+#                            -Z(CODE)TINY_F=_..X_FLASH_BASE-FF                 #
+#                            -Z(CODE)NEAR_F=_..X_FLASH_BASE-_..X_FLASH_NEND    #
+#                            -Z(CODE)SWITCH=_..X_FLASH_BASE-_..X_FLASH_NEND    #
+#                            -Z(CODE)DIFUNCT=_..X_FLASH_BASE-_..X_FLASH_NEND   #
+#                            -Z(CODE)CODE=_..X_FLASH_BASE-_..X_FLASH_END       #
+#                            -P(CODE)FAR_F=[_..X_FLASH_BASE-_..X_FLASH_END]/10 #
+#                            000                                               #
+#                            -Z(CODE)INITTAB=_..X_FLASH_BASE-_..X_FLASH_END    #
+#                            -Z(CODE)HUGE_F=_..X_FLASH_BASE-_..X_FLASH_END     #
+#                            -Z(CODE)TINY_ID=_..X_FLASH_BASE-_..X_FLASH_END    #
+#                            -Z(CODE)NEAR_ID=_..X_FLASH_BASE-_..X_FLASH_END    #
+#                            -Z(CODE)CHECKSUM#_..X_FLASH_END                   #
+#                            -Z(DATA)TINY_I,TINY_Z,TINY_N=_..X_SRAM_TBASE:+_.. #
+#                            X_SRAM_TSIZE                                      #
+#                            -Z(DATA)CSTACK+_..X_CSTACK_SIZE=_..X_CSTACK_BASE- #
+#                            _..X_CSTACK_END                                   #
+#                            -Z(DATA)HEAP+_..X_HEAP_SIZE=_..X_SRAM_BASE-_..X_S #
+#                            RAM_END                                           #
+#                            -Z(DATA)IOSTREAM_N#_..X_SRAM_BASE-_..X_SRAM_END   #
+#                            -Z(DATA)NEAR_HEAP+_..X_NEAR_HEAP_SIZE=_..X_SRAM_B #
+#                            ASE-_..X_SRAM_END                                 #
+#                            -Z(DATA)RSTACK+_..X_RSTACK_SIZE=_..X_RSTACK_BASE- #
+#                            _..X_RSTACK_END                                   #
+#                            -Z(DATA)NEAR_I,NEAR_Z,NEAR_N=_..X_SRAM_BASE-_..X_ #
+#                            SRAM_END                                          #
+#                            -Z(XDATA)EEPROM_I,EEPROM_N=_..X_EEPROM_START-_..X #
+#                            _EEPROM_END)                                      #
+#                            -D_..X_FLASH_BASE=_..X_INTVEC_SIZE -H1895         #
+#                            -h(CODE)0-(_..X_INTVEC_SIZE-1)                    #
+#                            -D_..X_EXT_SRAM_BASE=_..X_SRAM_END                #
+#                            -D_..X_EXT_SRAM_SIZE=0                            #
+#                            -D_..X_EXT_ROM_BASE=_..X_SRAM_END                 #
+#                            -D_..X_EXT_ROM_SIZE=0                             #
+#                            -D_..X_EXT_NV_BASE=_..X_SRAM_END                  #
+#                            -D_..X_EXT_NV_SIZE=0                              #
+#                            -D_..X_CSTACK_BASE=_..X_SRAM_BASE                 #
+#                            -D_..X_CSTACK_END=_..X_SRAM_END                   #
+#                            -D_..X_RSTACK_BASE=_..X_SRAM_BASE                 #
+#                            -D_..X_RSTACK_END=_..X_SRAM_END -rt -s            #
+#                            __program_start                                   #
+#                            "C:\Program Files (x86)\IAR Systems\Embedded Work #
+#                            bench 7.4\avr\LIB\CLIB\cl3s-ec_mul.r90"           #
+#                            -e_large_write=_formatted_write                   #
+#                                                                              #
+#                           Copyright (C) 1987-2016 IAR Systems AB.            #
+################################################################################
+
+
+
+
+
+                ****************************************
+                *                                      *
+                *           CROSS REFERENCE            *
+                *                                      *
+                ****************************************
+
+       Program entry at : CODE      0000244A  Relocatable, from module : ?C_STARTUP
+
+
+
+
+                ****************************************
+                *                                      *
+                *            RUNTIME MODEL             *
+                *                                      *
+                ****************************************
+
+  __64bit_doubles = disabled
+  __SystemLibrary = CLib
+  __cpu           = 3
+  __cpu_name      = ATmega128
+  __enhanced_core = enabled
+  __has_elpm      = true
+  __memory_model  = 2
+  __no_rampd      = enabled
+  __rt_version    = 3
+  __tiny_avr      = false
+  __vtable_memory = __nearflash
+
+                ****************************************
+                *                                      *
+                *    AUTOMATIC SYMBOL REDIRECTIONS     *
+                *                                      *
+                ****************************************
+
+                  There are no automatic symbol redirections.
+
+
+
+                ****************************************
+                *                                      *
+                *              MODULE MAP              *
+                *                                      *
+                ****************************************
+
+
+  DEFINED ABSOLUTE ENTRIES
+  PROGRAM MODULE, NAME : ?ABS_ENTRY_MOD
+
+Absolute parts
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _..X_RSTACK_END         000010FF 
+           _..X_RSTACK_BASE        00000100 
+           _..X_CSTACK_END         000010FF 
+           _..X_CSTACK_BASE        00000100 
+           _..X_EXT_NV_SIZE        00000000 
+           _..X_EXT_NV_BASE        000010FF 
+           _..X_EXT_ROM_SIZE       00000000 
+           _..X_EXT_ROM_BASE       000010FF 
+           _..X_EXT_SRAM_SIZE      00000000 
+           _..X_EXT_SRAM_BASE      000010FF 
+           _..X_FLASH_BASE         0000008C 
+           _..X_FLASH_CODE_END     0001FFFF 
+           _..X_RSTACK_SIZE        00000020 
+           _..X_CSTACK_SIZE        00000020 
+           _..X_HUGE_HEAP_SIZE     00000000 
+           _..X_FAR_HEAP_SIZE      00000000 
+           _..X_NEAR_HEAP_SIZE     00000000 
+           _..X_TINY_HEAP_SIZE     00000000 
+           _..X_HEAP_SIZE          00000010 
+           _..X_EEPROM_START       00000000 
+           _..X_EEPROM_END         00000FFF 
+           _..X_SRAM_END           000010FF 
+           _..X_SRAM_TSIZE         00000000 
+           _..X_SRAM_TBASE         00000000 
+           _..X_SRAM_BASE          00000100 
+           _..X_FLASH_END          0001FFFF 
+           _..X_FLASH_NEND         0000FFFF 
+           _..X_INTVEC_SIZE        0000008C 
+    *************************************************************************
+
+  FILE NAME : D:\workspace\Femto2\software\source\2_MCU\0V1_test_for_ES9018_Reg_120725\Debug\Obj\App_0V1_start2.r90
+  PROGRAM MODULE, NAME : App_0V1_start2
+
+  SEGMENTS IN THE MODULE
+  ======================
+ABSOLUTE
+  Relative segment, address: DATA 00000020 - 00000020 (0x1 bytes), align: 0
+  Segment part 1. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PINF                 00000020 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PINF                    00000020 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000021 - 00000021 (0x1 bytes), align: 0
+  Segment part 2. ROOT        Intra module refs:   INT5_Handler
+                                                   INT6_Handler
+                                                   INT7_Handler
+                                                   TIMER0_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PINE                 00000021 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PINE                    00000021 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000022 - 00000022 (0x1 bytes), align: 0
+  Segment part 3. ROOT        Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DDRE                 00000022 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DDRE                    00000022 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000023 - 00000023 (0x1 bytes), align: 0
+  Segment part 4. ROOT        Intra module refs:   _system_init
+                                                   channel_change
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PORTE                00000023 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PORTE                   00000023 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000030 - 00000030 (0x1 bytes), align: 0
+  Segment part 5. ROOT        Intra module refs:   I2C_SHIN
+                                                   I2C_SHOUT
+                                                   INT3_Handler
+                                                   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PIND                 00000030 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PIND                    00000030 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000031 - 00000031 (0x1 bytes), align: 0
+  Segment part 6. ROOT        Intra module refs:   I2C_SHIN
+                                                   I2C_SHOUT
+                                                   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DDRD                 00000031 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DDRD                    00000031 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000032 - 00000032 (0x1 bytes), align: 0
+  Segment part 7. ROOT        Intra module refs:   I2C_SHIN
+                                                   I2C_SHOUT
+                                                   I2C_START
+                                                   I2C_STOP
+                                                   _system_init
+                                                   _system_init_se
+                                                   dot_matrix_bright
+                                                   dot_matrix_clear
+                                                   dot_string_digit
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PORTD                00000032 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PORTD                   00000032 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000033 - 00000033 (0x1 bytes), align: 0
+  Segment part 8. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PINC                 00000033 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PINC                    00000033 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000034 - 00000034 (0x1 bytes), align: 0
+  Segment part 9. ROOT        Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DDRC                 00000034 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DDRC                    00000034 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000035 - 00000035 (0x1 bytes), align: 0
+  Segment part 10. ROOT       Intra module refs:   _system_init
+                                                   dot_matrix_bright
+                                                   dot_string_digit
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PORTC                00000035 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PORTC                   00000035 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000036 - 00000036 (0x1 bytes), align: 0
+  Segment part 11. ROOT       Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PINB                 00000036 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PINB                    00000036 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000037 - 00000037 (0x1 bytes), align: 0
+  Segment part 12. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DDRB                 00000037 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DDRB                    00000037 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000038 - 00000038 (0x1 bytes), align: 0
+  Segment part 13. ROOT       Intra module refs:   _system_init
+                                                   _system_init_se
+                                                   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PORTB                00000038 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PORTB                   00000038 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000039 - 00000039 (0x1 bytes), align: 0
+  Segment part 14. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PINA                 00000039 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PINA                    00000039 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000003A - 0000003A (0x1 bytes), align: 0
+  Segment part 15. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DDRA                 0000003A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DDRA                    0000003A 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000003B - 0000003B (0x1 bytes), align: 0
+  Segment part 16. ROOT       Intra module refs:   _system_init
+                                                   dot_matrix_bright
+                                                   dot_string_digit
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PORTA                0000003B 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PORTA                   0000003B 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000044 - 00000044 (0x1 bytes), align: 0
+  Segment part 17. ROOT       Intra module refs:   TIMER2_OVF_Handler
+                                                   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_TCNT2                00000044 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           TCNT2                   00000044 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000045 - 00000045 (0x1 bytes), align: 0
+  Segment part 18. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_TCCR2                00000045 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           TCCR2                   00000045 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000004C - 0000004D (0x2 bytes), align: 0
+  Segment part 19. ROOT       Intra module refs:   TIMER1_OVF_Handler
+                                                   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_TCNT1                0000004C 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           TCNT1                   0000004C 
+           TCNT1H                  0000004D 
+           TCNT1L                  0000004C 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000004E - 0000004E (0x1 bytes), align: 0
+  Segment part 20. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_TCCR1B               0000004E 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           TCCR1B                  0000004E 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000051 - 00000051 (0x1 bytes), align: 0
+  Segment part 21. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_OCR0                 00000051 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           OCR0                    00000051 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000052 - 00000052 (0x1 bytes), align: 0
+  Segment part 22. ROOT       Intra module refs:   TIMER0_OVF_Handler
+                                                   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_TCNT0                00000052 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           TCNT0                   00000052 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000053 - 00000053 (0x1 bytes), align: 0
+  Segment part 23. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_TCCR0                00000053 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           TCCR0                   00000053 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000056 - 00000056 (0x1 bytes), align: 0
+  Segment part 24. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_TIFR                 00000056 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           TIFR                    00000056 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000057 - 00000057 (0x1 bytes), align: 0
+  Segment part 25. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_TIMSK                00000057 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           TIMSK                   00000057 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000058 - 00000058 (0x1 bytes), align: 0
+  Segment part 26. ROOT       Intra module refs:   _system_init
+                                                   ess_filter
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_EIFR                 00000058 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           EIFR                    00000058 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000059 - 00000059 (0x1 bytes), align: 0
+  Segment part 27. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_EIMSK                00000059 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           EIMSK                   00000059 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000005A - 0000005A (0x1 bytes), align: 0
+  Segment part 28. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_EICRB                0000005A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           EICRB                   0000005A 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000061 - 00000061 (0x1 bytes), align: 0
+  Segment part 29. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DDRF                 00000061 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DDRF                    00000061 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000062 - 00000062 (0x1 bytes), align: 0
+  Segment part 30. ROOT       Intra module refs:   _system_init
+                                                   dot_matrix_bright
+                                                   dot_string_digit
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PORTF                00000062 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PORTF                   00000062 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000063 - 00000063 (0x1 bytes), align: 0
+  Segment part 31. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PING                 00000063 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PING                    00000063 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000064 - 00000064 (0x1 bytes), align: 0
+  Segment part 32. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_DDRG                 00000064 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           DDRG                    00000064 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 00000065 - 00000065 (0x1 bytes), align: 0
+  Segment part 33. ROOT       Intra module refs:   _system_init
+                                                   _system_init_se
+                                                   dot_matrix_bright
+                                                   dot_string_digit
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_PORTG                00000065 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           PORTG                   00000065 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000006A - 0000006A (0x1 bytes), align: 0
+  Segment part 34. ROOT       Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _A_EICRA                0000006A 
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           EICRA                   0000006A 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000466 - 00000485 (0x20 bytes), align: 0
+  Segment part 48.            Intra module refs:   _system_init_se
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           test_eeprom             00000466 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000486 - 00000487 (0x2 bytes), align: 0
+  Segment part 52.            Intra module refs:   _system_init_se
+                                                   rom_cnt_check
+                                                   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_add_pt              00000486 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000488 - 0000048B (0x4 bytes), align: 0
+  Segment part 53.            Intra module refs:   _system_init_se
+                                                   rom_cnt_check
+                                                   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_cnt                 00000488 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000048C - 0000048C (0x1 bytes), align: 0
+  Segment part 54.            Intra module refs:   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_cnt_high            0000048C 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000048D - 0000048D (0x1 bytes), align: 0
+  Segment part 55.            Intra module refs:   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_cnt_mid             0000048D 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000048E - 0000048E (0x1 bytes), align: 0
+  Segment part 56.            Intra module refs:   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_cnt_low             0000048E 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000048F - 0000048F (0x1 bytes), align: 0
+  Segment part 57.            Intra module refs:   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_func_data           0000048F 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000490 - 00000490 (0x1 bytes), align: 0
+  Segment part 58.            Intra module refs:   rom_cnt_check
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_add_pt_high         00000490 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000491 - 00000491 (0x1 bytes), align: 0
+  Segment part 59.            Intra module refs:   rom_cnt_check
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_add_pt_low          00000491 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000492 - 00000492 (0x1 bytes), align: 0
+  Segment part 60.            Intra module refs:   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_device_high         00000492 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000493 - 00000493 (0x1 bytes), align: 0
+  Segment part 61.            Intra module refs:   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_device_low          00000493 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000494 - 00000494 (0x1 bytes), align: 0
+  Segment part 62.            Intra module refs:   _system_init_se
+                                                   rom_cnt_check
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_add_check_sum       00000494 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000140 - 00000140 (0x1 bytes), align: 0
+  Segment part 63.            Intra module refs:   _system_init_se
+                                                   femto_function
+                                                   phase_ess
+                                                   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           phase_data              00000140 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000495 - 00000495 (0x1 bytes), align: 0
+  Segment part 68.            Intra module refs:   TIMER1_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_setting_check      00000495 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000496 - 00000496 (0x1 bytes), align: 0
+  Segment part 69.            Intra module refs:   INT7_Handler
+                                                   TIMER0_OVF_Handler
+                                                   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ess_automute            00000496 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000497 - 00000497 (0x1 bytes), align: 0
+  Segment part 70.            Intra module refs:   INT6_Handler
+                                                   TIMER0_OVF_Handler
+                                                   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ess_lock_ck             00000497 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000498 - 00000498 (0x1 bytes), align: 0
+  Segment part 71.            Intra module refs:   TIMER0_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           old_ess_automute        00000498 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 00000499 - 00000499 (0x1 bytes), align: 0
+  Segment part 72.            Intra module refs:   TIMER0_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           old_ess_lock_ck         00000499 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000049A - 0000049A (0x1 bytes), align: 0
+  Segment part 73.            Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           exMute                  0000049A 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000049B - 0000049B (0x1 bytes), align: 0
+  Segment part 74.            Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           old_exMute              0000049B 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000049C - 0000049D (0x2 bytes), align: 0
+  Segment part 75.            Intra module refs:   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           key_tmr                 0000049C 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000049E - 0000049E (0x1 bytes), align: 0
+  Segment part 76.            Intra module refs:   INT3_Handler
+                                                   INT6_Handler
+                                                   INT7_Handler
+                                                   TIMER0_OVF_Handler
+                                                   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           tmr_osc_ck              0000049E 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 0000049F - 0000049F (0x1 bytes), align: 0
+  Segment part 77.            Intra module refs:   INT3_Handler
+                                                   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           key_int_flag            0000049F 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004A0 - 000004A1 (0x2 bytes), align: 0
+  Segment part 78.            Intra module refs:   TIMER1_OVF_Handler
+                                                   TIMER2_OVF_Handler
+                                                   ess_filter
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_tmr                 000004A0 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000141 - 00000141 (0x1 bytes), align: 0
+  Segment part 79.            Intra module refs:   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_save_flag           00000141 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000142 - 00000142 (0x1 bytes), align: 0
+  Segment part 81.            Intra module refs:   ess_filter
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_save_flag2          00000142 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004A2 - 000004A2 (0x1 bytes), align: 0
+  Segment part 83.            Intra module refs:   TIMER0_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           Time_500us              000004A2 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004A3 - 000004A4 (0x2 bytes), align: 0
+  Segment part 84.            Intra module refs:   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           Time_50ms               000004A3 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000143 - 00000143 (0x1 bytes), align: 0
+  Segment part 85.            Intra module refs:   _system_init_se
+                                                   dot_matrix_clear
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           dot_light_reg           00000143 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004A5 - 000004A5 (0x1 bytes), align: 0
+  Segment part 87.            Intra module refs:   TIMER0_OVF_Handler
+                                                   _system_init_se
+                                                   channel_change
+                                                   channel_down
+                                                   channel_up
+                                                   rom_write_multi
+                                                   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ch_led_data             000004A5 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000144 - 00000144 (0x1 bytes), align: 0
+  Segment part 90.            Intra module refs:   TIMER0_OVF_Handler
+                                                   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sr_led_data             00000144 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004A6 - 000004A6 (0x1 bytes), align: 0
+  Segment part 94.            Intra module refs:   _system_init
+                                                   init_vol_dn
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ess_lch_master_trim     000004A6 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004A7 - 000004A7 (0x1 bytes), align: 0
+  Segment part 95.            Intra module refs:   _system_init
+                                                   init_vol_dn
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ess_rch_master_trim     000004A7 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000145 - 00000145 (0x1 bytes), align: 0
+  Segment part 96.            Intra module refs:   TIMER1_OVF_Handler
+                                                   _system_init_se
+                                                   audio_level_down
+                                                   audio_level_sp_down
+                                                   audio_level_sp_up
+                                                   audio_level_up
+                                                   ess_mute
+                                                   rom_write_multi
+                                                   sample_rate_cal
+                                                   volume_set
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           vol_dB                  00000145 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000146 - 00000146 (0x1 bytes), align: 0
+  Segment part 98.            Intra module refs:   channel_change
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           i2s_flag                00000146 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004A8 - 000004A8 (0x1 bytes), align: 0
+  Segment part 103.           Intra module refs:   _system_init_se
+                                                   ess_filter
+                                                   femto_function
+                                                   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           filter_flag             000004A8 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000147 - 00000147 (0x1 bytes), align: 0
+  Segment part 104.           Intra module refs:   audio_level_down
+                                                   audio_level_up
+                                                   channel_change
+                                                   dot_vol_hextodeci
+                                                   ess_mute
+                                                   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           mute_enable             00000147 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004A9 - 000004A9 (0x1 bytes), align: 0
+  Segment part 106.           Intra module refs:   INT3_Handler
+                                                   TIMER0_OVF_Handler
+                                                   audio_level_down
+                                                   audio_level_sp_down
+                                                   audio_level_sp_up
+                                                   audio_level_up
+                                                   channel_down
+                                                   channel_up
+                                                   ess_mute
+                                                   femto_function
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           key_func                000004A9 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004AA - 000004AB (0x2 bytes), align: 0
+  Segment part 107.           Intra module refs:   TIMER0_OVF_Handler
+                                                   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           key_func_tmr            000004AA 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004AC - 000004AC (0x1 bytes), align: 0
+  Segment part 108.           Intra module refs:   INT3_Handler
+                                                   TIMER0_OVF_Handler
+                                                   femto_function
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           key_condition           000004AC 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000148 - 00000148 (0x1 bytes), align: 0
+  Segment part 109.           Intra module refs:   TIMER1_OVF_Handler
+                                                   ess_mute
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           es9018_reg10            00000148 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004AD - 000004AE (0x2 bytes), align: 0
+  Segment part 114.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sample_rate             000004AD 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004AF - 000004B0 (0x2 bytes), align: 0
+  Segment part 115.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sample_rate2            000004AF 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000149 - 0000014A (0x2 bytes), align: 0
+  Segment part 116.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           min44                   00000149 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 0000014B - 0000014C (0x2 bytes), align: 0
+  Segment part 118.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           max44                   0000014B 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 0000014D - 0000014E (0x2 bytes), align: 0
+  Segment part 120.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           min48                   0000014D 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 0000014F - 00000150 (0x2 bytes), align: 0
+  Segment part 122.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           max48                   0000014F 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000151 - 00000152 (0x2 bytes), align: 0
+  Segment part 124.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           min88                   00000151 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000153 - 00000154 (0x2 bytes), align: 0
+  Segment part 126.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           max88                   00000153 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000155 - 00000156 (0x2 bytes), align: 0
+  Segment part 128.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           min96                   00000155 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000157 - 00000158 (0x2 bytes), align: 0
+  Segment part 130.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           max96                   00000157 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000159 - 0000015A (0x2 bytes), align: 0
+  Segment part 132.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           min176                  00000159 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 0000015B - 0000015C (0x2 bytes), align: 0
+  Segment part 134.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           max176                  0000015B 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 0000015D - 0000015E (0x2 bytes), align: 0
+  Segment part 136.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           min192                  0000015D 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 0000015F - 00000160 (0x2 bytes), align: 0
+  Segment part 138.           Intra module refs:   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           max192                  0000015F 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004B1 - 000004B1 (0x1 bytes), align: 0
+  Segment part 140.           Intra module refs:   TIMER1_OVF_Handler
+                                                   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           tmr_osc                 000004B1 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000161 - 00000161 (0x1 bytes), align: 0
+  Segment part 141.           Intra module refs:   channel_change
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           interface_ch            00000161 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000162 - 00000191 (0x30 bytes), align: 0
+  Segment part 148.           Intra module refs:   TIMER0_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ch_name                 00000162 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000192 - 000001BB (0x2a bytes), align: 0
+  Segment part 150.           Intra module refs:   TIMER0_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sr_name                 00000192 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 000001BC - 000001D3 (0x18 bytes), align: 0
+  Segment part 152.           Intra module refs:   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           filter_name             000001BC 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 000001D4 - 000001DB (0x8 bytes), align: 0
+  Segment part 154.           Intra module refs:   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           phase_name              000001D4 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 000001DC - 000001E3 (0x8 bytes), align: 0
+  Segment part 156.           Intra module refs:   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           normal_name             000001DC 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004B2 - 000004C1 (0x10 bytes), align: 0
+  Segment part 162.           Intra module refs:   TIMER0_OVF_Handler
+                                                   _system_init
+                                                   dot_string_digit
+                                                   dot_vol_hextodeci
+                                                   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           dot_string              000004B2 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004C2 - 000004C5 (0x4 bytes), align: 0
+  Segment part 163.           Intra module refs:   TIMER0_OVF_Handler
+                                                   dot_vol_hextodeci
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ess_volume              000004C2 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 000001E4 - 000002E3 (0x100 bytes), align: 0
+  Segment part 164.           Intra module refs:   ess_filter
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           f1_coeff_st1            000001E4 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 000002E4 - 00000323 (0x40 bytes), align: 0
+  Segment part 166.           Intra module refs:   ess_filter
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           f1_coeff_st2            000002E4 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000324 - 00000423 (0x100 bytes), align: 0
+  Segment part 168.           Intra module refs:   ess_filter
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           f2_coeff_st1            00000324 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000424 - 00000463 (0x40 bytes), align: 0
+  Segment part 170.           Intra module refs:   ess_filter
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           f2_coeff_st2            00000424 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 0000008C - 00000099 (0xe bytes), align: 1
+  Segment part 231.           Intra module refs:   DelayTime_ms
+                                                   I2C_SHIN
+                                                   I2C_SHOUT
+                                                   I2C_START
+                                                   I2C_STOP
+                                                   dot_matrix_bright
+                                                   dot_string_digit
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           DelayTime               0000008C 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 0000009A - 000000B5 (0x1c bytes), align: 1
+  Segment part 232.           Intra module refs:   TIMER1_OVF_Handler
+                                                   _system_init_se
+                                                   ess_filter
+                                                   femto_function
+                                                   rom_check_sum_error
+                                                   rom_cnt_check
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           DelayTime_ms            0000009A 
+               calls direct
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004C6 - 000004C6 (0x1 bytes), align: 0
+  Segment part 179.           Intra module refs:   I2C_Read
+                                                   I2C_SHIN
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           inByte                  000004C6 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004C7 - 000004C7 (0x1 bytes), align: 0
+  Segment part 180.           Intra module refs:   I2C_SHIN
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           grAck                   000004C7 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000000B6 - 000000D1 (0x1c bytes), align: 1
+  Segment part 239.           Intra module refs:   I2C_Read
+                                                   I2C_Write
+                                                   _system_init_se
+                                                   rom_check_sum_error
+                                                   rom_cnt_check
+                                                   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           I2C_START               000000B6 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000000D2 - 000000EB (0x1a bytes), align: 1
+  Segment part 240.           Intra module refs:   I2C_Read
+                                                   I2C_Write
+                                                   _system_init_se
+                                                   rom_check_sum_error
+                                                   rom_cnt_check
+                                                   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           I2C_STOP                000000D2 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000000EC - 00000155 (0x6a bytes), align: 1
+  Segment part 241.           Intra module refs:   I2C_Read
+                                                   I2C_Write
+                                                   _system_init_se
+                                                   rom_check_sum_error
+                                                   rom_cnt_check
+                                                   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           I2C_SHOUT               000000EC 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000156 - 000001F3 (0x9e bytes), align: 1
+  Segment part 242.           Intra module refs:   I2C_Read
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           I2C_SHIN                00000156 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000001F4 - 0000020B (0x18 bytes), align: 1
+  Segment part 243.           Intra module refs:   TIMER1_OVF_Handler
+                                                   _system_init
+                                                   _system_init_se
+                                                   channel_change
+                                                   ess_filter
+                                                   ess_mute
+                                                   femto_function
+                                                   init_vol
+                                                   init_vol_dn
+                                                   phase_ess
+                                                   sample_rate_cal
+                                                   volume_set
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           I2C_Write               000001F4 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 0000020C - 00000301 (0xf6 bytes), align: 1
+  Segment part 244.           Intra module refs:   rom_write_multi
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_cnt_check           0000020C 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000302 - 000003C3 (0xc2 bytes), align: 1
+  Segment part 245.           Intra module refs:   channel_change
+                                                   ess_filter
+                                                   phase_ess
+                                                   volume_set
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_write_multi         00000302 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000003C4 - 000003E9 (0x26 bytes), align: 1
+  Segment part 246.           Intra module refs:   rom_I2C_Read
+                                                   sample_rate_cal
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           I2C_Read                000003C4 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000003EA - 000003FD (0x14 bytes), align: 1
+  Segment part 247.           Intra module refs:   _system_init_se
+                                                   rom_check_sum_error
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_I2C_Read            000003EA 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000003FE - 00000407 (0xa bytes), align: 1
+  Segment part 250.           Intra module refs:   _system_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           dot_matrix_clear        000003FE 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000408 - 000005C7 (0x1c0 bytes), align: 1
+  Segment part 251.           Intra module refs:   TIMER0_OVF_Handler
+                                                   dot_vol_hextodeci
+                                                   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           dot_string_digit        00000408 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000005C8 - 000008BB (0x2f4 bytes), align: 1
+  Segment part 254.           Intra module refs:   _system_init_se
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           dot_matrix_bright       000005C8 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000008BC - 00000997 (0xdc bytes), align: 1
+  Segment part 256.           Intra module refs:   TIMER1_OVF_Handler
+                                                   audio_level_down
+                                                   audio_level_sp_down
+                                                   audio_level_sp_up
+                                                   audio_level_up
+                                                   ess_mute
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           dot_vol_hextodeci       000008BC 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000998 - 000009EB (0x54 bytes), align: 1
+  Segment part 258.           Intra module refs:   INT3_Handler
+                                                   audio_level_down
+                                                   audio_level_up
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ess_mute                00000998 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000009EC - 00000A19 (0x2e bytes), align: 1
+  Segment part 259.           Intra module refs:   _system_init_se
+                                                   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           phase_ess               000009EC 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000A1A - 00000A3B (0x22 bytes), align: 1
+  Segment part 260.           Intra module refs:   _system_init_se
+                                                   audio_level_down
+                                                   audio_level_sp_down
+                                                   audio_level_sp_up
+                                                   audio_level_up
+                                                   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           volume_set              00000A1A 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000A3C - 00000A69 (0x2e bytes), align: 1
+  Segment part 261.           Intra module refs:   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_vol_dn             00000A3C 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000A6A - 00000A7B (0x12 bytes), align: 1
+  Segment part 262.           Intra module refs:   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_vol                00000A6A 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000A7C - 00000AB3 (0x38 bytes), align: 1
+  Segment part 263.           Intra module refs:   _remocon_processing
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           audio_level_sp_down     00000A7C 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000AB4 - 00000AFB (0x48 bytes), align: 1
+  Segment part 264.           Intra module refs:   _remocon_processing
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           audio_level_sp_up       00000AB4 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000AFC - 00000B3D (0x42 bytes), align: 1
+  Segment part 265.           Intra module refs:   INT3_Handler
+                                                   TIMER1_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           audio_level_down        00000AFC 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000B3E - 00000B87 (0x4a bytes), align: 1
+  Segment part 266.           Intra module refs:   INT3_Handler
+                                                   TIMER1_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           audio_level_up          00000B3E 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000B88 - 00000C0B (0x84 bytes), align: 1
+  Segment part 267.           Intra module refs:   _system_init_se
+                                                   channel_down
+                                                   channel_up
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           channel_change          00000B88 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000C0C - 00000C31 (0x26 bytes), align: 1
+  Segment part 268.           Intra module refs:   INT3_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           channel_up              00000C0C 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000C32 - 00000C57 (0x26 bytes), align: 1
+  Segment part 269.           Intra module refs:   INT3_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           channel_down            00000C32 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000C58 - 00000EB7 (0x260 bytes), align: 1
+  Segment part 270.           Intra module refs:   _system_init_se
+                                                   femto_function
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ess_filter              00000C58 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000EB8 - 00000FC1 (0x10a bytes), align: 1
+  Segment part 271.           Intra module refs:   INT3_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           femto_function          00000EB8 
+               calls direct
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004C8 - 000004C8 (0x1 bytes), align: 0
+  Segment part 183.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _flg_on_remocon         000004C8 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004C9 - 000004C9 (0x1 bytes), align: 0
+  Segment part 184.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _code_remocon           000004C9 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004CA - 000004CB (0x2 bytes), align: 0
+  Segment part 185.           Intra module refs:   INT5_Handler
+                                                   TIMER2_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _counter_remocon        000004CA 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004CC - 000004CD (0x2 bytes), align: 0
+  Segment part 186.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _remocon_custom         000004CC 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004CE - 000004CF (0x2 bytes), align: 0
+  Segment part 187.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _remocon_custom_2       000004CE 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004D0 - 000004D1 (0x2 bytes), align: 0
+  Segment part 188.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _remocon_data           000004D0 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004D2 - 000004D3 (0x2 bytes), align: 0
+  Segment part 190.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _remocon_data_2         000004D2 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004D4 - 000004D4 (0x1 bytes), align: 0
+  Segment part 191.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _remocon_counter        000004D4 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004D5 - 000004D5 (0x1 bytes), align: 0
+  Segment part 195.           Intra module refs:   _remocon_processing
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _flg_repeat             000004D5 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004D6 - 000004D7 (0x2 bytes), align: 0
+  Segment part 196.           Intra module refs:   _remocon_processing
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _remocon_repeat_count   000004D6 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004D8 - 000004D8 (0x1 bytes), align: 0
+  Segment part 197.           Intra module refs:   _remocon_processing
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _flg_run_repeat         000004D8 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004D9 - 000004DA (0x2 bytes), align: 0
+  Segment part 199.           Intra module refs:   TIMER2_OVF_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           cnt_remocon             000004D9 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004DB - 000004DB (0x1 bytes), align: 0
+  Segment part 200.           Intra module refs:   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           bit_input               000004DB 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004DC - 000004DC (0x1 bytes), align: 0
+  Segment part 201.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _repeat_remocon         000004DC 
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000464 - 00000464 (0x1 bytes), align: 0
+  Segment part 202.           Intra module refs:   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _repeat_data            00000464 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004DD - 000004DD (0x1 bytes), align: 0
+  Segment part 204.           Intra module refs:   INT5_Handler
+                                                   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           low_bit_time            000004DD 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004DE - 000004DE (0x1 bytes), align: 0
+  Segment part 205.           Intra module refs:   INT5_Handler
+                                                   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           low_start_flag          000004DE 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004DF - 000004DF (0x1 bytes), align: 0
+  Segment part 206.           Intra module refs:   INT5_Handler
+                                                   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           high_bit_0              000004DF 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E0 - 000004E0 (0x1 bytes), align: 0
+  Segment part 207.           Intra module refs:   INT5_Handler
+                                                   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           high_bit_1              000004E0 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E1 - 000004E1 (0x1 bytes), align: 0
+  Segment part 208.           Intra module refs:   INT5_Handler
+                                                   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           high_start_flag         000004E1 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E2 - 000004E2 (0x1 bytes), align: 0
+  Segment part 209.           Intra module refs:   INT5_Handler
+                                                   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           high_repeat_flag0       000004E2 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E3 - 000004E3 (0x1 bytes), align: 0
+  Segment part 210.           Intra module refs:   INT5_Handler
+                                                   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           high_repeat_flag1       000004E3 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E4 - 000004E4 (0x1 bytes), align: 0
+  Segment part 211.           Intra module refs:   IR_error
+                                                   TIMER2_OVF_Handler
+                                                   _remocon_processing
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ir_error_check          000004E4 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00000FC2 - 000010CD (0x10c bytes), align: 1
+  Segment part 272.           Intra module refs:   TIMER2_OVF_Handler::??INTVEC 40
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER2_OVF_Handler      00000FC2 
+               interrupt function
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000010CE - 00001147 (0x7a bytes), align: 1
+  Segment part 273.           Intra module refs:   INT5_Handler
+                                                   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           IR_error                000010CE 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E5 - 000004E5 (0x1 bytes), align: 0
+  Segment part 212.           Intra module refs:   remocon_data
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           new_repeat_flag         000004E5 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00001148 - 0000143B (0x2f4 bytes), align: 1
+  Segment part 274.           Intra module refs:   _remocon_processing
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           remocon_data            00001148 
+               calls direct
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E6 - 000004E7 (0x2 bytes), align: 0
+  Segment part 213.           Intra module refs:   _remocon_processing
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sp_en_cnt               000004E6 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 0000143C - 000015CF (0x194 bytes), align: 1
+  Segment part 275.           Intra module refs:   INT5_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _remocon_processing     0000143C 
+               calls direct
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E8 - 000004E8 (0x1 bytes), align: 0
+  Segment part 214.           Intra module refs:   INT5_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ir_error                000004E8 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000015D0 - 000016FB (0x12c bytes), align: 1
+  Segment part 276.           Intra module refs:   INT5_Handler::??INTVEC 24
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           INT5_Handler            000015D0 
+               interrupt function
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000016FC - 000017C3 (0xc8 bytes), align: 1
+  Segment part 277.           Intra module refs:   main
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _system_init            000016FC 
+               calls direct
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004E9 - 000004EA (0x2 bytes), align: 0
+  Segment part 217.           Intra module refs:   _system_init_se
+                                                   rom_check_sum_error
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           test_check              000004E9 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004EB - 000004EB (0x1 bytes), align: 0
+  Segment part 219.           Intra module refs:   _system_init_se
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_rom_data0          000004EB 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004EC - 000004EC (0x1 bytes), align: 0
+  Segment part 220.           Intra module refs:   _system_init_se
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_rom_data1          000004EC 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004ED - 000004ED (0x1 bytes), align: 0
+  Segment part 221.           Intra module refs:   _system_init_se
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_rom_data2          000004ED 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004EE - 000004EE (0x1 bytes), align: 0
+  Segment part 222.           Intra module refs:   rom_check_sum_error
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_rom_add0           000004EE 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004EF - 000004EF (0x1 bytes), align: 0
+  Segment part 223.           Intra module refs:   rom_check_sum_error
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_rom_add1           000004EF 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004F0 - 000004F0 (0x1 bytes), align: 0
+  Segment part 224.           Intra module refs:   rom_check_sum_error
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_rom_add2           000004F0 
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004F1 - 000004F1 (0x1 bytes), align: 0
+  Segment part 225.           Intra module refs:   rom_check_sum_error
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           init_rom_address_data   000004F1 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000017C4 - 000018B1 (0xee bytes), align: 1
+  Segment part 278.           Intra module refs:   _system_init_se
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           rom_check_sum_error     000017C4 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000018B2 - 00001C2B (0x37a bytes), align: 1
+  Segment part 279.           Intra module refs:   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           _system_init_se         000018B2 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00001C2C - 00001F73 (0x348 bytes), align: 1
+  Segment part 280.           Intra module refs:   INT6_Handler
+                                                   INT7_Handler
+                                                   TIMER0_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           sample_rate_cal         00001C2C 
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00001F74 - 00001FC9 (0x56 bytes), align: 1
+  Segment part 281.           Intra module refs:   INT7_Handler::??INTVEC 32
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           INT7_Handler            00001F74 
+               interrupt function
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00001FCA - 0000201F (0x56 bytes), align: 1
+  Segment part 282.           Intra module refs:   INT6_Handler::??INTVEC 28
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           INT6_Handler            00001FCA 
+               interrupt function
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00002020 - 00002109 (0xea bytes), align: 1
+  Segment part 283.           Intra module refs:   INT3_Handler::??INTVEC 16
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           INT3_Handler            00002020 
+               interrupt function
+               calls direct
+    -------------------------------------------------------------------------
+NEAR_Z
+  Relative segment, address: DATA 000004F2 - 000004F3 (0x2 bytes), align: 0
+  Segment part 226.           Intra module refs:   TIMER0_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           led_tmr                 000004F2 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 0000210A - 000022AD (0x1a4 bytes), align: 1
+  Segment part 284.           Intra module refs:   TIMER0_OVF_Handler::??INTVEC 64
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER0_OVF_Handler      0000210A 
+               interrupt function
+               calls direct
+    -------------------------------------------------------------------------
+NEAR_I
+  Relative segment, address: DATA 00000465 - 00000465 (0x1 bytes), align: 0
+  Segment part 229.           Intra module refs:   TIMER1_OVF_Handler
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           tmr_flag_ck             00000465 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000022AE - 00002439 (0x18c bytes), align: 1
+  Segment part 285.           Intra module refs:   TIMER1_OVF_Handler::??INTVEC 56
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER1_OVF_Handler      000022AE 
+               interrupt function
+               calls direct
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 0000243A - 00002443 (0xa bytes), align: 1
+  Segment part 286.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           main                    0000243A        ?cstartup_call_main (?C_STARTUP)
+               calls direct
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000001C, align: 0
+  Segment part 35. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __?EECR                 0000001C 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000001D, align: 0
+  Segment part 36. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __?EEDR                 0000001D 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000001E, align: 0
+  Segment part 37. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __?EEARL                0000001E 
+    -------------------------------------------------------------------------
+ABSOLUTE
+  Relative segment, address: DATA 0000001F, align: 0
+  Segment part 38. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __?EEARH                0000001F 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 00000000 - 00000013 (0x14 bytes), align: 1
+  Segment part 39. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           INT3_Handler::??INTVEC 16
+                                   00000010 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 00000000 - 0000001B (0x1c bytes), align: 1
+  Segment part 40. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           INT5_Handler::??INTVEC 24
+                                   00000018 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 00000000 - 0000001F (0x20 bytes), align: 1
+  Segment part 41. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           INT6_Handler::??INTVEC 28
+                                   0000001C 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 00000000 - 00000023 (0x24 bytes), align: 1
+  Segment part 42. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           INT7_Handler::??INTVEC 32
+                                   00000020 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 00000000 - 0000002B (0x2c bytes), align: 1
+  Segment part 43. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER2_OVF_Handler::??INTVEC 40
+                                   00000028 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 00000000 - 0000003B (0x3c bytes), align: 1
+  Segment part 44. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER1_OVF_Handler::??INTVEC 56
+                                   00000038 
+    -------------------------------------------------------------------------
+INTVEC
+  Common segment, address: CODE 00000000 - 00000043 (0x44 bytes), align: 1
+  Segment part 45. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           TIMER0_OVF_Handler::??INTVEC 64
+                                   00000040 
+    -------------------------------------------------------------------------
+INITTAB
+  Relative segment, address: CODE 00002538 - 0000253E (0x7 bytes), align: 0
+  Segment part 49.            Intra module refs:   Time_500us
+                                                   Time_50ms
+                                                   _code_remocon
+                                                   _counter_remocon
+                                                   _flg_on_remocon
+                                                   _flg_repeat
+                                                   _flg_run_repeat
+                                                   _remocon_counter
+                                                   _remocon_custom
+                                                   _remocon_custom_2
+                                                   _remocon_data
+                                                   _remocon_data_2
+                                                   _remocon_repeat_count
+                                                   _repeat_remocon
+                                                   bit_input
+                                                   ch_led_data
+                                                   cnt_remocon
+                                                   dot_string
+                                                   ess_automute
+                                                   ess_lch_master_trim
+                                                   ess_lock_ck
+                                                   ess_rch_master_trim
+                                                   ess_volume
+                                                   exMute
+                                                   filter_flag
+                                                   grAck
+                                                   high_bit_0
+                                                   high_bit_1
+                                                   high_repeat_flag0
+                                                   high_repeat_flag1
+                                                   high_start_flag
+                                                   inByte
+                                                   init_rom_add0
+                                                   init_rom_add1
+                                                   init_rom_add2
+                                                   init_rom_address_data
+                                                   init_rom_data0
+                                                   init_rom_data1
+                                                   init_rom_data2
+                                                   init_setting_check
+                                                   ir_error
+                                                   ir_error_check
+                                                   key_condition
+                                                   key_func
+                                                   key_func_tmr
+                                                   key_int_flag
+                                                   key_tmr
+                                                   led_tmr
+                                                   low_bit_time
+                                                   low_start_flag
+                                                   new_repeat_flag
+                                                   old_ess_automute
+                                                   old_ess_lock_ck
+                                                   old_exMute
+                                                   rom_add_check_sum
+                                                   rom_add_pt
+                                                   rom_add_pt_high
+                                                   rom_add_pt_low
+                                                   rom_cnt
+                                                   rom_cnt_high
+                                                   rom_cnt_low
+                                                   rom_cnt_mid
+                                                   rom_device_high
+                                                   rom_device_low
+                                                   rom_func_data
+                                                   rom_tmr
+                                                   sample_rate
+                                                   sample_rate2
+                                                   sp_en_cnt
+                                                   test_check
+                                                   test_eeprom
+                                                   tmr_osc
+                                                   tmr_osc_ck
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?<Segment init: NEAR_Z>
+                                   00002538 
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002546 - 00002546 (0x1 bytes), align: 0
+  Segment part 64.            Intra module refs:   phase_data
+    -------------------------------------------------------------------------
+INITTAB
+  Relative segment, address: CODE 0000253F - 00002545 (0x7 bytes), align: 0
+  Segment part 65.            Intra module refs:   _repeat_data
+                                                   ch_name
+                                                   dot_light_reg
+                                                   es9018_reg10
+                                                   f1_coeff_st1
+                                                   f1_coeff_st2
+                                                   f2_coeff_st1
+                                                   f2_coeff_st2
+                                                   filter_name
+                                                   i2s_flag
+                                                   interface_ch
+                                                   max176
+                                                   max192
+                                                   max44
+                                                   max48
+                                                   max88
+                                                   max96
+                                                   min176
+                                                   min192
+                                                   min44
+                                                   min48
+                                                   min88
+                                                   min96
+                                                   mute_enable
+                                                   normal_name
+                                                   phase_data
+                                                   phase_name
+                                                   rom_save_flag
+                                                   rom_save_flag2
+                                                   sr_led_data
+                                                   sr_name
+                                                   tmr_flag_ck
+                                                   vol_dB
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?<Segment init: NEAR_I>
+                                   0000253F 
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002547 - 00002547 (0x1 bytes), align: 0
+  Segment part 80.            Intra module refs:   rom_save_flag
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002548 - 00002548 (0x1 bytes), align: 0
+  Segment part 82.            Intra module refs:   rom_save_flag2
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002549 - 00002549 (0x1 bytes), align: 0
+  Segment part 86.            Intra module refs:   dot_light_reg
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000254A - 0000254A (0x1 bytes), align: 0
+  Segment part 91.            Intra module refs:   sr_led_data
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000254B - 0000254B (0x1 bytes), align: 0
+  Segment part 97.            Intra module refs:   vol_dB
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000254C - 0000254C (0x1 bytes), align: 0
+  Segment part 99.            Intra module refs:   i2s_flag
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000254D - 0000254D (0x1 bytes), align: 0
+  Segment part 105.           Intra module refs:   mute_enable
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000254E - 0000254E (0x1 bytes), align: 0
+  Segment part 110.           Intra module refs:   es9018_reg10
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000254F - 00002550 (0x2 bytes), align: 0
+  Segment part 117.           Intra module refs:   min44
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002551 - 00002552 (0x2 bytes), align: 0
+  Segment part 119.           Intra module refs:   max44
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002553 - 00002554 (0x2 bytes), align: 0
+  Segment part 121.           Intra module refs:   min48
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002555 - 00002556 (0x2 bytes), align: 0
+  Segment part 123.           Intra module refs:   max48
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002557 - 00002558 (0x2 bytes), align: 0
+  Segment part 125.           Intra module refs:   min88
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002559 - 0000255A (0x2 bytes), align: 0
+  Segment part 127.           Intra module refs:   max88
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000255B - 0000255C (0x2 bytes), align: 0
+  Segment part 129.           Intra module refs:   min96
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000255D - 0000255E (0x2 bytes), align: 0
+  Segment part 131.           Intra module refs:   max96
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000255F - 00002560 (0x2 bytes), align: 0
+  Segment part 133.           Intra module refs:   min176
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002561 - 00002562 (0x2 bytes), align: 0
+  Segment part 135.           Intra module refs:   max176
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002563 - 00002564 (0x2 bytes), align: 0
+  Segment part 137.           Intra module refs:   min192
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002565 - 00002566 (0x2 bytes), align: 0
+  Segment part 139.           Intra module refs:   max192
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002567 - 00002567 (0x1 bytes), align: 0
+  Segment part 142.           Intra module refs:   interface_ch
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002568 - 00002597 (0x30 bytes), align: 0
+  Segment part 149.           Intra module refs:   ch_name
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 00002598 - 000025C1 (0x2a bytes), align: 0
+  Segment part 151.           Intra module refs:   sr_name
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 000025C2 - 000025D9 (0x18 bytes), align: 0
+  Segment part 153.           Intra module refs:   filter_name
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 000025DA - 000025E1 (0x8 bytes), align: 0
+  Segment part 155.           Intra module refs:   phase_name
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 000025E2 - 000025E9 (0x8 bytes), align: 0
+  Segment part 157.           Intra module refs:   normal_name
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 000025EA - 000026E9 (0x100 bytes), align: 0
+  Segment part 165.           Intra module refs:   f1_coeff_st1
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 000026EA - 00002729 (0x40 bytes), align: 0
+  Segment part 167.           Intra module refs:   f1_coeff_st2
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000272A - 00002829 (0x100 bytes), align: 0
+  Segment part 169.           Intra module refs:   f2_coeff_st1
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000282A - 00002869 (0x40 bytes), align: 0
+  Segment part 171.           Intra module refs:   f2_coeff_st2
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000286A - 0000286A (0x1 bytes), align: 0
+  Segment part 203.           Intra module refs:   _repeat_data
+    -------------------------------------------------------------------------
+NEAR_ID
+  Relative segment, address: CODE 0000286B - 0000286B (0x1 bytes), align: 0
+  Segment part 230.           Intra module refs:   tmr_flag_ck
+
+    *************************************************************************
+
+  FILE NAME : C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\LIB\CLIB\cl3s-ec_mul.r90
+  LIBRARY MODULE, NAME : ?__exit
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 00002444 - 00002449 (0x6 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __exit                  00002446 
+           ?C_EXIT                 00002446 
+           ?C_FUNCALL              00002444 
+           _exit                   00002444        ?cstartup_call_main (?C_STARTUP)
+           exit                    00002444        ?cstartup_call_main (?C_STARTUP)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?RESET
+
+  SEGMENTS IN THE MODULE
+  ======================
+INTVEC
+  Common segment, address: CODE 00000000 - 00000003 (0x4 bytes), align: 1
+  Segment part 0. ROOT 
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?RESET                  00000000        Segment part 2 (?C_STARTUP)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?C_STARTUP
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 0000244A, align: 1
+  Segment part 2.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __program_start         0000244A        Absolute parts (?ABS_ENTRY_MOD)
+           ?C_STARTUP              0000244A        ?RESET (?RESET)
+           __RESTART               0000244A 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 0000244A - 00002455 (0xc bytes), align: 1
+  Segment part 5.             Intra module refs:   Segment part 2
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00002456 - 00002459 (0x4 bytes), align: 1
+  Segment part 7.             Intra module refs:   Segment part 5
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?call_low_level_init    00002456 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 0000245A - 00002461 (0x8 bytes), align: 1
+  Segment part 8.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?need_segment_init      0000245A        ?<Segment init: NEAR_I> (App_0V1_start2)
+                                                   ?<Segment init: NEAR_Z> (App_0V1_start2)
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 00002462 - 0000246D (0xc bytes), align: 1
+  Segment part 9.             Intra module refs:   ?call_low_level_init
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?cstartup_call_main     00002462 
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?UC_DIVMOD_L01
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 0000246E - 00002487 (0x1a bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?UC_DIVMOD_L01          0000246E        dot_vol_hextodeci (App_0V1_start2)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?S_EC_MUL_L02
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 00002488 - 00002497 (0x10 bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?S_EC_MUL_L02           00002488        TIMER0_OVF_Handler (App_0V1_start2)
+                                                   dot_string_digit (App_0V1_start2)
+                                                   femto_function (App_0V1_start2)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?US_SHR_L02
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 00002498 - 000024A1 (0xa bytes), align: 1
+  Segment part 0.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?US_SHR_L02             0000249C        rom_I2C_Read (App_0V1_start2)
+                                                   rom_check_sum_error (App_0V1_start2)
+                                                   rom_write_multi (App_0V1_start2)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?PROLOGUE_L09
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 000024A2 - 000024A3 (0x2 bytes), align: 1
+  Segment part 12.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?PROLOGUE4_L09          000024A2        ess_filter (App_0V1_start2)
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024A4 - 000024A5 (0x2 bytes), align: 1
+  Segment part 13.            Intra module refs:   ?PROLOGUE4_L09
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?PROLOGUE3_L09          000024A4 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024A6 - 000024A7 (0x2 bytes), align: 1
+  Segment part 14.            Intra module refs:   ?PROLOGUE3_L09
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?PROLOGUE2_L09          000024A6 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024A8 - 000024A9 (0x2 bytes), align: 1
+  Segment part 15.            Intra module refs:   ?PROLOGUE2_L09
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?PROLOGUE1_L09          000024A8 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024AA - 000024AB (0x2 bytes), align: 1
+  Segment part 16.            Intra module refs:   ?PROLOGUE1_L09
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?EPILOGUE_B_L09
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 000024AC - 000024AD (0x2 bytes), align: 1
+  Segment part 12.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?EPILOGUE_B4_L09        000024AC        ess_filter (App_0V1_start2)
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024AE - 000024AF (0x2 bytes), align: 1
+  Segment part 13.            Intra module refs:   ?EPILOGUE_B4_L09
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?EPILOGUE_B3_L09        000024AE 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024B0 - 000024B1 (0x2 bytes), align: 1
+  Segment part 14.            Intra module refs:   ?EPILOGUE_B3_L09
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?EPILOGUE_B2_L09        000024B0 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024B2 - 000024B3 (0x2 bytes), align: 1
+  Segment part 15.            Intra module refs:   ?EPILOGUE_B2_L09
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?EPILOGUE_B1_L09        000024B2 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024B4 - 000024BD (0xa bytes), align: 1
+  Segment part 16.            Intra module refs:   ?EPILOGUE_B1_L09
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           ?EPILOGUE_B0_L09        000024B4 
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?low_level_init
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 000024BE - 000024C1 (0x4 bytes), align: 1
+  Segment part 3.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __low_level_init        000024BE        ?call_low_level_init (?C_STARTUP)
+
+    -------------------------------------------------------------------------
+  LIBRARY MODULE, NAME : ?segment_init
+
+  SEGMENTS IN THE MODULE
+  ======================
+CODE
+  Relative segment, address: CODE 000024C2 - 000024CD (0xc bytes), align: 1
+  Segment part 3.             Intra module refs:   __segment_init
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           __memclr                000024C2 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024CE - 000024E1 (0x14 bytes), align: 1
+  Segment part 4.             Intra module refs:   __segment_init
+           LOCAL                   ADDRESS         
+           =====                   =======         
+           __flashcpy              000024CE 
+    -------------------------------------------------------------------------
+CODE
+  Relative segment, address: CODE 000024E2 - 00002537 (0x56 bytes), align: 1
+  Segment part 5.
+           ENTRY                   ADDRESS         REF BY
+           =====                   =======         ======
+           __segment_init          000024E2        ?need_segment_init (?C_STARTUP)
+               calls direct
+
+    *************************************************************************
+
+  DEFINED ABSOLUTE ENTRIES
+  PROGRAM MODULE, NAME : ?FILLER_BYTES
+
+  SEGMENTS IN THE MODULE
+  ======================
+INTVEC
+  Common segment, address: CODE 00000000 - 00000043 (0x44 bytes), align: 0
+  Segment part 1.
+    -------------------------------------------------------------------------
+?FILL1
+  Relative segment, address: CODE 00000044 - 0000008B (0x48 bytes), align: 0
+  Segment part 0.
+
+
+
+
+                ****************************************
+                *                                      *
+                *      SEGMENTS IN ADDRESS ORDER       *
+                *                                      *
+                ****************************************
+
+
+SEGMENT              SPACE    START ADDRESS   END ADDRESS     SIZE  TYPE  ALIGN
+=======              =====    =============   ===========     ====  ====  =====
+INTVEC               CODE          00000000 - 00000043          44   com    1
+?FILL1               CODE          00000044 - 0000008B          48   rel    0
+CODE                 CODE          0000008C - 00002537        24AC   rel    1
+INITTAB              CODE          00002538 - 00002545           E   rel    0
+NEAR_ID              CODE          00002546 - 0000286B         326   rel    0
+ABSOLUTE             DATA               0000001C                     rel    0
+                     DATA               0000001D                   
+                     DATA               0000001E                   
+                     DATA               0000001F                   
+                     DATA          00000020 - 00000023           4 
+                     DATA          00000030 - 0000003B           C 
+                     DATA          00000044 - 00000045           2 
+                     DATA          0000004C - 0000004E           3 
+                     DATA          00000051 - 00000053           3 
+                     DATA          00000056 - 0000005A           5 
+                     DATA          00000061 - 00000065           5 
+                     DATA          0000006A - 0000006A           1 
+CSTACK               DATA          00000100 - 0000011F          20   dse    0
+RSTACK               DATA          00000120 - 0000013F          20   dse    0
+NEAR_I               DATA          00000140 - 00000465         326   rel    0
+NEAR_Z               DATA          00000466 - 000004F3          8E   rel    0
+
+                ****************************************
+                *                                      *
+                *        END OF CROSS REFERENCE        *
+                *                                      *
+                ****************************************
+
+ 10 276 bytes of CODE memory (+             72 range fill )
+  1 012 bytes of DATA memory (+ 35 absolute )
+
+Errors: none
+Warnings: none
+

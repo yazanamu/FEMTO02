@@ -1,0 +1,832 @@
+//////////////////////////////////////////////////////////////////////////////
+//                                                                           /
+// IAR Atmel AVR C/EC++ Compiler V3.10C/W32            10/May/2012  15:40:06 /
+// Copyright 1996-2004 IAR Systems. All rights reserved.                     /
+//                                                                           /
+//    Source file  =  H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\0V0_r /
+//                    emocon_APP.C                                           /
+//    Command line =  --cpu=m16 -mt -o H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\ /
+//                    0V0_remocon\Debug\Obj\ -lC                             /
+//                    H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\Debug /
+//                    \List\ -lA H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_re /
+//                    mocon\Debug\List\ --initializers_in_flash -z3          /
+//                    --no_cse --no_inline --no_code_motion --no_cross_call  /
+//                    --no_clustering --debug -DENABLE_BIT_DEFINITIONS -e    /
+//                    -I "E:\Program Files\IAR Systems\Embedded Workbench    /
+//                    3.2\avr\INC\" -I "E:\Program Files\IAR                 /
+//                    Systems\Embedded Workbench 3.2\avr\INC\CLIB\"          /
+//                    --eeprom_size 512 H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU /
+//                    \0V0_remocon\0V0_remocon_APP.C                         /
+//    List file    =  H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\Debug /
+//                    \List\0V0_remocon_APP.s90                              /
+//                                                                           /
+//                                                                           /
+//////////////////////////////////////////////////////////////////////////////
+
+        NAME `0V0_remocon_APP`
+
+        RTMODEL "__64bit_doubles", "disabled"
+        RTMODEL "__cpu", "3"
+        RTMODEL "__cpu_name", "ATmega16"
+        RTMODEL "__enhanced_core", "enabled"
+        RTMODEL "__has_elpm", "false"
+        RTMODEL "__memory_model", "1"
+        RTMODEL "__rt_version", "3"
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: TINY_I>`
+        PUBWEAK `?<Segment init: TINY_Z>`
+        PUBLIC Data_code
+        PUBLIC Data_code1
+        PUBLIC DelayTime
+        FUNCTION DelayTime,0203H
+        LOCFRAME RSTACK, 2, STACK
+        PUBLIC INT0_Handler
+        FUNCTION INT0_Handler,021233H
+        LOCFRAME CSTACK, 15, STACK
+        LOCFRAME RSTACK, 2, STACK
+        PUBLIC IR_data_trans
+        FUNCTION IR_data_trans,0201H
+        LOCFRAME RSTACK, 2, STACK
+        PUBLIC IR_lead_trans
+        FUNCTION IR_lead_trans,021201H
+        LOCFRAME CSTACK, 2, STACK
+        LOCFRAME RSTACK, 2, STACK
+        PUBWEAK _A_MCUCR
+        PUBWEAK _A_PINB
+        PUBWEAK _A_PORTB
+        PUBWEAK __?EEARH
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC carry
+        PUBLIC cpd
+        PUBLIC key_data
+        PUBLIC main
+        FUNCTION main,0a03H
+        LOCFRAME RSTACK, 2, STACK
+        
+        CFI Names cfiNames0
+        CFI StackFrame CFA_Y Y DATA
+        CFI StackFrame CFA_SP SP DATA
+        CFI VirtualResource ?RetPad:1, ?RetHigh:8, ?RetLow:8, ?Ret:17
+        CFI Resource R0:8, R1:8, R2:8, R3:8, R4:8, R5:8, R6:8, R7:8, R8:8, R9:8
+        CFI Resource R10:8, R11:8, R12:8, R13:8, R14:8, R15:8, R16:8, R17:8
+        CFI Resource R18:8, R19:8, R20:8, R21:8, R22:8, R23:8, R24:8, R25:8
+        CFI Resource R26:8, R27:8, R28:8, R29:8, R30:8, R31:8, SP:16, SPH:8
+        CFI Resource SPL:8, Y:16
+        CFI ResourceParts ?Ret ?RetHigh, ?RetLow, ?RetPad
+        CFI ResourceParts SP SPH, SPL
+        CFI ResourceParts Y R29, R28
+        CFI EndNames cfiNames0
+        
+        CFI Common cfiCommon0 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign 1
+        CFI ReturnAddress ?Ret CODE
+        CFI CFA_Y Y+0
+        CFI CFA_SP SP+2
+        CFI ?RetPad 0
+        CFI ?RetHigh Frame(CFA_SP, -1)
+        CFI ?RetLow Frame(CFA_SP, 0)
+        CFI ?Ret Concat
+        CFI R0 Undefined
+        CFI R1 Undefined
+        CFI R2 Undefined
+        CFI R3 Undefined
+        CFI R4 SameValue
+        CFI R5 SameValue
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI R8 SameValue
+        CFI R9 SameValue
+        CFI R10 SameValue
+        CFI R11 SameValue
+        CFI R12 SameValue
+        CFI R13 SameValue
+        CFI R14 SameValue
+        CFI R15 SameValue
+        CFI R16 Undefined
+        CFI R17 Undefined
+        CFI R18 Undefined
+        CFI R19 Undefined
+        CFI R20 Undefined
+        CFI R21 Undefined
+        CFI R22 Undefined
+        CFI R23 Undefined
+        CFI R24 SameValue
+        CFI R25 SameValue
+        CFI R26 SameValue
+        CFI R27 SameValue
+        CFI R28 Undefined
+        CFI R29 Undefined
+        CFI R30 Undefined
+        CFI R31 Undefined
+        CFI SPH Undefined
+        CFI SPL Undefined
+        CFI EndCommon cfiCommon0
+        
+        
+        CFI Common cfiCommon1 Using cfiNames0
+        CFI CodeAlign 1
+        CFI DataAlign 1
+        CFI ReturnAddress ?Ret CODE
+        CFI CFA_Y Y+0
+        CFI CFA_SP SP+2
+        CFI ?RetPad 0
+        CFI ?RetHigh Frame(CFA_SP, -1)
+        CFI ?RetLow Frame(CFA_SP, 0)
+        CFI ?Ret Concat
+        CFI R0 SameValue
+        CFI R1 SameValue
+        CFI R2 SameValue
+        CFI R3 SameValue
+        CFI R4 SameValue
+        CFI R5 SameValue
+        CFI R6 SameValue
+        CFI R7 SameValue
+        CFI R8 SameValue
+        CFI R9 SameValue
+        CFI R10 SameValue
+        CFI R11 SameValue
+        CFI R12 SameValue
+        CFI R13 SameValue
+        CFI R14 SameValue
+        CFI R15 SameValue
+        CFI R16 SameValue
+        CFI R17 SameValue
+        CFI R18 SameValue
+        CFI R19 SameValue
+        CFI R20 SameValue
+        CFI R21 SameValue
+        CFI R22 SameValue
+        CFI R23 SameValue
+        CFI R24 SameValue
+        CFI R25 SameValue
+        CFI R26 SameValue
+        CFI R27 SameValue
+        CFI R28 Undefined
+        CFI R29 Undefined
+        CFI R30 SameValue
+        CFI R31 SameValue
+        CFI SPH Undefined
+        CFI SPL Undefined
+        CFI EndCommon cfiCommon1
+        
+// H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\0V0_remocon_APP.C
+//    1 
+//    2 //2009.12.21
+//    3 
+//    4 #include <iom16.h>
+//    5 //#include <iotiny13.h>
+//    6 #include <inavr.h>
+//    7 //#include "remocon_code.c"
+//    8 
+//    9 
+//   10 //#define IR_out	PORTB_Bit2
+//   11 
+//   12 //#define KEY_A2       PINB_Bit4
+//   13 //#define KEY_A1       PINB_Bit3
+//   14 //#define KEY_A0       PINB_Bit0
+//   15 
+//   16 //unsigned int custom_code=0xd77a;
+//   17 /*
+//   18 U8 mute=0xb0;
+//   19 U8 vol_up=0x80;
+//   20 U8 vol_down=0xa8;
+//   21 U8 ch_up=0x90;
+//   22 U8 ch_down=0x88;
+//   23 U8 phase=0xa0;
+//   24 U8 filter=0x98;
+//   25 */
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+	REQUIRE `?<Segment init: TINY_Z>`
+//   26 unsigned char carry=0;
+carry:
+        DS 1
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+	REQUIRE `?<Segment init: TINY_Z>`
+//   27 unsigned char key_data=0;
+key_data:
+        DS 1
+
+        RSEG TINY_I:DATA:NOROOT(0)
+	REQUIRE `?<Segment init: TINY_I>`
+//   28 unsigned char Data_code[16]={0,1,0,1,1,1,1,0,1,1,1,0,1,0,1,1};
+Data_code:
+        DS 16
+	REQUIRE `?<Initializer for Data_code>`
+//   29 
+
+        RSEG CODE:CODE:NOROOT(1)
+//   30 void DelayTime(unsigned int time_end)
+DelayTime:
+??DelayTime_0:
+        CFI Block cfiBlock0 Using cfiCommon0
+        CFI Function DelayTime
+//   31 {
+//   32    while(time_end--);
+	MOVW	R19 : R18,R17 : R16
+	MOVW	R17 : R16,R19 : R18
+	SUBI	R16,1
+	SBCI	R17,0
+	OR	R18,R19
+	BRNE	??DelayTime_0
+//   33 }
+	RET
+        CFI EndBlock cfiBlock0
+//   34 
+
+        RSEG CODE:CODE:NOROOT(1)
+//   35 void IR_lead_trans(){
+IR_lead_trans:
+        CFI Block cfiBlock1 Using cfiCommon0
+        CFI Function IR_lead_trans
+        FUNCALL IR_lead_trans, DelayTime
+        LOCFRAME CSTACK, 2, STACK
+        LOCFRAME RSTACK, 2, STACK
+        FUNCALL IR_lead_trans, DelayTime
+        LOCFRAME CSTACK, 2, STACK
+        LOCFRAME RSTACK, 2, STACK
+        FUNCALL IR_lead_trans, DelayTime
+        LOCFRAME CSTACK, 2, STACK
+        LOCFRAME RSTACK, 2, STACK
+	ST	-Y,R25
+        CFI R25 Frame(CFA_Y, -1)
+        CFI CFA_Y Y+1
+	ST	-Y,R24
+        CFI R24 Frame(CFA_Y, -2)
+        CFI CFA_Y Y+2
+//   36   unsigned int i;
+//   37   
+//   38   for(i=0; i<690; i++){
+	LDI	R24,0
+	LDI	R25,0
+	RJMP	??IR_lead_trans_0
+//   39     if(carry==0) carry=1;
+//   40     else carry=0;
+??IR_lead_trans_1:
+	LDI	R16,0
+	STS	carry,R16
+//   41     PORTB_Bit2=carry;
+??IR_lead_trans_2:
+	LDI	R30,carry
+	LDI	R31,0
+	LD	R16,Z
+	SBRC	R16,0
+	SBI	0x18,0x02
+??IR_lead_trans_3:
+	SBRS	R16,0
+	CBI	0x18,0x02
+//   42     DelayTime(4);
+??IR_lead_trans_4:
+	LDI	R16,4
+	LDI	R17,0
+	RCALL	DelayTime
+	ADIW	R25 : R24,1
+??IR_lead_trans_0:
+	CPI	R24,178
+	LDI	R16,2
+	CPC	R25,R16
+	BRCC	??IR_lead_trans_5
+	LDS	R16,carry
+	TST	R16
+	BRNE	??IR_lead_trans_1
+	LDI	R16,1
+	STS	carry,R16
+	RJMP	??IR_lead_trans_2
+//   43   }
+//   44   PORTB_Bit2=0; 
+??IR_lead_trans_5:
+	CBI	0x18,0x02
+//   45   for(i=0; i<345; i++)   DelayTime(4);
+	LDI	R24,0
+	LDI	R25,0
+	RJMP	??IR_lead_trans_6
+??IR_lead_trans_7:
+	LDI	R16,4
+	LDI	R17,0
+	RCALL	DelayTime
+	ADIW	R25 : R24,1
+??IR_lead_trans_6:
+	CPI	R24,89
+	LDI	R16,1
+	CPC	R25,R16
+	BRCS	??IR_lead_trans_7
+//   46   
+//   47   for(i=0; i<46; i++){
+	LDI	R24,0
+	LDI	R25,0
+	RJMP	??IR_lead_trans_8
+//   48     if(carry==0) carry=1;
+//   49     else carry=0;
+??IR_lead_trans_9:
+	LDI	R16,0
+	STS	carry,R16
+//   50     PORTB_Bit2=carry;
+??IR_lead_trans_10:
+	LDI	R30,carry
+	LDI	R31,0
+	LD	R16,Z
+	SBRC	R16,0
+	SBI	0x18,0x02
+??IR_lead_trans_11:
+	SBRS	R16,0
+	CBI	0x18,0x02
+//   51     DelayTime(4);
+??IR_lead_trans_12:
+	LDI	R16,4
+	LDI	R17,0
+	RCALL	DelayTime
+	ADIW	R25 : R24,1
+??IR_lead_trans_8:
+	CPI	R24,46
+	LDI	R16,0
+	CPC	R25,R16
+	BRCC	??IR_lead_trans_13
+	LDS	R16,carry
+	TST	R16
+	BRNE	??IR_lead_trans_9
+	LDI	R16,1
+	STS	carry,R16
+	RJMP	??IR_lead_trans_10
+//   52   }
+//   53 }
+??IR_lead_trans_13:
+	LD	R24,Y+
+        CFI R24 SameValue
+        CFI CFA_Y Y+1
+	LD	R25,Y+
+        CFI R25 SameValue
+        CFI CFA_Y Y+0
+	RET
+        CFI EndBlock cfiBlock1
+//   54 
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+	REQUIRE `?<Segment init: TINY_Z>`
+//   55 unsigned int cpd=0;
+cpd:
+        DS 2
+//   56 //unsigned int Data_code[16];
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+	REQUIRE `?<Segment init: TINY_Z>`
+//   57 unsigned int Data_code1[16];
+Data_code1:
+        DS 32
+//   58 
+
+        RSEG CODE:CODE:NOROOT(1)
+//   59 void IR_data_trans(){/*
+IR_data_trans:
+        CFI Block cfiBlock2 Using cfiCommon0
+        CFI Function IR_data_trans
+//   60   unsigned char i;
+//   61   unsigned int temp;
+//   62   
+//   63   if(key_data==1)         cpd=0xb04f; //mute
+//   64   else if(key_data==2)  cpd=0x98; //filter
+//   65   else if(key_data==3)  cpd=0xa0; //phase
+//   66   else if(key_data==4)  cpd=0x88; //ch_down
+//   67   else if(key_data==5)  cpd=0x90; //ch_up
+//   68   else if(key_data==6)  cpd=0xa8; //vol_down
+//   69   else if(key_data==7)  cpd=0x80; //vol_up
+//   70   
+//   71 
+//   72   for(i=0; i<16; i++){
+//   73     Data_code[i] = ( (0xd77a>>i) & 0x01 );
+//   74   }
+//   75 
+//   76   
+//   77   for(i=0; i<16; i++){
+//   78     Data_code[i] = ( (temp>>i) & 0x01 );
+//   79     //Data_code1[i+8] = !Data_code1[i];
+//   80   }
+//   81 
+//   82   for(i=0; i<16; i++){
+//   83     if(Data_code[i]){
+//   84       PORTB_Bit2=0; 
+//   85       for(i=0; i<172; i++)   DelayTime(4);
+//   86     }
+//   87     else {
+//   88       for(i=0; i<46; i++){
+//   89         if(carry==0) carry=1;
+//   90         else carry=0;
+//   91         PORTB_Bit2=carry;
+//   92         DelayTime(4);
+//   93       }
+//   94     }
+//   95   }
+//   96     
+//   97   for(i=0; i<16; i++){
+//   98     if(Data_code1[i]){
+//   99       PORTB_Bit2=0; 
+//  100       for(i=0; i<172; i++)   DelayTime(4);
+//  101     }
+//  102     else {
+//  103       for(i=0; i<46; i++){
+//  104         if(carry==0) carry=1;
+//  105         else carry=0;
+//  106         PORTB_Bit2=carry;
+//  107         DelayTime(4);
+//  108       }
+//  109     }
+//  110   }
+//  111   */
+//  112 }
+	RET
+        CFI EndBlock cfiBlock2
+//  113 
+//  114 /*
+//  115 U8 test_yu=0;6
+//  116 
+//  117 void test_wave(U8 data){
+//  118   data=data*2;
+//  119    while(data){
+//  120     if(test_yu==0) test_yu=1;
+//  121     else test_yu=0;
+//  122     IR_out=test_yu;
+//  123     DelayTime(4);
+//  124     data--;
+//  125   }
+//  126 }
+//  127 void test_hold(U8 data){
+//  128   U8 i;
+//  129   IR_out=0;
+//  130   for(i=0; i<(data*2); i++)   DelayTime(4);
+//  131 }
+//  132 */
+//  133 
+//  134 
+//  135 
+//  136 #pragma vector = INT0_vect
+
+        RSEG CODE:CODE:NOROOT(1)
+//  137 __interrupt void INT0_Handler(void)
+INT0_Handler:
+        CFI Block cfiBlock3 Using cfiCommon1
+        CFI Function INT0_Handler
+//  138 {  
+        FUNCALL INT0_Handler, IR_lead_trans
+        LOCFRAME CSTACK, 15, STACK
+        LOCFRAME RSTACK, 2, STACK
+        FUNCALL INT0_Handler, IR_data_trans
+        LOCFRAME CSTACK, 15, STACK
+        LOCFRAME RSTACK, 2, STACK
+        FUNCALL INT0_Handler, DelayTime
+        LOCFRAME CSTACK, 15, STACK
+        LOCFRAME RSTACK, 2, STACK
+	ST	-Y,R24
+        CFI R24 Frame(CFA_Y, -1)
+        CFI CFA_Y Y+1
+	ST	-Y,R31
+        CFI R31 Frame(CFA_Y, -2)
+        CFI CFA_Y Y+2
+	ST	-Y,R30
+        CFI R30 Frame(CFA_Y, -3)
+        CFI CFA_Y Y+3
+	ST	-Y,R3
+        CFI R3 Frame(CFA_Y, -4)
+        CFI CFA_Y Y+4
+	ST	-Y,R2
+        CFI R2 Frame(CFA_Y, -5)
+        CFI CFA_Y Y+5
+	ST	-Y,R1
+        CFI R1 Frame(CFA_Y, -6)
+        CFI CFA_Y Y+6
+	ST	-Y,R0
+        CFI R0 Frame(CFA_Y, -7)
+        CFI CFA_Y Y+7
+	ST	-Y,R23
+        CFI R23 Frame(CFA_Y, -8)
+        CFI CFA_Y Y+8
+	ST	-Y,R22
+        CFI R22 Frame(CFA_Y, -9)
+        CFI CFA_Y Y+9
+	ST	-Y,R21
+        CFI R21 Frame(CFA_Y, -10)
+        CFI CFA_Y Y+10
+	ST	-Y,R20
+        CFI R20 Frame(CFA_Y, -11)
+        CFI CFA_Y Y+11
+	ST	-Y,R19
+        CFI R19 Frame(CFA_Y, -12)
+        CFI CFA_Y Y+12
+	ST	-Y,R18
+        CFI R18 Frame(CFA_Y, -13)
+        CFI CFA_Y Y+13
+	ST	-Y,R17
+        CFI R17 Frame(CFA_Y, -14)
+        CFI CFA_Y Y+14
+	ST	-Y,R16
+        CFI R16 Frame(CFA_Y, -15)
+        CFI CFA_Y Y+15
+	IN	R24,0x3F
+//  139     
+//  140     key_data=PINB_Bit4;
+	LDI	R16,0
+	SBIC	0x16,0x04
+	INC	R16
+??INT0_Handler_0:
+	STS	key_data,R16
+//  141     key_data<<=1;
+	LDS	R16,key_data
+	LSL	R16
+	STS	key_data,R16
+//  142     key_data+=PINB_Bit3;
+	LDI	R16,0
+	SBIC	0x16,0x03
+	INC	R16
+??INT0_Handler_1:
+	LDI	R30,key_data
+	LDI	R31,0
+	LD	R17,Z
+	ADD	R17,R16
+	ST	Z,R17
+//  143     key_data<<=1;
+	LDS	R16,key_data
+	LSL	R16
+	STS	key_data,R16
+//  144     key_data+=PINB_Bit0;
+	LDI	R16,0
+	SBIC	0x16,0x00
+	INC	R16
+??INT0_Handler_2:
+	LDI	R30,key_data
+	LDI	R31,0
+	LD	R17,Z
+	ADD	R17,R16
+	ST	Z,R17
+//  145     /*
+//  146     key_data=PINB;
+//  147     key_data=key_data & 0x19;
+//  148     key_data = (key_data>>2) + (key_data &0x01);
+//  149     */
+//  150     IR_lead_trans();
+	RCALL	IR_lead_trans
+//  151     IR_data_trans();  
+	RCALL	IR_data_trans
+//  152         
+//  153     
+//  154  /* 
+//  155     //
+//  156   for(i=0; i<50; i++){
+//  157    test_wave(23);
+//  158    test_hold(100);
+//  159   }
+//  160   //
+//  161   
+//  162   */
+//  163   PORTB_Bit2=0;  
+	CBI	0x18,0x02
+//  164 
+//  165   key_data=PINB_Bit4;
+	LDI	R16,0
+	SBIC	0x16,0x04
+	INC	R16
+??INT0_Handler_3:
+	STS	key_data,R16
+//  166   key_data<<=1;
+	LDS	R16,key_data
+	LSL	R16
+	STS	key_data,R16
+//  167   key_data+=PINB_Bit3;
+	LDI	R16,0
+	SBIC	0x16,0x03
+	INC	R16
+??INT0_Handler_4:
+	LDI	R30,key_data
+	LDI	R31,0
+	LD	R17,Z
+	ADD	R17,R16
+	ST	Z,R17
+//  168   key_data<<=1;
+	LDS	R16,key_data
+	LSL	R16
+	STS	key_data,R16
+//  169   key_data+=PINB_Bit0;
+	LDI	R16,0
+	SBIC	0x16,0x00
+	INC	R16
+??INT0_Handler_5:
+	LDI	R30,key_data
+	LDI	R31,0
+	LD	R17,Z
+	ADD	R17,R16
+	ST	Z,R17
+//  170   
+//  171   if((key_data==1) || (key_data==2) || (key_data==3) || (key_data==4) || (key_data==5))  {
+	LDS	R16,key_data
+	CPI	R16,1
+	BREQ	??INT0_Handler_6
+	LDS	R16,key_data
+	CPI	R16,2
+	BREQ	??INT0_Handler_6
+	LDS	R16,key_data
+	CPI	R16,3
+	BREQ	??INT0_Handler_6
+	LDS	R16,key_data
+	CPI	R16,4
+	BREQ	??INT0_Handler_6
+	LDS	R16,key_data
+	CPI	R16,5
+	BRNE	??INT0_Handler_7
+//  172     while(1){
+//  173       if( (PINB_Bit1!=0)  ) break;
+??INT0_Handler_6:
+	SBIS	0x16,0x01
+	RJMP	??INT0_Handler_6
+//  174     }
+//  175   }
+//  176   
+//  177   DelayTime(0xffff);
+??INT0_Handler_7:
+	LDI	R16,255
+	LDI	R17,255
+	RCALL	DelayTime
+//  178 
+//  179 }
+	OUT	0x3F,R24
+	LD	R16,Y+
+        CFI R16 SameValue
+        CFI CFA_Y Y+14
+	LD	R17,Y+
+        CFI R17 SameValue
+        CFI CFA_Y Y+13
+	LD	R18,Y+
+        CFI R18 SameValue
+        CFI CFA_Y Y+12
+	LD	R19,Y+
+        CFI R19 SameValue
+        CFI CFA_Y Y+11
+	LD	R20,Y+
+        CFI R20 SameValue
+        CFI CFA_Y Y+10
+	LD	R21,Y+
+        CFI R21 SameValue
+        CFI CFA_Y Y+9
+	LD	R22,Y+
+        CFI R22 SameValue
+        CFI CFA_Y Y+8
+	LD	R23,Y+
+        CFI R23 SameValue
+        CFI CFA_Y Y+7
+	LD	R0,Y+
+        CFI R0 SameValue
+        CFI CFA_Y Y+6
+	LD	R1,Y+
+        CFI R1 SameValue
+        CFI CFA_Y Y+5
+	LD	R2,Y+
+        CFI R2 SameValue
+        CFI CFA_Y Y+4
+	LD	R3,Y+
+        CFI R3 SameValue
+        CFI CFA_Y Y+3
+	LD	R30,Y+
+        CFI R30 SameValue
+        CFI CFA_Y Y+2
+	LD	R31,Y+
+        CFI R31 SameValue
+        CFI CFA_Y Y+1
+	LD	R24,Y+
+        CFI R24 SameValue
+        CFI CFA_Y Y+0
+	RETI
+        CFI EndBlock cfiBlock3
+//  180 
+//  181 /*
+//  182 #pragma vector = TIM0_OVF_vect
+//  183 __interrupt void TIM0_OVF_Handler(void)
+//  184 {
+//  185   TCNT0=255-254;
+//  186   if(test_yu==0) test_yu=0xff;
+//  187   else test_yu=0;
+//  188   PORTB=test_yu;
+//  189 }
+//  190 */
+//  191 
+//  192 
+//  193 ///////////////////////////////////////////////////////////////////////////////
+//  194 //	Main ÇÔ¼ö
+//  195 ///////////////////////////////////////////////////////////////////////////////
+
+        RSEG CODE:CODE:NOROOT(1)
+//  196 void main(void){ 
+main:
+        CFI Block cfiBlock4 Using cfiCommon0
+        CFI Function main
+//  197 	//unsigned char temp;
+//  198 
+//  199   //OSCCAL=0;
+//  200   
+//  201   
+//  202   //DDRB=0x04;   //PB0=MOSI, PB1=MISO, PB2=SCK, PB3=I2C(SCL), PB4=I2C(SDA), PB5=/RESET
+//  203   //PORTB=0x3f;
+//  204   //PORTB_Bit2=0;
+//  205   
+//  206   
+//  207   
+//  208 //  TCCR0B=(0<< CS02)| (0<< CS01)| (1<< CS00);	// 8prescaling
+//  209   //TIMSK0= (1<<TOIE0);
+//  210   //TIFR0=(1<<TOV0);
+//  211   //TCNT0=0;
+//  212   
+//  213   //MCUCR = (1<<ISC01) | (0<<ISC00);    //The falling edge
+//  214   //GICR = (1<<INT0);   //mega16
+//  215   //GIMSK = (1<<INT0);
+//  216 //  GIFR = (1<<INTF0);    //mega16
+//  217   //EIFR = (1<<INTF0);
+//  218   
+//  219   MCUCR=0x60;
+	LDI	R16,96
+	OUT	0x35,R16
+//  220   __enable_interrupt();
+	SEI
+//  221   //MCUCR=0x32;
+//  222   //GIMSK=0x40;
+//  223   //GIFR=0x40;
+//  224 	/*
+//  225   while(1){
+//  226     if(test_yu==0) test_yu=0xff;
+//  227     else test_yu=0;
+//  228     PORTB=test_yu;
+//  229     DelayTime(4);
+//  230   }*/
+//  231 }
+	RET
+        CFI EndBlock cfiBlock4
+
+        COMMON INTVEC:CODE:ROOT(1)
+        ORG 4
+	JMP	INT0_Handler
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: TINY_Z>`:
+	DW	SFE(TINY_Z) - SFB(TINY_Z)
+	DW	SFB(TINY_Z)
+	DW	0
+	REQUIRE ?need_segment_init
+
+        RSEG TINY_ID:CODE:NOROOT(0)
+`?<Initializer for Data_code>`:
+        DB 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: TINY_I>`:
+	DW	SFE(TINY_I) - SFB(TINY_I)
+	DW	SFB(TINY_I)
+	DW	SFB(TINY_ID)
+	REQUIRE ?need_segment_init
+
+        ASEGN ABSOLUTE:DATA:NOROOT,036H
+// union <unnamed> volatile __io _A_PINB
+_A_PINB:
+        DS 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,038H
+// union <unnamed> volatile __io _A_PORTB
+_A_PORTB:
+        DS 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,055H
+// union <unnamed> volatile __io _A_MCUCR
+_A_MCUCR:
+        DS 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01fH
+__?EEARH:
+
+        END
+//  232 
+//  233 
+// 
+//   3 bytes in segment ABSOLUTE
+// 420 bytes in segment CODE
+//  12 bytes in segment INITTAB
+//   4 bytes in segment INTVEC
+//  16 bytes in segment TINY_I
+//  16 bytes in segment TINY_ID
+//  36 bytes in segment TINY_Z
+// 
+// 440 bytes of CODE memory (+ 12 bytes shared)
+//  52 bytes of DATA memory (+  3 bytes shared)
+//
+//Errors: none
+//Warnings: none

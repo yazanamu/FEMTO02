@@ -1,0 +1,27 @@
+"--cpu=tiny13" 
+
+"--enhanced_core" 
+
+"-p" 
+
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 7.4\avr\Config\iotiny13.ddf" 
+
+"--eeprom_size" 
+
+"64" 
+
+"-d" 
+
+"jtagIceMkII" 
+
+"--jtagice_leave_timers_running" 
+
+"--drv_set_putchar_breakpoint" 
+
+"--drv_set_getchar_breakpoint" 
+
+"--drv_communication=USB" 
+
+
+
+

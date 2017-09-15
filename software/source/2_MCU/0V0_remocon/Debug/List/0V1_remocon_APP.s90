@@ -1,0 +1,965 @@
+///////////////////////////////////////////////////////////////////////////////
+//                                                                            /
+// IAR C/C++ Compiler V6.12.1.50500 for Atmel AVR       01/Sep/2017  20:18:04 /
+// Copyright 1996-2012 IAR Systems AB.                                        /
+//                                                                            /
+//    Source file  =  D:\workspace\Femto2\software\source\2_MCU\0V0_remocon\0 /
+//                    V1_remocon_APP.C                                        /
+//    Command line =  D:\workspace\Femto2\software\source\2_MCU\0V0_remocon\0 /
+//                    V1_remocon_APP.C --cpu=tiny13 -mt -o                    /
+//                    D:\workspace\Femto2\software\source\2_MCU\0V0_remocon\D /
+//                    ebug\Obj\ -lC D:\workspace\Femto2\software\source\2_MCU /
+//                    \0V0_remocon\Debug\List\ -lA                            /
+//                    D:\workspace\Femto2\software\source\2_MCU\0V0_remocon\D /
+//                    ebug\List\ --initializers_in_flash --no_cse             /
+//                    --no_inline --no_code_motion --no_cross_call            /
+//                    --no_clustering --no_tbaa --debug                       /
+//                    -DENABLE_BIT_DEFINITIONS -e --eeprom_size 64 --clib -Ol /
+//    List file    =  D:\workspace\Femto2\software\source\2_MCU\0V0_remocon\D /
+//                    ebug\List\0V1_remocon_APP.s90                           /
+//                                                                            /
+//                                                                            /
+///////////////////////////////////////////////////////////////////////////////
+
+        NAME `0V1_remocon_APP`
+
+        RTMODEL "__64bit_doubles", "disabled"
+        RTMODEL "__SystemLibrary", "CLib"
+        RTMODEL "__cpu", "0"
+        RTMODEL "__cpu_name", "ATtiny13"
+        RTMODEL "__enhanced_core", "enabled"
+        RTMODEL "__has_elpm", "false"
+        RTMODEL "__memory_model", "1"
+        RTMODEL "__rt_version", "3"
+
+        RSEG CSTACK:DATA:NOROOT(0)
+        RSEG RSTACK:DATA:NOROOT(0)
+
+        EXTERN ?EPILOGUE_B2_L09
+        EXTERN ?PROLOGUE2_L09
+        EXTERN ?UL_SHR_L03
+        EXTERN ?need_segment_init
+
+        PUBWEAK `?<Segment init: TINY_I>`
+        PUBWEAK `?<Segment init: TINY_Z>`
+        PUBWEAK `??TIMER0_OVF_Handler??INTVEC 6`
+        PUBLIC IR_data_trans
+        FUNCTION IR_data_trans,021201H
+        ARGFRAME RSTACK, 0, STACK
+        LOCFRAME CSTACK, 1, STACK
+        LOCFRAME RSTACK, 4, STACK
+        PUBLIC IR_lead_trans
+        FUNCTION IR_lead_trans,021201H
+        ARGFRAME RSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        PUBLIC IR_tmr
+        FUNCTION IR_tmr,0203H
+        ARGFRAME RSTACK, 0, STACK
+        LOCFRAME CSTACK, 2, STACK
+        LOCFRAME RSTACK, 2, STACK
+        PUBLIC TIMER0_OVF_Handler
+        FUNCTION TIMER0_OVF_Handler,0233H
+        ARGFRAME CSTACK, 0, STACK
+        LOCFRAME CSTACK, 4, STACK
+        LOCFRAME RSTACK, 2, STACK
+        PUBWEAK _A_DDRB
+        PUBWEAK _A_PINB
+        PUBWEAK _A_PORTB
+        PUBWEAK _A_TCCR0B
+        PUBWEAK _A_TCNT0
+        PUBWEAK _A_TIFR0
+        PUBWEAK _A_TIMSK0
+        PUBWEAK __?EEARL
+        PUBWEAK __?EECR
+        PUBWEAK __?EEDR
+        PUBLIC carry
+        PUBLIC cp_code
+        PUBLIC data_code
+        PUBLIC data_temp
+        PUBLIC flag
+        PUBLIC hold_tmr
+        PUBLIC in_key
+        FUNCTION in_key,0201H
+        ARGFRAME RSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        PUBLIC in_key_save
+        FUNCTION in_key_save,021201H
+        ARGFRAME RSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        PUBLIC key_data
+        PUBLIC lead_tmr0
+        PUBLIC lead_tmr1
+        PUBLIC main
+        FUNCTION main,021a03H
+        ARGFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        PUBLIC old_key
+        PUBLIC signal_tmr0
+        PUBLIC signal_tmr1
+        PUBLIC tmr_set
+        FUNCTION tmr_set,0203H
+        ARGFRAME RSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        
+          CFI Names cfiNames0
+          CFI StackFrame CFA_R28 R28 DATA
+          CFI StackFrame CFA_SP SP DATA
+          CFI VirtualResource ?RetPad:1, ?RetHigh:8, ?RetLow:8, ?Ret:17
+          CFI Resource R0:8, R1:8, R2:8, R3:8, R4:8, R5:8, R6:8, R7:8, R8:8, R9:8
+          CFI Resource R10:8, R11:8, R12:8, R13:8, R14:8, R15:8, R16:8, R17:8
+          CFI Resource R18:8, R19:8, R20:8, R21:8, R22:8, R23:8, R24:8, R25:8
+          CFI Resource R26:8, R27:8, R28:8, R29:8, R30:8, R31:8
+          CFI Resource ?RetHighByteMask:8, SP:8
+          CFI ResourceParts ?Ret ?RetHigh, ?RetLow, ?RetPad
+          CFI EndNames cfiNames0
+        
+          CFI Common cfiCommon0 Using cfiNames0
+          CFI CodeAlign 1
+          CFI DataAlign 1
+          CFI ReturnAddress ?Ret CODE
+          CFI CFA_R28 R28+0
+          CFI CFA_SP SP+2
+          CFI ?RetPad 0
+          CFI ?RetHigh and(load(1, DATA, sub(CFA_SP, 1)), ?RetHighByteMask)
+          CFI ?RetLow Frame(CFA_SP, 0)
+          CFI ?Ret Concat
+          CFI R0 Undefined
+          CFI R1 Undefined
+          CFI R2 Undefined
+          CFI R3 Undefined
+          CFI R4 SameValue
+          CFI R5 SameValue
+          CFI R6 SameValue
+          CFI R7 SameValue
+          CFI R8 SameValue
+          CFI R9 SameValue
+          CFI R10 SameValue
+          CFI R11 SameValue
+          CFI R12 SameValue
+          CFI R13 SameValue
+          CFI R14 SameValue
+          CFI R15 SameValue
+          CFI R16 Undefined
+          CFI R17 Undefined
+          CFI R18 Undefined
+          CFI R19 Undefined
+          CFI R20 Undefined
+          CFI R21 Undefined
+          CFI R22 Undefined
+          CFI R23 Undefined
+          CFI R24 SameValue
+          CFI R25 SameValue
+          CFI R26 SameValue
+          CFI R27 SameValue
+          CFI R29 SameValue
+          CFI R30 Undefined
+          CFI R31 Undefined
+          CFI ?RetHighByteMask SameValue
+          CFI EndCommon cfiCommon0
+        
+        
+          CFI Common cfiCommon1 Using cfiNames0
+          CFI CodeAlign 1
+          CFI DataAlign 1
+          CFI ReturnAddress ?Ret CODE
+          CFI CFA_R28 R28+0
+          CFI CFA_SP SP+2
+          CFI ?RetPad 0
+          CFI ?RetHigh and(load(1, DATA, sub(CFA_SP, 1)), ?RetHighByteMask)
+          CFI ?RetLow Frame(CFA_SP, 0)
+          CFI ?Ret Concat
+          CFI R0 SameValue
+          CFI R1 SameValue
+          CFI R2 SameValue
+          CFI R3 SameValue
+          CFI R4 SameValue
+          CFI R5 SameValue
+          CFI R6 SameValue
+          CFI R7 SameValue
+          CFI R8 SameValue
+          CFI R9 SameValue
+          CFI R10 SameValue
+          CFI R11 SameValue
+          CFI R12 SameValue
+          CFI R13 SameValue
+          CFI R14 SameValue
+          CFI R15 SameValue
+          CFI R16 SameValue
+          CFI R17 SameValue
+          CFI R18 SameValue
+          CFI R19 SameValue
+          CFI R20 SameValue
+          CFI R21 SameValue
+          CFI R22 SameValue
+          CFI R23 SameValue
+          CFI R24 SameValue
+          CFI R25 SameValue
+          CFI R26 SameValue
+          CFI R27 SameValue
+          CFI R29 SameValue
+          CFI R30 SameValue
+          CFI R31 SameValue
+          CFI ?RetHighByteMask SameValue
+          CFI EndCommon cfiCommon1
+        
+TIMER0_OVF_Handler  SYMBOL "TIMER0_OVF_Handler"
+`??TIMER0_OVF_Handler??INTVEC 6` SYMBOL "??INTVEC 6", TIMER0_OVF_Handler
+
+// D:\workspace\Femto2\software\source\2_MCU\0V0_remocon\0V1_remocon_APP.C
+//    1 //check : SUT0, CKSEL0
+//    2 
+//    3 #include <iotiny13.h>
+
+        ASEGN ABSOLUTE:DATA:NOROOT,059H
+// union <unnamed> volatile __io _A_TIMSK0
+_A_TIMSK0:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,058H
+// union <unnamed> volatile __io _A_TIFR0
+_A_TIFR0:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,053H
+// union <unnamed> volatile __io _A_TCCR0B
+_A_TCCR0B:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,052H
+// union <unnamed> volatile __io _A_TCNT0
+_A_TCNT0:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,038H
+// union <unnamed> volatile __io _A_PORTB
+_A_PORTB:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,037H
+// union <unnamed> volatile __io _A_DDRB
+_A_DDRB:
+        DS8 1
+
+        ASEGN ABSOLUTE:DATA:NOROOT,036H
+// union <unnamed> volatile __io _A_PINB
+_A_PINB:
+        DS8 1
+//    4 #include <inavr.h>
+//    5 
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//    6 unsigned char carry=0;
+carry:
+        DS8 1
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//    7 unsigned char key_data=0;
+key_data:
+        DS8 1
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//    8 unsigned long data_code;
+data_code:
+        DS8 4
+
+        RSEG TINY_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_I>`
+//    9 unsigned long cp_code=0xd77a0000;
+cp_code:
+        DS8 4
+        REQUIRE `?<Initializer for cp_code>`
+//   10 
+
+        RSEG TINY_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_I>`
+//   11 unsigned char flag=1;
+flag:
+        DS8 1
+        REQUIRE `?<Initializer for flag>`
+
+        RSEG TINY_I:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_I>`
+//   12 unsigned int hold_tmr=1;
+hold_tmr:
+        DS8 2
+        REQUIRE `?<Initializer for hold_tmr>`
+//   13 
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//   14 unsigned int lead_tmr0;
+lead_tmr0:
+        DS8 2
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//   15 unsigned int lead_tmr1;
+lead_tmr1:
+        DS8 2
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//   16 unsigned char signal_tmr0;
+signal_tmr0:
+        DS8 1
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//   17 unsigned char signal_tmr1;
+signal_tmr1:
+        DS8 1
+//   18 
+//   19 
+
+        RSEG CODE:CODE:NOROOT(1)
+//   20 void IR_tmr(unsigned char h_data, unsigned int tmr)
+IR_tmr:
+          CFI Block cfiBlock0 Using cfiCommon0
+          CFI Function IR_tmr
+//   21 {
+        RCALL   ?PROLOGUE2_L09
+          CFI R25 Frame(CFA_R28, -1)
+          CFI R24 Frame(CFA_R28, -2)
+          CFI CFA_R28 R28+2
+        MOV     R20, R16
+//   22   unsigned int i;
+//   23   
+//   24   carry=0;
+        LDI     R16, 0
+        LDI     R30, carry
+        ST      Z, R16
+//   25   h_data^=1;
+        LDI     R16, 1
+        EOR     R20, R16
+//   26   for(i=0; i<tmr; i++){
+        LDI     R24, 0
+        LDI     R25, 0
+        RJMP    ??IR_tmr_0
+//   27     TCNT0=255-10; //13usec
+??IR_tmr_1:
+        LDI     R16, 245
+        OUT     0x32, R16
+//   28     hold_tmr=1;
+        LDI     R16, 1
+        LDI     R17, 0
+        LDI     R30, hold_tmr
+        ST      Z, R16
+        STD     Z+1, R17
+//   29     carry^=h_data;
+        LDS     R16, carry
+        EOR     R16, R20
+        STS     carry, R16
+//   30     PORTB_Bit4=carry;
+        LDI     R30, carry
+        LD      R17, Z
+        SBRC    R17, 0
+        SBI     0x18, 0x04
+??IR_tmr_2:
+        SBRS    R17, 0
+        CBI     0x18, 0x04
+//   31     while(hold_tmr);
+??IR_tmr_3:
+        LDI     R30, hold_tmr
+        LD      R16, Z
+        LDD     R17, Z+1
+        OR      R16, R17
+        BRNE    ??IR_tmr_3
+//   32   }
+        ADIW    R25:R24, 1
+??IR_tmr_0:
+        CP      R24, R18
+        CPC     R25, R19
+        BRCS    ??IR_tmr_1
+//   33   PORTB_Bit4=0;
+        CBI     0x18, 0x04
+//   34 }
+        LDI     R30, 2
+        RJMP    ?EPILOGUE_B2_L09
+          CFI EndBlock cfiBlock0
+        REQUIRE _A_TCNT0
+        REQUIRE _A_PORTB
+//   35 
+
+        RSEG CODE:CODE:NOROOT(1)
+//   36 void IR_lead_trans(){
+IR_lead_trans:
+          CFI Block cfiBlock1 Using cfiCommon0
+          CFI Function IR_lead_trans
+//   37   IR_tmr(0,lead_tmr0);  //low 9msec
+        FUNCALL IR_lead_trans, IR_tmr
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL IR_lead_trans, IR_tmr
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL IR_lead_trans, IR_tmr
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        LDI     R30, lead_tmr0
+        LD      R18, Z
+        LDD     R19, Z+1
+        LDI     R16, 0
+        RCALL   IR_tmr
+//   38   IR_tmr(1,lead_tmr1);  //high 4.5msec
+        LDI     R30, lead_tmr1
+        LD      R18, Z
+        LDD     R19, Z+1
+        LDI     R16, 1
+        RCALL   IR_tmr
+//   39   IR_tmr(0,signal_tmr0);   //low 0.56msec
+        LDI     R30, signal_tmr0
+        LD      R18, Z
+        LDI     R19, 0
+        LDI     R16, 0
+        RCALL   IR_tmr
+//   40 }
+        RET
+          CFI EndBlock cfiBlock1
+//   41 
+
+        RSEG CODE:CODE:NOROOT(1)
+//   42 void IR_data_trans(){
+IR_data_trans:
+          CFI Block cfiBlock2 Using cfiCommon0
+          CFI Function IR_data_trans
+        FUNCALL IR_data_trans, IR_lead_trans
+        LOCFRAME CSTACK, 1, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL IR_data_trans, IR_tmr
+        LOCFRAME CSTACK, 1, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL IR_data_trans, IR_tmr
+        LOCFRAME CSTACK, 1, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL IR_data_trans, IR_tmr
+        LOCFRAME CSTACK, 1, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL IR_data_trans, IR_tmr
+        LOCFRAME CSTACK, 1, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        ST      -Y, R24
+          CFI R24 Frame(CFA_R28, -1)
+          CFI CFA_R28 R28+1
+//   43   unsigned char i,temp;
+//   44 
+//   45   //lead code
+//   46   IR_lead_trans();
+        RCALL   IR_lead_trans
+//   47   
+//   48   //1   data code
+//   49   for(i=0; i<32; i++){
+        LDI     R24, 0
+        RJMP    ??IR_data_trans_0
+//   50     temp=(cp_code>>(31-i)) & 1;
+//   51     if( temp) { IR_tmr(1,signal_tmr1); IR_tmr(0,signal_tmr0);} // 1
+//   52     else      { IR_tmr(1,signal_tmr0); IR_tmr(0,signal_tmr0);} // 0
+??IR_data_trans_1:
+        LDI     R30, signal_tmr0
+        LD      R18, Z
+        LDI     R19, 0
+        LDI     R16, 1
+        RCALL   IR_tmr
+        LDI     R30, signal_tmr0
+        LD      R18, Z
+        LDI     R19, 0
+        LDI     R16, 0
+        RCALL   IR_tmr
+??IR_data_trans_2:
+        INC     R24
+??IR_data_trans_0:
+        CPI     R24, 32
+        BRCC    ??IR_data_trans_3
+        LDI     R20, 31
+        SUB     R20, R24
+        LDI     R30, cp_code
+        LD      R16, Z
+        LDD     R17, Z+1
+        LDD     R18, Z+2
+        LDD     R19, Z+3
+        RCALL   ?UL_SHR_L03
+        ANDI    R16, 0x01
+        TST     R16
+        BREQ    ??IR_data_trans_1
+        LDI     R30, signal_tmr1
+        LD      R18, Z
+        LDI     R19, 0
+        LDI     R16, 1
+        RCALL   IR_tmr
+        LDI     R30, signal_tmr0
+        LD      R18, Z
+        LDI     R19, 0
+        LDI     R16, 0
+        RCALL   IR_tmr
+        RJMP    ??IR_data_trans_2
+//   53   }
+//   54 }
+??IR_data_trans_3:
+        LD      R24, Y+
+          CFI R24 SameValue
+          CFI CFA_R28 R28+0
+        RET
+          CFI EndBlock cfiBlock2
+//   55 
+
+        RSEG CODE:CODE:NOROOT(1)
+//   56 void in_key(){
+in_key:
+          CFI Block cfiBlock3 Using cfiCommon0
+          CFI Function in_key
+//   57   //0=vol-up, 1=ch-dn, 2=ch-up, 3=filter, 4=phase, 5=vol-dn, 6=mute
+//   58   //data_code=0x10, data_code+=key_data, data_code<<=3;
+//   59   
+//   60   key_data=PINB;
+        IN      R16, 0x16
+        LDI     R30, key_data
+        ST      Z, R16
+//   61   key_data&=0x07;
+        LDS     R16, key_data
+        ANDI    R16, 0x07
+        STS     key_data, R16
+//   62 }
+        RET
+          CFI EndBlock cfiBlock3
+        REQUIRE _A_PINB
+//   63 
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//   64 unsigned char data_temp;
+data_temp:
+        DS8 1
+//   65 
+
+        RSEG CODE:CODE:NOROOT(1)
+//   66 void in_key_save(){
+in_key_save:
+          CFI Block cfiBlock4 Using cfiCommon0
+          CFI Function in_key_save
+//   67   //unsigned char i;
+//   68   in_key();
+        FUNCALL in_key_save, in_key
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        RCALL   in_key
+//   69   data_code=0;
+        LDI     R16, 0
+        LDI     R17, 0
+        LDI     R18, 0
+        LDI     R19, 0
+        LDI     R30, data_code
+        ST      Z, R16
+        STD     Z+1, R17
+        STD     Z+2, R18
+        STD     Z+3, R19
+//   70   
+//   71   
+//   72   data_temp=0x10;
+        LDI     R16, 16
+        LDI     R30, data_temp
+        ST      Z, R16
+//   73   data_temp+=key_data;
+        LDI     R30, key_data
+        LD      R16, Z
+        LDI     R30, data_temp
+        LD      R17, Z
+        ADD     R17, R16
+        ST      Z, R17
+//   74   data_temp<<=3;
+        LDI     R30, data_temp
+        LD      R16, Z
+        LSL     R16
+        LSL     R16
+        LSL     R16
+        LDI     R30, data_temp
+        ST      Z, R16
+//   75   data_code+=data_temp;
+        LDI     R30, data_temp
+        LD      R16, Z
+        LDI     R17, 0
+        LDI     R18, 0
+        LDI     R19, 0
+        LDI     R30, data_code
+        LD      R20, Z
+        LDD     R21, Z+1
+        LDD     R22, Z+2
+        LDD     R23, Z+3
+        ADD     R20, R16
+        ADC     R21, R17
+        ADC     R22, R18
+        ADC     R23, R19
+        ST      Z, R20
+        STD     Z+1, R21
+        STD     Z+2, R22
+        STD     Z+3, R23
+//   76   data_code<<=8;
+        LDI     R30, data_code
+        LD      R16, Z
+        LDD     R17, Z+1
+        LDD     R18, Z+2
+        MOV     R19, R18
+        MOV     R18, R17
+        MOV     R17, R16
+        LDI     R16, 0
+        LDI     R30, data_code
+        ST      Z, R16
+        STD     Z+1, R17
+        STD     Z+2, R18
+        STD     Z+3, R19
+//   77   data_temp^=0xff; // invert data code
+        LDI     R16, 255
+        LDS     R17, data_temp
+        EOR     R17, R16
+        STS     data_temp, R17
+//   78   data_code+=data_temp;
+        LDI     R30, data_temp
+        LD      R16, Z
+        LDI     R17, 0
+        LDI     R18, 0
+        LDI     R19, 0
+        LDI     R30, data_code
+        LD      R20, Z
+        LDD     R21, Z+1
+        LDD     R22, Z+2
+        LDD     R23, Z+3
+        ADD     R20, R16
+        ADC     R21, R17
+        ADC     R22, R18
+        ADC     R23, R19
+        ST      Z, R20
+        STD     Z+1, R21
+        STD     Z+2, R22
+        STD     Z+3, R23
+//   79   cp_code+=data_code;
+        LDI     R30, data_code
+        LD      R16, Z
+        LDD     R17, Z+1
+        LDD     R18, Z+2
+        LDD     R19, Z+3
+        LDI     R30, cp_code
+        LD      R20, Z
+        LDD     R21, Z+1
+        LDD     R22, Z+2
+        LDD     R23, Z+3
+        ADD     R20, R16
+        ADC     R21, R17
+        ADC     R22, R18
+        ADC     R23, R19
+        ST      Z, R20
+        STD     Z+1, R21
+        STD     Z+2, R22
+        STD     Z+3, R23
+//   80   
+//   81   if(key_data==0 || key_data==5)  flag=2;
+        LDI     R30, key_data
+        LD      R16, Z
+        TST     R16
+        BREQ    ??in_key_save_0
+        LDI     R30, key_data
+        LD      R16, Z
+        CPI     R16, 5
+        BRNE    ??in_key_save_1
+??in_key_save_0:
+        LDI     R16, 2
+        LDI     R30, flag
+        ST      Z, R16
+        RET
+//   82   else flag=1;
+??in_key_save_1:
+        LDI     R16, 1
+        LDI     R30, flag
+        ST      Z, R16
+//   83 }
+        RET
+          CFI EndBlock cfiBlock4
+
+        RSEG CODE:CODE:NOROOT(1)
+//   84 void tmr_set(unsigned char j){
+tmr_set:
+          CFI Block cfiBlock5 Using cfiCommon0
+          CFI Function tmr_set
+//   85   if(j==0) {
+        TST     R16
+        BRNE    ??tmr_set_0
+//   86     lead_tmr0=680;
+        LDI     R16, 168
+        LDI     R17, 2
+        LDI     R30, lead_tmr0
+        ST      Z, R16
+        STD     Z+1, R17
+//   87     lead_tmr1=340;
+        LDI     R16, 84
+        LDI     R17, 1
+        LDI     R30, lead_tmr1
+        ST      Z, R16
+        STD     Z+1, R17
+//   88     signal_tmr0=43;
+        LDI     R16, 43
+        LDI     R30, signal_tmr0
+        ST      Z, R16
+//   89     signal_tmr1=130;
+        LDI     R16, 130
+        LDI     R30, signal_tmr1
+        ST      Z, R16
+        RET
+//   90   }
+//   91   else if(j==1){
+??tmr_set_0:
+        CPI     R16, 1
+        BRNE    ??tmr_set_1
+//   92     lead_tmr0=660;
+        LDI     R16, 148
+        LDI     R17, 2
+        LDI     R30, lead_tmr0
+        ST      Z, R16
+        STD     Z+1, R17
+//   93     lead_tmr1=330;
+        LDI     R16, 74
+        LDI     R17, 1
+        LDI     R30, lead_tmr1
+        ST      Z, R16
+        STD     Z+1, R17
+//   94     signal_tmr0=43;
+        LDI     R16, 43
+        LDI     R30, signal_tmr0
+        ST      Z, R16
+//   95     signal_tmr1=120;
+        LDI     R16, 120
+        LDI     R30, signal_tmr1
+        ST      Z, R16
+//   96   }
+//   97 }
+??tmr_set_1:
+        RET
+          CFI EndBlock cfiBlock5
+//   98 
+//   99 #pragma vector = TIM0_OVF_vect
+
+        RSEG CODE:CODE:NOROOT(1)
+//  100 __interrupt void TIMER0_OVF_Handler(void)
+TIMER0_OVF_Handler:
+          CFI Block cfiBlock6 Using cfiCommon1
+          CFI Function TIMER0_OVF_Handler
+//  101 {
+        ST      -Y, R30
+          CFI R30 Frame(CFA_R28, -1)
+          CFI CFA_R28 R28+1
+        ST      -Y, R18
+          CFI R18 Frame(CFA_R28, -2)
+          CFI CFA_R28 R28+2
+        ST      -Y, R17
+          CFI R17 Frame(CFA_R28, -3)
+          CFI CFA_R28 R28+3
+        ST      -Y, R16
+          CFI R16 Frame(CFA_R28, -4)
+          CFI CFA_R28 R28+4
+        IN      R18, 0x3F
+//  102   hold_tmr=0;
+        LDI     R16, 0
+        LDI     R17, 0
+        LDI     R30, hold_tmr
+        ST      Z, R16
+        STD     Z+1, R17
+//  103 }
+        OUT     0x3F, R18
+        LD      R16, Y+
+          CFI R16 SameValue
+          CFI CFA_R28 R28+3
+        LD      R17, Y+
+          CFI R17 SameValue
+          CFI CFA_R28 R28+2
+        LD      R18, Y+
+          CFI R18 SameValue
+          CFI CFA_R28 R28+1
+        LD      R30, Y+
+          CFI R30 SameValue
+          CFI CFA_R28 R28+0
+        RETI
+          CFI EndBlock cfiBlock6
+//  104 
+
+        RSEG TINY_Z:DATA:NOROOT(0)
+        REQUIRE `?<Segment init: TINY_Z>`
+//  105 unsigned char old_key=0;
+old_key:
+        DS8 1
+
+        RSEG CODE:CODE:NOROOT(1)
+//  106 void main(void){ 
+main:
+          CFI Block cfiBlock7 Using cfiCommon0
+          CFI Function main
+//  107   
+//  108   DDRB=0x10;
+        FUNCALL main, tmr_set
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL main, in_key_save
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL main, IR_tmr
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL main, IR_data_trans
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        FUNCALL main, in_key
+        LOCFRAME CSTACK, 0, STACK
+        LOCFRAME RSTACK, 2, STACK
+        ARGFRAME RSTACK, 0, STACK
+        LDI     R16, 16
+        OUT     0x17, R16
+//  109   PORTB=0x1f;
+        LDI     R16, 31
+        OUT     0x18, R16
+//  110   
+//  111   TCCR0B=2;	// 1=1prescaling, 2=8prescaling, 3=64prescaling, 4=256prescaling
+        LDI     R16, 2
+        OUT     0x33, R16
+//  112   TCNT0=255-10; //13sec 
+        LDI     R16, 245
+        OUT     0x32, R16
+//  113   //TCNT0=0;
+//  114   TIMSK0 = 2; // (1<<TOIE0);
+        LDI     R16, 2
+        OUT     0x39, R16
+//  115   TIFR0 = 2; // (1<<TOV0);
+        LDI     R16, 2
+        OUT     0x38, R16
+//  116   
+//  117   tmr_set(1); // timer setting
+        LDI     R16, 1
+        RCALL   tmr_set
+//  118               // 0 = basic
+//  119               // 1 = special 1
+//  120   
+//  121   __enable_interrupt(); 
+        SEI
+//  122   
+//  123   in_key_save();
+        RCALL   in_key_save
+//  124   old_key=key_data;
+        LDI     R30, key_data
+        LD      R16, Z
+        LDI     R30, old_key
+        ST      Z, R16
+        RJMP    ??main_0
+//  125   while(flag){   
+//  126     if(flag<2) flag--;
+//  127     
+//  128     IR_data_trans();     
+//  129     in_key();
+//  130     if(old_key!=key_data) break;
+//  131     IR_tmr(1,3850); //50msec wait
+??main_1:
+        LDI     R18, 10
+        LDI     R19, 15
+        LDI     R16, 1
+        RCALL   IR_tmr
+??main_0:
+        LDI     R30, flag
+        LD      R16, Z
+        TST     R16
+        BREQ    ??main_2
+        LDI     R30, flag
+        LD      R16, Z
+        CPI     R16, 2
+        BRCC    ??main_3
+        LDS     R16, flag
+        DEC     R16
+        STS     flag, R16
+??main_3:
+        RCALL   IR_data_trans
+        RCALL   in_key
+        LDI     R30, old_key
+        LD      R16, Z
+        LDI     R30, key_data
+        LD      R17, Z
+        CP      R16, R17
+        BREQ    ??main_1
+//  132   }
+//  133   
+//  134   
+//  135 }
+??main_2:
+        RET
+          CFI EndBlock cfiBlock7
+        REQUIRE _A_DDRB
+        REQUIRE _A_PORTB
+        REQUIRE _A_TCCR0B
+        REQUIRE _A_TCNT0
+        REQUIRE _A_TIMSK0
+        REQUIRE _A_TIFR0
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01cH
+__?EECR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01dH
+__?EEDR:
+
+        ASEGN ABSOLUTE:DATA:NOROOT,01eH
+__?EEARL:
+
+        COMMON INTVEC:CODE:ROOT(1)
+        ORG 6
+`??TIMER0_OVF_Handler??INTVEC 6`:
+        RJMP    TIMER0_OVF_Handler
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: TINY_Z>`:
+        DC8     SFE(TINY_Z) - SFB(TINY_Z)
+        DC8     SFB(TINY_Z)
+        DC16    0
+        REQUIRE ?need_segment_init
+
+        RSEG TINY_ID:CODE:NOROOT(0)
+`?<Initializer for cp_code>`:
+        DD 3615096832
+
+        RSEG INITTAB:CODE:NOROOT(0)
+`?<Segment init: TINY_I>`:
+        DC8     SFE(TINY_I) - SFB(TINY_I)
+        DC8     SFB(TINY_I)
+        DC16    SFB(TINY_ID)
+        REQUIRE ?need_segment_init
+
+        RSEG TINY_ID:CODE:NOROOT(0)
+`?<Initializer for flag>`:
+        DC8 1
+
+        RSEG TINY_ID:CODE:NOROOT(0)
+`?<Initializer for hold_tmr>`:
+        DC16 1
+
+        END
+//  136 
+//  137 
+// 
+//   7 bytes in segment ABSOLUTE
+// 644 bytes in segment CODE
+//   8 bytes in segment INITTAB
+//   2 bytes in segment INTVEC
+//   7 bytes in segment TINY_I
+//   7 bytes in segment TINY_ID
+//  14 bytes in segment TINY_Z
+// 
+// 651 bytes of CODE memory (+ 10 bytes shared)
+//  21 bytes of DATA memory (+  7 bytes shared)
+//
+//Errors: none
+//Warnings: none

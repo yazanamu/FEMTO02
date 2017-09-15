@@ -1,0 +1,48 @@
+[Watch]
+Watch 1=
+Watch 2=
+Watch 3=
+[DisAssemblyWindow]
+NumStates=_ 1
+State 1=_ 1
+[Profiling]
+State=_ 0
+[TermIOSettings]
+Filename=_ ""
+InputMode=_ 1
+[CodeCoverage]
+State=_ 0
+[Desktop-Debug]
+Wnd0=_ "Log" "open" 44 0 1 -1 -1 -1 -1 915 727 1675 920
+Wnd1=_ "CallStack" "open" 44 0 1 -1 -1 -1 -1 0 606 260 896 1
+Wnd2=_ "Locals" "open" 44 0 1 -1 -1 -1 -1 1197 0 1675 237 100 100 100 100
+Wnd3=_ "Terminal I/O" "open" 44 0 1 -1 -1 -1 -1 1195 448 1675 708
+Wnd4=_ "Watch" "open" 44 0 1 -1 -1 -1 -1 1197 237 1675 449 100 100 100 100
+Wnd5=_ "Editor-DebugSource" "open" 44 0 1 -1 -1 -1 -1 75 75 1476 697 "H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V1_start\App_0V1_start2.C" 1 1 0 356 9465 9465 0 334 9296 9296
+Wnd6=_ "Disassembly" "open" 44 0 1 -1 -1 -1 -1 716 0 1195 708
+Wnd7=_ "Memory" "closed" 44 0 1 -1 -1 -1 -1 25 25 675 647 1 1160 0 2344 0 1 0
+Wnd8=_ "Register" "closed" 44 0 1 -1 -1 -1 -1 75 75 1476 697 2 0 0 1 "SREG"
+Maximized=_ 0
+Count=_ 9
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
+[Stack]
+FillEnabled=0
+OverflowWarningsEnabled=1
+WarningThreshold=90
+SpWarningsEnabled=1
+WarnLogOnly=1
+UseTrigger=1
+TriggerName=main
+LimitSize=0
+ByteLimit=50
+[Breakpoints]
+Count=0
+[Aliases]
+Count=0
+SuppressDialog=0

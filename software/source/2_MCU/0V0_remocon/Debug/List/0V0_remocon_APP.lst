@@ -1,0 +1,590 @@
+##############################################################################
+#                                                                            #
+# IAR Atmel AVR C/EC++ Compiler V3.10C/W32             10/May/2012  15:40:06 #
+# Copyright 1996-2004 IAR Systems. All rights reserved.                      #
+#                                                                            #
+#    Source file  =  H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\0V0_re #
+#                    mocon_APP.C                                             #
+#    Command line =  --cpu=m16 -mt -o H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0 #
+#                    V0_remocon\Debug\Obj\ -lC H:\2_CalyxII\0_FEMTO\0_Circui #
+#                    t\2_MCU\0V0_remocon\Debug\List\ -lA                     #
+#                    H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\Debug\ #
+#                    List\ --initializers_in_flash -z3 --no_cse --no_inline  #
+#                    --no_code_motion --no_cross_call --no_clustering        #
+#                    --debug -DENABLE_BIT_DEFINITIONS -e -I "E:\Program      #
+#                    Files\IAR Systems\Embedded Workbench 3.2\avr\INC\" -I   #
+#                    "E:\Program Files\IAR Systems\Embedded Workbench        #
+#                    3.2\avr\INC\CLIB\" --eeprom_size 512                    #
+#                    H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\0V0_re #
+#                    mocon_APP.C                                             #
+#    List file    =  H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\Debug\ #
+#                    List\0V0_remocon_APP.lst                                #
+#    Object file  =  H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\Debug\ #
+#                    Obj\0V0_remocon_APP.r90                                 #
+#                                                                            #
+#                                                                            #
+##############################################################################
+
+H:\2_CalyxII\0_FEMTO\0_Circuit\2_MCU\0V0_remocon\0V0_remocon_APP.C
+      1          
+      2          //2009.12.21
+      3          
+      4          #include <iom16.h>
+      5          //#include <iotiny13.h>
+      6          #include <inavr.h>
+      7          //#include "remocon_code.c"
+      8          
+      9          
+     10          //#define IR_out	PORTB_Bit2
+     11          
+     12          //#define KEY_A2       PINB_Bit4
+     13          //#define KEY_A1       PINB_Bit3
+     14          //#define KEY_A0       PINB_Bit0
+     15          
+     16          //unsigned int custom_code=0xd77a;
+     17          /*
+     18          U8 mute=0xb0;
+     19          U8 vol_up=0x80;
+     20          U8 vol_down=0xa8;
+     21          U8 ch_up=0x90;
+     22          U8 ch_down=0x88;
+     23          U8 phase=0xa0;
+     24          U8 filter=0x98;
+     25          */
+
+   \                                 In segment TINY_Z, align 1, keep-with-next
+   \   00000000                              REQUIRE `?<Segment init: TINY_Z>`
+     26          unsigned char carry=0;
+   \                     carry:
+   \   00000000                              DS 1
+
+   \                                 In segment TINY_Z, align 1, keep-with-next
+   \   00000000                              REQUIRE `?<Segment init: TINY_Z>`
+     27          unsigned char key_data=0;
+   \                     key_data:
+   \   00000000                              DS 1
+
+   \                                 In segment TINY_I, align 1, keep-with-next
+   \   00000000                              REQUIRE `?<Segment init: TINY_I>`
+     28          unsigned char Data_code[16]={0,1,0,1,1,1,1,0,1,1,1,0,1,0,1,1};
+   \                     Data_code:
+   \   00000000                              DS 16
+   \   00000010                              REQUIRE `?<Initializer for Data_code>`
+     29          
+
+   \                                 In segment CODE, align 2, keep-with-next
+     30          void DelayTime(unsigned int time_end)
+   \                     DelayTime:
+   \                     ??DelayTime_0:
+     31          {
+     32             while(time_end--);
+   \   00000000   0198                       MOVW    R19 : R18,R17 : R16
+   \   00000002   0189                       MOVW    R17 : R16,R19 : R18
+   \   00000004   5001                       SUBI    R16,1
+   \   00000006   4010                       SBCI    R17,0
+   \   00000008   2B23                       OR      R18,R19
+   \   0000000A   F7D1                       BRNE    ??DelayTime_0
+     33          }
+   \   0000000C   9508                       RET
+     34          
+
+   \                                 In segment CODE, align 2, keep-with-next
+     35          void IR_lead_trans(){
+   \                     IR_lead_trans:
+   \   00000000   939A                       ST      -Y,R25
+   \   00000002   938A                       ST      -Y,R24
+     36            unsigned int i;
+     37            
+     38            for(i=0; i<690; i++){
+   \   00000004   E080                       LDI     R24,0
+   \   00000006   E090                       LDI     R25,0
+   \   00000008   C00E                       RJMP    ??IR_lead_trans_0
+     39              if(carry==0) carry=1;
+     40              else carry=0;
+   \                     ??IR_lead_trans_1:
+   \   0000000A   E000                       LDI     R16,0
+   \   0000000C   9300....                   STS     carry,R16
+     41              PORTB_Bit2=carry;
+   \                     ??IR_lead_trans_2:
+   \   00000010   ....                       LDI     R30,carry
+   \   00000012   E0F0                       LDI     R31,0
+   \   00000014   8100                       LD      R16,Z
+   \   00000016   FD00                       SBRC    R16,0
+   \   00000018   9AC2                       SBI     0x18,0x02
+   \                     ??IR_lead_trans_3:
+   \   0000001A   FF00                       SBRS    R16,0
+   \   0000001C   98C2                       CBI     0x18,0x02
+     42              DelayTime(4);
+   \                     ??IR_lead_trans_4:
+   \   0000001E   E004                       LDI     R16,4
+   \   00000020   E010                       LDI     R17,0
+   \   00000022   ....                       RCALL   DelayTime
+   \   00000024   9601                       ADIW    R25 : R24,1
+   \                     ??IR_lead_trans_0:
+   \   00000026   3B82                       CPI     R24,178
+   \   00000028   E002                       LDI     R16,2
+   \   0000002A   0790                       CPC     R25,R16
+   \   0000002C   F440                       BRCC    ??IR_lead_trans_5
+   \   0000002E   9100....                   LDS     R16,carry
+   \   00000032   2300                       TST     R16
+   \   00000034   F751                       BRNE    ??IR_lead_trans_1
+   \   00000036   E001                       LDI     R16,1
+   \   00000038   9300....                   STS     carry,R16
+   \   0000003C   CFE9                       RJMP    ??IR_lead_trans_2
+     43            }
+     44            PORTB_Bit2=0; 
+   \                     ??IR_lead_trans_5:
+   \   0000003E   98C2                       CBI     0x18,0x02
+     45            for(i=0; i<345; i++)   DelayTime(4);
+   \   00000040   E080                       LDI     R24,0
+   \   00000042   E090                       LDI     R25,0
+   \   00000044   C004                       RJMP    ??IR_lead_trans_6
+   \                     ??IR_lead_trans_7:
+   \   00000046   E004                       LDI     R16,4
+   \   00000048   E010                       LDI     R17,0
+   \   0000004A   ....                       RCALL   DelayTime
+   \   0000004C   9601                       ADIW    R25 : R24,1
+   \                     ??IR_lead_trans_6:
+   \   0000004E   3589                       CPI     R24,89
+   \   00000050   E001                       LDI     R16,1
+   \   00000052   0790                       CPC     R25,R16
+   \   00000054   F3C0                       BRCS    ??IR_lead_trans_7
+     46            
+     47            for(i=0; i<46; i++){
+   \   00000056   E080                       LDI     R24,0
+   \   00000058   E090                       LDI     R25,0
+   \   0000005A   C00E                       RJMP    ??IR_lead_trans_8
+     48              if(carry==0) carry=1;
+     49              else carry=0;
+   \                     ??IR_lead_trans_9:
+   \   0000005C   E000                       LDI     R16,0
+   \   0000005E   9300....                   STS     carry,R16
+     50              PORTB_Bit2=carry;
+   \                     ??IR_lead_trans_10:
+   \   00000062   ....                       LDI     R30,carry
+   \   00000064   E0F0                       LDI     R31,0
+   \   00000066   8100                       LD      R16,Z
+   \   00000068   FD00                       SBRC    R16,0
+   \   0000006A   9AC2                       SBI     0x18,0x02
+   \                     ??IR_lead_trans_11:
+   \   0000006C   FF00                       SBRS    R16,0
+   \   0000006E   98C2                       CBI     0x18,0x02
+     51              DelayTime(4);
+   \                     ??IR_lead_trans_12:
+   \   00000070   E004                       LDI     R16,4
+   \   00000072   E010                       LDI     R17,0
+   \   00000074   ....                       RCALL   DelayTime
+   \   00000076   9601                       ADIW    R25 : R24,1
+   \                     ??IR_lead_trans_8:
+   \   00000078   328E                       CPI     R24,46
+   \   0000007A   E000                       LDI     R16,0
+   \   0000007C   0790                       CPC     R25,R16
+   \   0000007E   F440                       BRCC    ??IR_lead_trans_13
+   \   00000080   9100....                   LDS     R16,carry
+   \   00000084   2300                       TST     R16
+   \   00000086   F751                       BRNE    ??IR_lead_trans_9
+   \   00000088   E001                       LDI     R16,1
+   \   0000008A   9300....                   STS     carry,R16
+   \   0000008E   CFE9                       RJMP    ??IR_lead_trans_10
+     52            }
+     53          }
+   \                     ??IR_lead_trans_13:
+   \   00000090   9189                       LD      R24,Y+
+   \   00000092   9199                       LD      R25,Y+
+   \   00000094   9508                       RET
+     54          
+
+   \                                 In segment TINY_Z, align 1, keep-with-next
+   \   00000000                              REQUIRE `?<Segment init: TINY_Z>`
+     55          unsigned int cpd=0;
+   \                     cpd:
+   \   00000000                              DS 2
+     56          //unsigned int Data_code[16];
+
+   \                                 In segment TINY_Z, align 1, keep-with-next
+   \   00000000                              REQUIRE `?<Segment init: TINY_Z>`
+     57          unsigned int Data_code1[16];
+   \                     Data_code1:
+   \   00000000                              DS 32
+     58          
+
+   \                                 In segment CODE, align 2, keep-with-next
+     59          void IR_data_trans(){/*
+   \                     IR_data_trans:
+     60            unsigned char i;
+     61            unsigned int temp;
+     62            
+     63            if(key_data==1)         cpd=0xb04f; //mute
+     64            else if(key_data==2)  cpd=0x98; //filter
+     65            else if(key_data==3)  cpd=0xa0; //phase
+     66            else if(key_data==4)  cpd=0x88; //ch_down
+     67            else if(key_data==5)  cpd=0x90; //ch_up
+     68            else if(key_data==6)  cpd=0xa8; //vol_down
+     69            else if(key_data==7)  cpd=0x80; //vol_up
+     70            
+     71          
+     72            for(i=0; i<16; i++){
+     73              Data_code[i] = ( (0xd77a>>i) & 0x01 );
+     74            }
+     75          
+     76            
+     77            for(i=0; i<16; i++){
+     78              Data_code[i] = ( (temp>>i) & 0x01 );
+     79              //Data_code1[i+8] = !Data_code1[i];
+     80            }
+     81          
+     82            for(i=0; i<16; i++){
+     83              if(Data_code[i]){
+     84                PORTB_Bit2=0; 
+     85                for(i=0; i<172; i++)   DelayTime(4);
+     86              }
+     87              else {
+     88                for(i=0; i<46; i++){
+     89                  if(carry==0) carry=1;
+     90                  else carry=0;
+     91                  PORTB_Bit2=carry;
+     92                  DelayTime(4);
+     93                }
+     94              }
+     95            }
+     96              
+     97            for(i=0; i<16; i++){
+     98              if(Data_code1[i]){
+     99                PORTB_Bit2=0; 
+    100                for(i=0; i<172; i++)   DelayTime(4);
+    101              }
+    102              else {
+    103                for(i=0; i<46; i++){
+    104                  if(carry==0) carry=1;
+    105                  else carry=0;
+    106                  PORTB_Bit2=carry;
+    107                  DelayTime(4);
+    108                }
+    109              }
+    110            }
+    111            */
+    112          }
+   \   00000000   9508                       RET
+    113          
+    114          /*
+    115          U8 test_yu=0;6
+    116          
+    117          void test_wave(U8 data){
+    118            data=data*2;
+    119             while(data){
+    120              if(test_yu==0) test_yu=1;
+    121              else test_yu=0;
+    122              IR_out=test_yu;
+    123              DelayTime(4);
+    124              data--;
+    125            }
+    126          }
+    127          void test_hold(U8 data){
+    128            U8 i;
+    129            IR_out=0;
+    130            for(i=0; i<(data*2); i++)   DelayTime(4);
+    131          }
+    132          */
+    133          
+    134          
+    135          
+    136          #pragma vector = INT0_vect
+
+   \                                 In segment CODE, align 2, keep-with-next
+    137          __interrupt void INT0_Handler(void)
+   \                     INT0_Handler:
+    138          {  
+   \   00000000   938A                       ST      -Y,R24
+   \   00000002   93FA                       ST      -Y,R31
+   \   00000004   93EA                       ST      -Y,R30
+   \   00000006   923A                       ST      -Y,R3
+   \   00000008   922A                       ST      -Y,R2
+   \   0000000A   921A                       ST      -Y,R1
+   \   0000000C   920A                       ST      -Y,R0
+   \   0000000E   937A                       ST      -Y,R23
+   \   00000010   936A                       ST      -Y,R22
+   \   00000012   935A                       ST      -Y,R21
+   \   00000014   934A                       ST      -Y,R20
+   \   00000016   933A                       ST      -Y,R19
+   \   00000018   932A                       ST      -Y,R18
+   \   0000001A   931A                       ST      -Y,R17
+   \   0000001C   930A                       ST      -Y,R16
+   \   0000001E   B78F                       IN      R24,0x3F
+    139              
+    140              key_data=PINB_Bit4;
+   \   00000020   E000                       LDI     R16,0
+   \   00000022   99B4                       SBIC    0x16,0x04
+   \   00000024   9503                       INC     R16
+   \                     ??INT0_Handler_0:
+   \   00000026   9300....                   STS     key_data,R16
+    141              key_data<<=1;
+   \   0000002A   9100....                   LDS     R16,key_data
+   \   0000002E   0F00                       LSL     R16
+   \   00000030   9300....                   STS     key_data,R16
+    142              key_data+=PINB_Bit3;
+   \   00000034   E000                       LDI     R16,0
+   \   00000036   99B3                       SBIC    0x16,0x03
+   \   00000038   9503                       INC     R16
+   \                     ??INT0_Handler_1:
+   \   0000003A   ....                       LDI     R30,key_data
+   \   0000003C   E0F0                       LDI     R31,0
+   \   0000003E   8110                       LD      R17,Z
+   \   00000040   0F10                       ADD     R17,R16
+   \   00000042   8310                       ST      Z,R17
+    143              key_data<<=1;
+   \   00000044   9100....                   LDS     R16,key_data
+   \   00000048   0F00                       LSL     R16
+   \   0000004A   9300....                   STS     key_data,R16
+    144              key_data+=PINB_Bit0;
+   \   0000004E   E000                       LDI     R16,0
+   \   00000050   99B0                       SBIC    0x16,0x00
+   \   00000052   9503                       INC     R16
+   \                     ??INT0_Handler_2:
+   \   00000054   ....                       LDI     R30,key_data
+   \   00000056   E0F0                       LDI     R31,0
+   \   00000058   8110                       LD      R17,Z
+   \   0000005A   0F10                       ADD     R17,R16
+   \   0000005C   8310                       ST      Z,R17
+    145              /*
+    146              key_data=PINB;
+    147              key_data=key_data & 0x19;
+    148              key_data = (key_data>>2) + (key_data &0x01);
+    149              */
+    150              IR_lead_trans();
+   \   0000005E   ....                       RCALL   IR_lead_trans
+    151              IR_data_trans();  
+   \   00000060   ....                       RCALL   IR_data_trans
+    152                  
+    153              
+    154           /* 
+    155              //
+    156            for(i=0; i<50; i++){
+    157             test_wave(23);
+    158             test_hold(100);
+    159            }
+    160            //
+    161            
+    162            */
+    163            PORTB_Bit2=0;  
+   \   00000062   98C2                       CBI     0x18,0x02
+    164          
+    165            key_data=PINB_Bit4;
+   \   00000064   E000                       LDI     R16,0
+   \   00000066   99B4                       SBIC    0x16,0x04
+   \   00000068   9503                       INC     R16
+   \                     ??INT0_Handler_3:
+   \   0000006A   9300....                   STS     key_data,R16
+    166            key_data<<=1;
+   \   0000006E   9100....                   LDS     R16,key_data
+   \   00000072   0F00                       LSL     R16
+   \   00000074   9300....                   STS     key_data,R16
+    167            key_data+=PINB_Bit3;
+   \   00000078   E000                       LDI     R16,0
+   \   0000007A   99B3                       SBIC    0x16,0x03
+   \   0000007C   9503                       INC     R16
+   \                     ??INT0_Handler_4:
+   \   0000007E   ....                       LDI     R30,key_data
+   \   00000080   E0F0                       LDI     R31,0
+   \   00000082   8110                       LD      R17,Z
+   \   00000084   0F10                       ADD     R17,R16
+   \   00000086   8310                       ST      Z,R17
+    168            key_data<<=1;
+   \   00000088   9100....                   LDS     R16,key_data
+   \   0000008C   0F00                       LSL     R16
+   \   0000008E   9300....                   STS     key_data,R16
+    169            key_data+=PINB_Bit0;
+   \   00000092   E000                       LDI     R16,0
+   \   00000094   99B0                       SBIC    0x16,0x00
+   \   00000096   9503                       INC     R16
+   \                     ??INT0_Handler_5:
+   \   00000098   ....                       LDI     R30,key_data
+   \   0000009A   E0F0                       LDI     R31,0
+   \   0000009C   8110                       LD      R17,Z
+   \   0000009E   0F10                       ADD     R17,R16
+   \   000000A0   8310                       ST      Z,R17
+    170            
+    171            if((key_data==1) || (key_data==2) || (key_data==3) || (key_data==4) || (key_data==5))  {
+   \   000000A2   9100....                   LDS     R16,key_data
+   \   000000A6   3001                       CPI     R16,1
+   \   000000A8   F081                       BREQ    ??INT0_Handler_6
+   \   000000AA   9100....                   LDS     R16,key_data
+   \   000000AE   3002                       CPI     R16,2
+   \   000000B0   F061                       BREQ    ??INT0_Handler_6
+   \   000000B2   9100....                   LDS     R16,key_data
+   \   000000B6   3003                       CPI     R16,3
+   \   000000B8   F041                       BREQ    ??INT0_Handler_6
+   \   000000BA   9100....                   LDS     R16,key_data
+   \   000000BE   3004                       CPI     R16,4
+   \   000000C0   F021                       BREQ    ??INT0_Handler_6
+   \   000000C2   9100....                   LDS     R16,key_data
+   \   000000C6   3005                       CPI     R16,5
+   \   000000C8   F411                       BRNE    ??INT0_Handler_7
+    172              while(1){
+    173                if( (PINB_Bit1!=0)  ) break;
+   \                     ??INT0_Handler_6:
+   \   000000CA   9BB1                       SBIS    0x16,0x01
+   \   000000CC   CFFE                       RJMP    ??INT0_Handler_6
+    174              }
+    175            }
+    176            
+    177            DelayTime(0xffff);
+   \                     ??INT0_Handler_7:
+   \   000000CE   EF0F                       LDI     R16,255
+   \   000000D0   EF1F                       LDI     R17,255
+   \   000000D2   ....                       RCALL   DelayTime
+    178          
+    179          }
+   \   000000D4   BF8F                       OUT     0x3F,R24
+   \   000000D6   9109                       LD      R16,Y+
+   \   000000D8   9119                       LD      R17,Y+
+   \   000000DA   9129                       LD      R18,Y+
+   \   000000DC   9139                       LD      R19,Y+
+   \   000000DE   9149                       LD      R20,Y+
+   \   000000E0   9159                       LD      R21,Y+
+   \   000000E2   9169                       LD      R22,Y+
+   \   000000E4   9179                       LD      R23,Y+
+   \   000000E6   9009                       LD      R0,Y+
+   \   000000E8   9019                       LD      R1,Y+
+   \   000000EA   9029                       LD      R2,Y+
+   \   000000EC   9039                       LD      R3,Y+
+   \   000000EE   91E9                       LD      R30,Y+
+   \   000000F0   91F9                       LD      R31,Y+
+   \   000000F2   9189                       LD      R24,Y+
+   \   000000F4   9518                       RETI
+    180          
+    181          /*
+    182          #pragma vector = TIM0_OVF_vect
+    183          __interrupt void TIM0_OVF_Handler(void)
+    184          {
+    185            TCNT0=255-254;
+    186            if(test_yu==0) test_yu=0xff;
+    187            else test_yu=0;
+    188            PORTB=test_yu;
+    189          }
+    190          */
+    191          
+    192          
+    193          ///////////////////////////////////////////////////////////////////////////////
+    194          //	Main ÇÔ¼ö
+    195          ///////////////////////////////////////////////////////////////////////////////
+
+   \                                 In segment CODE, align 2, keep-with-next
+    196          void main(void){ 
+   \                     main:
+    197          	//unsigned char temp;
+    198          
+    199            //OSCCAL=0;
+    200            
+    201            
+    202            //DDRB=0x04;   //PB0=MOSI, PB1=MISO, PB2=SCK, PB3=I2C(SCL), PB4=I2C(SDA), PB5=/RESET
+    203            //PORTB=0x3f;
+    204            //PORTB_Bit2=0;
+    205            
+    206            
+    207            
+    208          //  TCCR0B=(0<< CS02)| (0<< CS01)| (1<< CS00);	// 8prescaling
+    209            //TIMSK0= (1<<TOIE0);
+    210            //TIFR0=(1<<TOV0);
+    211            //TCNT0=0;
+    212            
+    213            //MCUCR = (1<<ISC01) | (0<<ISC00);    //The falling edge
+    214            //GICR = (1<<INT0);   //mega16
+    215            //GIMSK = (1<<INT0);
+    216          //  GIFR = (1<<INTF0);    //mega16
+    217            //EIFR = (1<<INTF0);
+    218            
+    219            MCUCR=0x60;
+   \   00000000   E600                       LDI     R16,96
+   \   00000002   BF05                       OUT     0x35,R16
+    220            __enable_interrupt();
+   \   00000004   9478                       SEI
+    221            //MCUCR=0x32;
+    222            //GIMSK=0x40;
+    223            //GIFR=0x40;
+    224          	/*
+    225            while(1){
+    226              if(test_yu==0) test_yu=0xff;
+    227              else test_yu=0;
+    228              PORTB=test_yu;
+    229              DelayTime(4);
+    230            }*/
+    231          }
+   \   00000006   9508                       RET
+
+   \                                 In segment INTVEC, offset 0x4, root
+   \   00000000   ........                   JMP     INT0_Handler
+
+   \                                 In segment TINY_ID, align 1, keep-with-next
+   \                     `?<Initializer for Data_code>`:
+   \   00000000   010001000101               DB 0, 1, 0, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1
+   \              000101010001
+   \              00010101    
+
+   \                                 In segment ABSOLUTE, at 0x36
+   \   union <unnamed> volatile __io _A_PINB
+   \                     _A_PINB:
+   \   00000000                              DS 1
+
+   \                                 In segment ABSOLUTE, at 0x38
+   \   union <unnamed> volatile __io _A_PORTB
+   \                     _A_PORTB:
+   \   00000000                              DS 1
+
+   \                                 In segment ABSOLUTE, at 0x55
+   \   union <unnamed> volatile __io _A_MCUCR
+   \                     _A_MCUCR:
+   \   00000000                              DS 1
+    232          
+    233          
+
+   Maximum stack usage in bytes:
+
+     Function           CSTACK RSTACK
+     --------           ------ ------
+     DelayTime              0      2
+     INT0_Handler          15      2
+       -> IR_lead_trans    15      2
+       -> IR_data_trans    15      2
+       -> DelayTime        15      2
+     IR_data_trans          0      2
+     IR_lead_trans          2      2
+       -> DelayTime         2      2
+       -> DelayTime         2      2
+       -> DelayTime         2      2
+     main                   0      2
+
+
+   Segment part sizes:
+
+     Function/Label               Bytes
+     --------------               -----
+     carry                           1
+     key_data                        1
+     Data_code                      16
+     ??DelayTime_0                  14
+     IR_lead_trans                 150
+     cpd                             2
+     Data_code1                     32
+     IR_data_trans                   2
+     INT0_Handler                  246
+     main                            8
+     ?<Initializer for Data_code>   16
+     _A_PINB                         1
+     _A_PORTB                        1
+     _A_MCUCR                        1
+      Others                        16
+
+ 
+   3 bytes in segment ABSOLUTE
+ 420 bytes in segment CODE
+  12 bytes in segment INITTAB
+   4 bytes in segment INTVEC
+  16 bytes in segment TINY_I
+  16 bytes in segment TINY_ID
+  36 bytes in segment TINY_Z
+ 
+ 440 bytes of CODE memory (+ 12 bytes shared)
+  52 bytes of DATA memory (+  3 bytes shared)
+
+Errors: none
+Warnings: none

@@ -1,0 +1,10 @@
+CALYX FEMTO
+MCU에 다운로딩할 때 주의 사항
+
+1. 몇 몇 제품중 L채널과 R채널의 게인이 틀린 경우 있다.
+  1) InitBoard.c의 _system_init() 함수 내에 ess_lch_master_trim 와 ess_rch_master_trim 을
+  2) 0으로 초기화 한 후, 
+  3) L채널과 R채널의 게인을 확인하고, 
+  4) 틀린 경우 ess_lch_master_trim 와 ess_rch_master_trim로 조정한다.
+  
+  
