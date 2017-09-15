@@ -25,7 +25,7 @@ if not "%~1" == "" goto debugFile
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.8\common\bin\cspybat" -f "D:\workspace\Femto2\software\source\FEMTO02\settings\Femto_0V2_DA1D985F_114_NAMI.Debug.general.xcl" --backend -f "D:\workspace\Femto2\software\source\FEMTO02\settings\Femto_0V2_DA1D985F_114_NAMI.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.8\common\bin\cspybat" -f "D:\workspace\Femto02\software\source\FEMTO02\settings\Femto_0V2_DA1D985F_114_NAMI.Debug.general.xcl" --backend -f "D:\workspace\Femto02\software\source\FEMTO02\settings\Femto_0V2_DA1D985F_114_NAMI.Debug.driver.xcl" 
 
 @echo off 
 goto end 
@@ -34,7 +34,7 @@ goto end
 
 @echo on 
 
-"C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.8\common\bin\cspybat" -f "D:\workspace\Femto2\software\source\FEMTO02\settings\Femto_0V2_DA1D985F_114_NAMI.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\workspace\Femto2\software\source\FEMTO02\settings\Femto_0V2_DA1D985F_114_NAMI.Debug.driver.xcl" 
+"C:\Program Files (x86)\IAR Systems\Embedded Workbench 6.8\common\bin\cspybat" -f "D:\workspace\Femto02\software\source\FEMTO02\settings\Femto_0V2_DA1D985F_114_NAMI.Debug.general.xcl" "--debug_file=%~1" --backend -f "D:\workspace\Femto02\software\source\FEMTO02\settings\Femto_0V2_DA1D985F_114_NAMI.Debug.driver.xcl" 
 
 @echo off 
 :end
