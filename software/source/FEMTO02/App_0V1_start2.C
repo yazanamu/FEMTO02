@@ -4,49 +4,56 @@
 
 #include <iom128.h>
 #include <inavr.h>
+#include <string.h>
+#include "define.h"
 #include "uart.h" // added by jang 2017.9.15
-#include "InitBoard.c"
+#include "es9038.h"     // added by jang 2017.9.16
+#include "initboard.c"
 
 ///////////////////////////////////////////////////////////////////////////////
 void sample_rate_cal(){
-  U8 i,temp;
+  U8 temp;
   
   //if ( (old_ess_lock_ck!=ess_lock_ck) || (old_ess_automute!=ess_automute) ) {
     
     //if (old_ess_lock_ck!=ess_lock_ck) old_ess_lock_ck=ess_lock_ck;
     //if (old_ess_automute!=ess_automute) old_ess_automute=ess_automute;
   
-    if( ( (ch_led_data!=7) && ess_lock_ck) || (ess_lock_ck && !ess_automute) ) {
-       sample_rate=I2C_Read(0x90, 31);
-       sample_rate<<=8;
-       sample_rate+=I2C_Read(0x90, 30);
-       sample_rate2=I2C_Read(0x92, 31);
-       sample_rate2<<=8;
-       sample_rate2+=I2C_Read(0x92, 30);
-    
+  if( ( (ch_led_data!=7) && ess_lock_ck) || (ess_lock_ck && !ess_automute) ) {
+    send_string("[I2C] Read Sampling rate.\r\n"); 
+    sample_rate=I2C_Read(0x90, 31);
+    sample_rate<<=8;
+    sample_rate+=I2C_Read(0x90, 30);
+    sample_rate2=I2C_Read(0x92, 31);
+    sample_rate2<<=8;
+    sample_rate2+=I2C_Read(0x92, 30);
+    send_string("[I2C] Complete reading Sampling rate.\r\n"); 
         //0=44.1kHz,    1=48kHz,    2=88.2kHz,    3=96kHz,    4=176.4kHz,   5=196kHz
   
         //192kHz
-        if( (sample_rate>min192 && sample_rate<max192) || (sample_rate2>min192 && sample_rate2<max192) )	sr_led_data=5;
+    if( (sample_rate>min192 && sample_rate<max192) || \
+        (sample_rate2>min192 && sample_rate2<max192) )	sr_led_data=5;
     
         //176.4kHz
-        else if( (sample_rate>min176 && sample_rate<max176) || (sample_rate2>min176 && sample_rate2<max176) )	sr_led_data=4;
+    else if( (sample_rate>min176 && sample_rate<max176) || \
+             (sample_rate2>min176 && sample_rate2<max176) )	sr_led_data=4;
         
         //96kHz
-        else if( (sample_rate>min96 && sample_rate<max96) || (sample_rate2>min96 && sample_rate2<max96) )	sr_led_data=3;
+    else if( (sample_rate>min96 && sample_rate<max96) || \
+             (sample_rate2>min96 && sample_rate2<max96) )	sr_led_data=3;
     
         //88.2kHz
-        else if( (sample_rate>min88 && sample_rate<max88) || (sample_rate2>min88 && sample_rate2<max88) )	sr_led_data=2;
+    else if( (sample_rate>min88 && sample_rate<max88) || (sample_rate2>min88 && sample_rate2<max88) )	sr_led_data=2;
     
         //48kHz
-        else if( (sample_rate>min48 && sample_rate<max48) || (sample_rate2>min48 && sample_rate2<max48) )	sr_led_data=1;
+    else if( (sample_rate>min48 && sample_rate<max48) || (sample_rate2>min48 && sample_rate2<max48) )	sr_led_data=1;
     
         //44.1kHz
-        else if( (sample_rate>min44 && sample_rate<max44) || (sample_rate2>min44 && sample_rate2<max44) )	sr_led_data=0;
+    else if( (sample_rate>min44 && sample_rate<max44) || (sample_rate2>min44 && sample_rate2<max44) )	sr_led_data=0;
     
-        else sr_led_data=6;	//sr led off
-    }
     else sr_led_data=6;	//sr led off
+  }
+  else sr_led_data=6;	//sr led off
   //}
   
   
@@ -61,10 +68,11 @@ void sample_rate_cal(){
     if(!old_exMute) temp=vol_dB;
     else temp=224;    //-114dB
       
-    for(i=0; i<8; i++){
-      I2C_Write(0x90,i,temp);	//Lch volume of DAC0
-      I2C_Write(0x92,i,temp);	//Rch volume of DAC0
-    }
+    //for(i=0; i<8; i++){
+    //  I2C_Write(0x90,i,temp);	//Lch volume of DAC0
+    //  I2C_Write(0x92,i,temp);	//Rch volume of DAC0
+    //}
+    es9038_set_volume(temp);
   }
   
 }
@@ -359,10 +367,14 @@ U8 data=0;
 ///////////////////////////////////////////////////////////////////////////////
 //U8 non_audio_flag=0;6
 void main(void){
-  Init_UART0(B9600);    // added by jang 2017.9.15
+  __enable_interrupt();
+  Init_UART0(57600);    // added by jang 2017.9.15
+  send_string("\r\nSystem started.\r\n");
+  send_string("System initializing......\r\n");
   _system_init();
   //_system_init_1();
-    
+  send_string("System init Completed.\r\n");
+
   while(1){
     if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
     //if(tmr_osc_ck) _system_init_1();

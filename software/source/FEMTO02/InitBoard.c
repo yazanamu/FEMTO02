@@ -1,10 +1,10 @@
 #include "Define.h"
 #include "ioport_128.c"
-#include "I2C.c"
+#include "I2C.h"
 #include"dot_matrix_func.c"
 #include"main_func.c"
 #include "remocon.c"
-#include "uart.h"
+#include "uart.h" // added by jang 2017.9.15
 
 U16 mtime_length = 0;
 U8 mtime_flag = 0;
@@ -24,6 +24,7 @@ void wait_mtime(unsigned int time){
 */
 void _system_init(void){
 U8 i;
+    send_string("Port init.\r\n");
 //DDR=1, PORT=1 --> 출력 High
 //DDR=1, PORT=0 --> 출력 Low
 //DDR=0, PORT=1 --> 입력(내부 Pull Up)
@@ -32,12 +33,12 @@ U8 i;
 //PORTB	: 7(APower_EN)=Out,L  6(Power_EN)=In,H     5(open)=Out,H        4(open)=Out,H      3(open)=Out,H     2(open)=Out,H       1(sck)=In,H         0(open)=Out,H
 //PORTC	: 7(Dot_/CE1)=Out,H   6(open)=Out,H         5(open)=Out,H        4(open)=Out,H      3(open)=Out,H     2(open)=Out,H       1(open)=Out,H       0(open)=Out,H
 //PORTD	: 7(Dot/CLR)=Out,H    6(Inkey1_A2)=In,H     5(Inkey1_A1)=In,H    4(Inkey1_A0)=In,H  3(Inkey1)=In,H    2(CS_ERR)=In,H      1(iSDA)=Out,H       0(iSCL)=Out,H
-//PORTE	: 7(AutoMute)=In,H    6(LOCK)=In,H          5(R_Trans)=In,H      4(CS_ERR1)=In,H    3(I2S_Sel)=Out,H  2(XMOS_check)=In,H  1(TXD)=In,H         0(RXD)=In,H
+//PORTE	: 7(AutoMute)=In,H    6(LOCK)=In,H          5(R_Trans)=In,H      4(CS_ERR1)=In,H    3(I2S_Sel)=Out,H  2(XMOS_check)=In,H  1(TXD)=Out,H         0(RXD)=In,H
 //PORTF	: 7(TDI)=In,H         6(TDO)=In,H           5(TMS)=In,H          4(TCK)=In,H        3(Dot_A3)=Out,L   2(Dot_A2)=Out,L     1(Dot_A1)=Out,L     0(Dot_A0)=Out,L
 //PORTG	:                                                                4(open)=Out,H      3(open)=Out,H     2(Dot_/CE1)=Out,H   1(Dot_/CE0)=Out,H   0(Dot_A4)=Out,L
 	
 // DDR Setting  
-    DDRA=0xff;      DDRB=0xbd;      DDRC=0xff;    DDRD=0x83;      DDRE=0x08;      DDRF=0x0f;      DDRG=0x1f;
+    DDRA=0xff;      DDRB=0xbd;      DDRC=0xff;    DDRD=0x83;      DDRE=0x0A;      DDRF=0x0f;      DDRG=0x1f;
 //DDRA=0xff;      DDRB=0x3d;      DDRC=0xff;    DDRD=0x83;      DDRE=0x08;      DDRF=0x0f;      DDRG=0x1f;
 
 // PORT Setting   
@@ -46,6 +47,7 @@ U8 i;
     
 ///////////////////////////////////////////////////////////////////////////////
 //Timer Setting
+    send_string("Timer setting.\r\n");
     TCCR0 = (0<<FOC0) | (0<<WGM00) | (0<<COM01) | (0<<COM00) |(0<<WGM01) | (0<< CS02)| (1<< CS01)| (1<< CS00);	// 32prescaling
     TCCR1B = (1<< CS12)| (0<< CS11)| (1<< CS10);	// 1024precaling
     TCCR2 = (0<<FOC2) | (0<<WGM20) | (0<<COM21) | (0<<COM20) |(0<<WGM21) | (0<< CS22)| (1<< CS21)| (0<< CS20);	// 8prescaling, remocon
@@ -71,6 +73,7 @@ U8 i;
     
 ///////////////////////////////////////////////////////////////////////////////
 //interrupt
+    send_string("Interrupt setting.\r\n");
     //EIMSK = (1<<INT7) | (1<<INT6) | (1<<INT5) | (1<<INT4) | (1<<INT3) | (1<<INT2) | (1<<INT1) | (1<<INT0);
     
     //EICRA = (1<<ISC31) | (0<<ISC30) | (0<<ISC21) | (0<<ISC20) | (0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
@@ -101,13 +104,17 @@ U8 i;
     //INT7~INT2
     EIFR =  (1<<INTF2) | (1<<INTF3) | (1<<INTF4) | (1<<INTF5) | (1<<INTF6) | (1<<INTF7);
     
+    send_string("[I2C] CS8416 Input7 to GND.\r\n");
     I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
-    I2C_Write(0x90, 0x0a, 0xcf);		//mute
-    I2C_Write(0x92, 0x0a, 0xcf);		//mute
+    send_string("[I2C] ES9038 U22 Right Mute.\r\n");
+    ES9038_ADDR0_MUTE;		//mute
+    send_string("[I2C] ES9038 U52 Left Mute.\r\n");
+    ES9038_ADDR1_MUTE;		//mute
 	
 
 
     //Dot matrix clear
+    send_string("[SPI] DOT Matrix Clear.\r\n");
     dot_matrix_clear();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -213,9 +220,15 @@ void rom_check_sum_error(){
 void _system_init_se(void){
   U16 i;
   
+  //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
+  //I2C_Write(0x90, 0x0a, 0xcf);		//mute
+  //I2C_Write(0x92, 0x0a, 0xcf);		//mute
+  send_string("[I2C] CS8416 Input7 to GND.\r\n");
   I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
-  I2C_Write(0x90, 0x0a, 0xcf);		//mute
-  I2C_Write(0x92, 0x0a, 0xcf);		//mute
+  send_string("[I2C] ES9038 U22 Right Mute.\r\n");
+  ES9038_ADDR0_MUTE;		//mute
+  send_string("[I2C] ES9038 U52 Left Mute.\r\n");
+  ES9038_ADDR1_MUTE;		//mute
   
   //PORTB_Bit6=1;   //Digital Power Enable
 
@@ -408,29 +421,31 @@ test_set_eeprom(0x1e, 0x01);
   
   
 
-  //initialize ES9018
+  //initialize ES9038
   
   //I2C_Write(0x90, 0x0b, 0x85);
   //I2C_Write(0x90, 0x0b, 0x95); //DPLL_BANDWIDTH : Med-High
-  I2C_Write(0x90, 0x0b, 0x9d); //DPLL_BANDWIDTH : Highest
-  I2C_Write(0x90, 0x0c, 0x20);
-  I2C_Write(0x90, 0x0f, 0x00);
-  I2C_Write(0x90, 0x11, 0x1d);
-  I2C_Write(0x90, 0x19, 0x01);
-
+  //I2C_Write(0x90, 0x0b, 0x9d); //DPLL_BANDWIDTH : Highest
+  es9038_set_dpll_bw(0x0F,0x0F); //DPLL_BANDWIDTH : Highest
+  //I2C_Write(0x90, 0x0c, 0x20);
+  //I2C_Write(0x90, 0x0f, 0x00);
+  //I2C_Write(0x90, 0x11, 0x1d);
+  //I2C_Write(0x90, 0x19, 0x01);
+  es9038_serial_data_config_automute(AUTOMUTE_RAMPNGND,I2S_MODE);
   
   //I2C_Write(0x92, 0x0b, 0x85);
   //I2C_Write(0x92, 0x0b, 0x95); //DPLL_BANDWIDTH : Med-High
-  I2C_Write(0x92, 0x0b, 0x9d); //DPLL_BANDWIDTH : Highest
-  I2C_Write(0x92, 0x0c, 0x20);
-  I2C_Write(0x92, 0x0f, 0x00);
-//  I2C_Write(0x92, 0x10, 0x08);
-  I2C_Write(0x92, 0x11, 0x9d);
-  I2C_Write(0x92, 0x19, 0x01);
+  //I2C_Write(0x92, 0x0b, 0x9d); //DPLL_BANDWIDTH : Highest
+  //I2C_Write(0x92, 0x0c, 0x20);
+  //I2C_Write(0x92, 0x0f, 0x00);
+  //I2C_Write(0x92, 0x10, 0x08);
+  //I2C_Write(0x92, 0x11, 0x9d);
+  //I2C_Write(0x92, 0x19, 0x01);
   
   //automute level : -102dB
-  I2C_Write(0x90, 0x08, 120);
-  I2C_Write(0x92, 0x08, 120);
+  //I2C_Write(0x90, 0x08, 120);
+  //I2C_Write(0x92, 0x08, 120);
+  es9038_set_automute_level(120); // set automute level -120dB
   
   volume_set();
   DelayTime_ms(10);  //5msec

@@ -6,88 +6,90 @@
   <configuration>
     <name>Debug</name>
     <outputs>
-      <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom128.inc</file>
-      <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$PROJ_DIR$\remocon.c</file>
+      <file>$TOOLKIT_DIR$\inc\inavr.h</file>
       <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.r90</file>
-      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul.r90</file>
+      <file>$PROJ_DIR$\App_0V1_start2.C</file>
       <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
       <file>$PROJ_DIR$\Debug\Obj\Femto_0V2_DA1D985F_114_NAMI.pbd</file>
       <file>$TOOLKIT_DIR$\inc\iom128.h</file>
       <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
-      <file>$PROJ_DIR$\remocon.c</file>
-      <file>$TOOLKIT_DIR$\inc\inavr.h</file>
-      <file>$PROJ_DIR$\App_0V1_start2.C</file>
-      <file>$PROJ_DIR$\dot_matrix_func.C</file>
-      <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
-      <file>$PROJ_DIR$\Define.c</file>
-      <file>$PROJ_DIR$\I2C.c</file>
-      <file>$PROJ_DIR$\Define.h</file>
-      <file>$PROJ_DIR$\Debug\List\FEMTO02.map</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul.r90</file>
       <file>$PROJ_DIR$\Debug\Obj\uart.r90</file>
-      <file>$PROJ_DIR$\uart.h</file>
-      <file>$PROJ_DIR$\InitBoard.c</file>
-      <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
-      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Debug\List\App_0V1_start2.s90</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
+      <file>$PROJ_DIR$\define.h</file>
       <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.__cstat.et</file>
+      <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
+      <file>$PROJ_DIR$\Debug\List\App_0V1_start2.lst</file>
+      <file>$PROJ_DIR$\ioport_128.c</file>
+      <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
+      <file>$PROJ_DIR$\dot_matrix_func.C</file>
+      <file>$PROJ_DIR$\main_func.c</file>
+      <file>$PROJ_DIR$\Debug\List\FEMTO02.map</file>
+      <file>$PROJ_DIR$\Debug\Exe\FEMTO02.hex</file>
       <file>$PROJ_DIR$\Debug\Obj\uart.__cstat.et</file>
       <file>$PROJ_DIR$\Debug\Obj\uart.pbi</file>
+      <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.__cstat.et</file>
+      <file>$PROJ_DIR$\InitBoard.c</file>
+      <file>$PROJ_DIR$\uart.h</file>
       <file>$TOOLKIT_DIR$\src\template\cfgm128.xcl</file>
-      <file>$PROJ_DIR$\main_func.c</file>
-      <file>$PROJ_DIR$\Debug\Exe\FEMTO02.hex</file>
-      <file>$PROJ_DIR$\ioport_128.c</file>
-      <file>$PROJ_DIR$\Debug\List\App_0V1_start2.s90</file>
-      <file>$PROJ_DIR$\Debug\List\App_0V1_start2.lst</file>
+      <file>$PROJ_DIR$\I2C.c</file>
       <file>$PROJ_DIR$\uart.c</file>
+      <file>$TOOLKIT_DIR$\inc\clib\string.h</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom128.inc</file>
+      <file>$PROJ_DIR$\I2C.h</file>
+      <file>$PROJ_DIR$\es9038.h</file>
     </outputs>
-    <file>
-      <name>$PROJ_DIR$\App_0V1_start2.C</name>
-      <outputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 22</file>
-        </tool>
-        <tool>
-          <name>ICCAVR</name>
-          <file> 30 31 2</file>
-        </tool>
-        <tool>
-          <name>__cstat</name>
-          <file> 23</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>BICOMP</name>
-          <file> 27 18 15 6 9 19 7 0 14 4 21 29 11 8 1 12</file>
-        </tool>
-        <tool>
-          <name>ICCAVR</name>
-          <file> 6 7 0 9 21 19 13 29 1 4 12 14 11 27 8 18</file>
-        </tool>
-      </inputs>
-    </file>
     <file>
       <name>[ROOT_NODE]</name>
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 28 16</file>
+          <file> 21 20</file>
         </tool>
       </outputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\App_0V1_start2.C</name>
+      <outputs>
+        <tool>
+          <name>__cstat</name>
+          <file> 24</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 13</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 10 15 2</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26 33 11 31 30 25 32 6 12 19 1 4 34 7 14 16 18 0</file>
+        </tool>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 6 7 32 1 14 30 4 12 26 34 33 25 16 31 11 18 19 0</file>
+        </tool>
+      </inputs>
     </file>
     <file>
       <name>$PROJ_DIR$\Debug\Exe\FEMTO02.hex</name>
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 16</file>
+          <file> 20</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 26 20 2 3</file>
+          <file> 27 17 2 8</file>
         </tool>
       </inputs>
     </file>
@@ -95,22 +97,22 @@
       <name>$PROJ_DIR$\uart.c</name>
       <outputs>
         <tool>
+          <name>__cstat</name>
+          <file> 22</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
-          <file> 25</file>
+          <file> 23</file>
         </tool>
         <tool>
           <name>ICCAVR</name>
-          <file> 17</file>
-        </tool>
-        <tool>
-          <name>__cstat</name>
-          <file> 24</file>
+          <file> 9</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>BICOMP</name>
-          <file> 18</file>
+          <file> 26</file>
         </tool>
       </inputs>
     </file>

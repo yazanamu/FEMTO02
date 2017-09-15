@@ -1,4 +1,10 @@
+#ifndef _AVR_DEFINE_H_
+#define _AVR_DEFINE_H_
+
+
 void dot_matrix_clear();
+//void DelayTime(U16 time_end);
+//void DelayTime_ms(U16 time_end);
 
 //unsigned char  test_eeprom[0x100];
 unsigned char  test_eeprom[0x20];
@@ -49,13 +55,7 @@ enum PORT128 {PPCA=1,PPCB,PPCC,PPCD,PPCE,PPCF,PPCG};
 //rom_address : 데이터의 주소(2Bytes)
 //rom_data_cnt : 데이터의 카운트(1Byte)
 //rom_data : 데이터(총 2Bytes: 볼륨 8bits, 채널 4bits, 필터 3bits, 위상 1bit)
-/*
-U8 rom_add_pt_low=0;
-U8 rom_add_pt_high=0;
-U8 rom_cnt_low=0;
-U8 rom_cnt_mid=0;
-U8 rom_cnt_high=0;
-*/
+
 U16 rom_add_pt=0;
 U32 rom_cnt=0;
 U8 rom_cnt_high=0;
@@ -67,14 +67,6 @@ U8 rom_add_pt_low=0;
 U8 rom_device_high=0;
 U8 rom_device_low=0;
 U8 rom_add_check_sum=0;
-//U16 rom_cycle=0;
-//U16 rom_address=0;
-//U8 rom_data_cnt=0;
-//U16 rom_data=0;
-
-//U8 pEEPROM_addr=0;		//current address
-//U16 pEEPROM_num=0;		//write number
-//U8 pEEPROM_data=1;		//current data,   //1=led off,     0=led on
 
 U8 phase_data=1;
 
@@ -458,7 +450,6 @@ S32 f2_coeff_st2[16]={
 ,0
 };
 
-
 void DelayTime(U16 time_end)
 {
    while(time_end--);
@@ -469,3 +460,4 @@ void DelayTime_ms(U16 time_end){  //msec
   for(i=0; i<=time_end+1; i++) DelayTime(16000);  //1msec
 }
 
+#endif

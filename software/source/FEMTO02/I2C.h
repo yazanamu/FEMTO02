@@ -1,3 +1,8 @@
+#ifndef _AVR_I2C_H_
+#define _AVR_I2C_H_
+
+#include "define.h"
+
 #define U8 unsigned char
 #define U16 unsigned int
 unsigned char inByte,grAck;
@@ -414,3 +419,5 @@ void I2C_Write(unsigned char device_address, unsigned char start_address, unsign
 	//I2C_result[y][2]=error;
 }
 */
+
+#endif
