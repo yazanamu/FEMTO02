@@ -59,11 +59,11 @@
         </option>
         <option>
           <name>LCHeapSize</name>
-          <state>0x10</state>
+          <state>0x20</state>
         </option>
         <option>
           <name>SCCStackSize</name>
-          <state>0x20</state>
+          <state>0x40</state>
         </option>
         <option>
           <name>SCExtCStack</name>

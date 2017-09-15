@@ -4,6 +4,7 @@
 #include"dot_matrix_func.c"
 #include"main_func.c"
 #include "remocon.c"
+#include "uart.h"
 
 U16 mtime_length = 0;
 U8 mtime_flag = 0;

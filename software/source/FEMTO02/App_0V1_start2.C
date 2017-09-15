@@ -4,8 +4,8 @@
 
 #include <iom128.h>
 #include <inavr.h>
+#include "uart.h" // added by jang 2017.9.15
 #include "InitBoard.c"
-//#include "uart.h" // added by jang 2017.9.13
 
 ///////////////////////////////////////////////////////////////////////////////
 void sample_rate_cal(){
@@ -359,6 +359,7 @@ U8 data=0;
 ///////////////////////////////////////////////////////////////////////////////
 //U8 non_audio_flag=0;6
 void main(void){
+  Init_UART0(B9600);    // added by jang 2017.9.15
   _system_init();
   //_system_init_1();
     
