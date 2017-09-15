@@ -1,0 +1,49 @@
+(ExpressProject ""
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (File ".\calyx_femto_2017-03-03.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (NoModify))
+  (Folder "Outputs")
+  (Folder "Referenced Projects")
+  (PartMRUSelector)
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources" ".\calyx_femto_2017-03-03.dsn")
+      (Path "Design Resources" ".\calyx_femto_2017-03-03.dsn" "SCHEMATIC1")
+      (Select "Design Resources" ".\calyx_femto_2017-03-03.dsn" "SCHEMATIC1"
+         "0_MainPower"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -11 -45 0 200 0 570"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -11 -45 114 1671 114 601")
+        (Scroll "0 0")
+        (Zoom "100")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\FEMTO-2017-03-03\CALYX_FEMTO_2017-03-03.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "1_InDigital"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -11 -45 114 1675 114 605")
+        (Scroll "0 0")
+        (Zoom "100")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\FEMTO-2017-03-03\CALYX_FEMTO_2017-03-03.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "0_MainPower")))
+  (MPSSessionName "yazan"))

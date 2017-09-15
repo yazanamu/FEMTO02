@@ -1,0 +1,144 @@
+{Program	GerbTool for Layout
+	{Version	8.0}
+	{Created	Sat Aug 19 14:03:27 2017}
+}
+{Environment
+	{FilesPath  E:\CALYX_FEMTO_2017-06-01\FINAL}
+}
+{Layers
+	{Layer  1
+		{File        CALYX_FEMTO_2017-06-01.TOP}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Green}
+		{DrawColor   Green}
+		{Type        Top}
+	}
+	{Layer  2
+		{File        CALYX_FEMTO_2017-06-01.GND}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  gray50}
+		{DrawColor   gray50}
+		{Type        Inner}
+	}
+	{Layer  3
+		{File        CALYX_FEMTO_2017-06-01.PWR}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Magenta}
+		{DrawColor   Magenta}
+		{Type        Inner}
+	}
+	{Layer  4
+		{File        CALYX_FEMTO_2017-06-01.BOT}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Red}
+		{DrawColor   Red}
+		{Type        Bottom}
+	}
+	{Layer  5
+		{File        CALYX_FEMTO_2017-06-01.SMT}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Cyan}
+		{DrawColor   Cyan}
+		{Type        Other}
+	}
+	{Layer  6
+		{File        CALYX_FEMTO_2017-06-01.SMB}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  vga16yellow}
+		{DrawColor   vga16yellow}
+		{Type        Other}
+	}
+	{Layer  7
+		{File        CALYX_FEMTO_2017-06-01.SPT}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  vga16cyan}
+		{DrawColor   vga16cyan}
+		{Type        Other}
+	}
+	{Layer  8
+		{File        CALYX_FEMTO_2017-06-01.SPB}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  vga16red}
+		{DrawColor   vga16red}
+		{Type        Other}
+	}
+	{Layer  9
+		{File        CALYX_FEMTO_2017-06-01.SST}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  White}
+		{DrawColor   White}
+		{Type        Other}
+	}
+	{Layer  10
+		{File        CALYX_FEMTO_2017-06-01.SSB}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Yellow}
+		{DrawColor   Yellow}
+		{Type        Other}
+	}
+	{Layer  11
+		{File        CALYX_FEMTO_2017-06-01.AST}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Red}
+		{DrawColor   Red}
+		{Type        Other}
+	}
+	{Layer  12
+		{File        CALYX_FEMTO_2017-06-01.DRD}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  vga16magenta}
+		{DrawColor   vga16magenta}
+		{Type        Other}
+	}
+	{Layer  13
+		{File        CALYX_FEMTO_2017-06-01.FAB}
+		{LyrName     -}
+		{ApList      }
+		{Visibility  On}
+		{FlashColor  Green}
+		{DrawColor   Green}
+		{Type        Other}
+	}
+}
+{Format Gerber
+	{Dialect           RS274X}
+	{m.n               3.4}
+	{Mode              Absolute}
+	{ZeroSuppression   Leading}
+	{Terminator        0x2a, 0xD, 0xA}
+	{Metric            No}
+	{Modal             No}
+	{UserData          Yes}
+	{Nets              No}
+	{Gcmds             Yes}
+	{CharSet           ASCII}
+	{Arcs360           No}
+	{ArcsModal         Yes}
+	{HonorCrLf         No}
+	{Comments          Yes}
+	{Flags             0}
+}

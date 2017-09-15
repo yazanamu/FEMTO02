@@ -1,0 +1,125 @@
+(ExpressProject ""
+  (ProjectVersion "19981106")
+  (ProjectType "PCB")
+  (Folder "Design Resources"
+    (Folder "Library")
+    (File ".\calyx_femto_2017-06-01.dsn"
+      (Type "Schematic Design"))
+    (BuildFileAddedOrDeleted "x")
+    (CompileFileAddedOrDeleted "x")
+    (NoModify))
+  (Folder "Outputs")
+  (Folder "Referenced Projects")
+  (PartMRUSelector)
+  (GlobalState
+    (FileView
+      (Path "Design Resources")
+      (Path "Design Resources" ".\calyx_femto_2017-06-01.dsn")
+      (Path "Design Resources" ".\calyx_femto_2017-06-01.dsn" "SCHEMATIC1")
+      (Select "Design Resources" ".\calyx_femto_2017-06-01.dsn"))
+    (HierarchyView)
+    (Doc
+      (Type "COrCapturePMDoc")
+      (Frame
+        (Placement "44 2 3 -1 -1 -8 -31 0 200 0 1177"))
+      (Tab 0))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 78 3072 78 1294")
+        (Scroll "-120 199")
+        (Zoom "178")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "0_MainPower"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 104 3098 104 1320")
+        (Scroll "-120 199")
+        (Zoom "178")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "1_InDigital"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 130 3124 130 1346")
+        (Scroll "-120 199")
+        (Zoom "178")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "2_USB"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 156 3150 156 1372")
+        (Scroll "-120 199")
+        (Zoom "178")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "3_DAC"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 182 3176 182 1398")
+        (Scroll "-120 199")
+        (Zoom "178")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "4_DAC-Out"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 208 3202 208 1424")
+        (Scroll "-120 0")
+        (Zoom "178")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "5_MCU_Key_Display"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 234 3228 234 1450")
+        (Scroll "-318 0")
+        (Zoom "238")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "6_Remocon"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 260 3254 260 1476")
+        (Scroll "-120 199")
+        (Zoom "178")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "7_HP-OUT"))
+    (Doc
+      (Type "COrSchematicDoc")
+      (Frame
+        (Placement "44 0 1 -1 -1 -8 -31 286 3280 286 1502")
+        (Scroll "-318 286")
+        (Zoom "238")
+        (Occurrence "/"))
+      (Path
+         "D:\WORKSPACE\FEMTO2\HARDWARE\SCH\CALYX_FEMTO_2017-06-01\CALYX_FEMTO_2017-06-01.DSN")
+      (Schematic "SCHEMATIC1")
+      (Page "8_Remocon-Extra")))
+  (MPSSessionName "yaza"))
