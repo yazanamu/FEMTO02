@@ -14,7 +14,6 @@
 #include <iom128.h>
 #include <inavr.h>
 
-//#include "Define.c"
 
 unsigned char _porta,_portb,_portc,_portd,_porte,_portf,_portg;
 

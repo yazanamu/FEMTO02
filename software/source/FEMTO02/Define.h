@@ -48,6 +48,10 @@ enum PORT128 {PPCA=1,PPCB,PPCC,PPCD,PPCE,PPCF,PPCG};
 #define	U16	unsigned int
 #define	U32	unsigned long
 #define S32  long
+#define uint8_t unsigned char
+#define uint16_t unsigned int
+#define uint32_t unsigned long
+
 
 //EEPROM
 //rom_add_pt : 林家单捞磐狼 矫累 林家(1Byte)

@@ -49,4 +49,30 @@ void send_string(char *p)
     while(rd = *p++) putchar((int) rd);
 }
 
+void send_integer(unsigned char ch)
+{
+  char *message = "000";
+  
+  message[0] = '0'+ (ch/100);
+  ch -= (ch/100)*100;
+  message[1] = '0'+ (ch/10);
+  ch -= (ch/10)*10;
+  message[2] = '0'+ ch;
+  
+  send_string(message);
+}
+
+void send_int2hex(unsigned char ch)
+{
+  char *message = "0x00";
+  
+  message[2] = '0'+ (ch>>4);
+  if ((ch>>4)>9) message[2]+=7;
+  message[3] = '0'+ (ch&0x0F);
+  if ((ch&0x0F)>9) message[3]+=7;
+  
+  send_string(message);
+}
+
+
 #endif

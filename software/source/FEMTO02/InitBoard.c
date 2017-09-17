@@ -1,10 +1,13 @@
 #include "Define.h"
 #include "ioport_128.c"
-#include "I2C.h"
-#include"dot_matrix_func.c"
-#include"main_func.c"
+//#include "I2C.h"
+#include "dot_matrix_func.c"
+#include "main_func.c"
 #include "remocon.c"
 #include "uart.h" // added by jang 2017.9.15
+#include "initboard.h"  // added by jang 2017.9.17
+#include "i2c_master.h" // added by jang 2017.9.17
+#include "ak4118a.h" // added by jang 2017.9.17
 
 U16 mtime_length = 0;
 U8 mtime_flag = 0;
@@ -32,7 +35,7 @@ U8 i;
 //PORTA	: 7(DotD7)=Out,L      6(DotD6)=Out,L        5(DotD5)=Out,L       4(DotD4)=Out,L     3(DotD3)=Out,L    2(DotD2)=Out,L      1(DotD1)=Out,L      0(DotD0)=Out,L
 //PORTB	: 7(APower_EN)=Out,L  6(Power_EN)=In,H     5(open)=Out,H        4(open)=Out,H      3(open)=Out,H     2(open)=Out,H       1(sck)=In,H         0(open)=Out,H
 //PORTC	: 7(Dot_/CE1)=Out,H   6(open)=Out,H         5(open)=Out,H        4(open)=Out,H      3(open)=Out,H     2(open)=Out,H       1(open)=Out,H       0(open)=Out,H
-//PORTD	: 7(Dot/CLR)=Out,H    6(Inkey1_A2)=In,H     5(Inkey1_A1)=In,H    4(Inkey1_A0)=In,H  3(Inkey1)=In,H    2(CS_ERR)=In,H      1(iSDA)=Out,H       0(iSCL)=Out,H
+//PORTD	: 7(Dot/CLR)=Out,H    6(Inkey1_A2)=In,H     5(Inkey1_A1)=In,H    4(Inkey1_A0)=In,H  3(Inkey1)=In,H    2(CS_ERR)=In,H      1(iSDA)=In,H       0(iSCL)=Out,H
 //PORTE	: 7(AutoMute)=In,H    6(LOCK)=In,H          5(R_Trans)=In,H      4(CS_ERR1)=In,H    3(I2S_Sel)=Out,H  2(XMOS_check)=In,H  1(TXD)=Out,H         0(RXD)=In,H
 //PORTF	: 7(TDI)=In,H         6(TDO)=In,H           5(TMS)=In,H          4(TCK)=In,H        3(Dot_A3)=Out,L   2(Dot_A2)=Out,L     1(Dot_A1)=Out,L     0(Dot_A0)=Out,L
 //PORTG	:                                                                4(open)=Out,H      3(open)=Out,H     2(Dot_/CE1)=Out,H   1(Dot_/CE0)=Out,H   0(Dot_A4)=Out,L
@@ -46,7 +49,15 @@ U8 i;
 //PORTA= 0x00;    PORTB=0xff;     PORTC=0xff;      PORTD=0xff;     PORTE=0xff;     PORTF=0xf0;     PORTG=0x1e;
     
 ///////////////////////////////////////////////////////////////////////////////
-//Timer Setting
+
+    // I2C Setting
+    send_string("I2C initialize..\r\n");
+    //TWSR = 0;
+    //TWBR = 0x0C;
+    //TWCR = (0x01<<TWEN);
+    i2c_init();
+   
+    //Timer Setting
     send_string("Timer setting.\r\n");
     TCCR0 = (0<<FOC0) | (0<<WGM00) | (0<<COM01) | (0<<COM00) |(0<<WGM01) | (0<< CS02)| (1<< CS01)| (1<< CS00);	// 32prescaling
     TCCR1B = (1<< CS12)| (0<< CS11)| (1<< CS10);	// 1024precaling
@@ -104,12 +115,28 @@ U8 i;
     //INT7~INT2
     EIFR =  (1<<INTF2) | (1<<INTF3) | (1<<INTF4) | (1<<INTF5) | (1<<INTF6) | (1<<INTF7);
     
+    send_string("[I2C] AK4118A Searching...\r\n");
+    if (Is_there_AK4118A()) send_string("[I2C] AK4118A Found.\r\n");
+    else send_string("[I2C] AK4118A not found.\r\n");
+ 
+    send_string("[I2C] ES9038PRO Searching...\r\n");
+    i=Is_there_ES9038();
+    if (i==0) send_string("[I2C] ES9038PRO x2 not found.\r\n");
+    else if(i==3) send_string("[I2C] ES9038PRO x2 found.\r\n");
+    else if(i==1) send_string("[I2C] ES9038PRO olny left found.\r\n");
+    else if(i==2) send_string("[I2C] ES9038PRO olny right found.\r\n");
+    
     send_string("[I2C] CS8416 Input7 to GND.\r\n");
-    I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
-    send_string("[I2C] ES9038 U22 Right Mute.\r\n");
+    //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
+    send_string("[I2C] ES9038 U22 Left Mute.\r\n");
     ES9038_ADDR0_MUTE;		//mute
-    send_string("[I2C] ES9038 U52 Left Mute.\r\n");
+    if(es9038_read_register(ES9038_ADDR0,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U22 Left Mute OK.\r\n");
+    else send_string("[I2C] ES9038 U22 Left Mute NG.\r\n");
+    
+    send_string("[I2C] ES9038 U52 Right Mute.\r\n");
     ES9038_ADDR1_MUTE;		//mute
+    if(es9038_read_register(ES9038_ADDR1,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U52 Right Mute OK.\r\n");
+    else send_string("[I2C] ES9038 U52 Right Mute NG.\r\n");
 	
 
 
@@ -179,7 +206,7 @@ void rom_check_sum_error(){
     
     if((i&0x000f) == 0x000f) i++;
       
-    init_rom_address_data=rom_I2C_Read(i);
+    //init_rom_address_data=rom_I2C_Read(i);
     
     if( init_rom_address_data  == 0xff) break;
   }
@@ -190,26 +217,26 @@ void rom_check_sum_error(){
   init_rom_add1=test_check&0xff;
   init_rom_add2=init_rom_add0+init_rom_add1;
   
-  I2C_START();
-  I2C_SHOUT(0xa0);        //device address
-  I2C_SHOUT(0x00);        //Sub address   
-  I2C_SHOUT(init_rom_add0);       
-  I2C_SHOUT(init_rom_add1);       
-  I2C_SHOUT(init_rom_add2); 
-  I2C_STOP();
+  //I2C_START();
+  //I2C_SHOUT(0xa0);        //device address
+  //I2C_SHOUT(0x00);        //Sub address   
+  //I2C_SHOUT(init_rom_add0);       
+  //I2C_SHOUT(init_rom_add1);       
+  //I2C_SHOUT(init_rom_add2); 
+  //I2C_STOP();
     
   DelayTime_ms(10);  //5msec
   
   if(test_check<0x7ff) {      
-    I2C_START();
-    I2C_SHOUT((0xa0 + ((test_check>>7) & 0x000e)));        //device address
-    I2C_SHOUT(test_check & 0x00ff);        //Sub address   
-    I2C_SHOUT(0x00);       //
-    I2C_SHOUT(0x00);       //
-    I2C_SHOUT(0x00);       //
-    I2C_SHOUT(0xff);       //vol(-999.999dB)
-    I2C_SHOUT(0x01);       //ch(4bits)+filter(3bits)+inverse(1bit)
-    I2C_STOP();
+    //I2C_START();
+    //I2C_SHOUT((0xa0 + ((test_check>>7) & 0x000e)));        //device address
+    //I2C_SHOUT(test_check & 0x00ff);        //Sub address   
+    //I2C_SHOUT(0x00);       //
+    //I2C_SHOUT(0x00);       //
+    //I2C_SHOUT(0x00);       //
+    //I2C_SHOUT(0xff);       //vol(-999.999dB)
+    //I2C_SHOUT(0x01);       //ch(4bits)+filter(3bits)+inverse(1bit)
+    //I2C_STOP();
       
     DelayTime_ms(10);  //5msec
   }
@@ -221,14 +248,13 @@ void _system_init_se(void){
   U16 i;
   
   //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
-  //I2C_Write(0x90, 0x0a, 0xcf);		//mute
-  //I2C_Write(0x92, 0x0a, 0xcf);		//mute
   send_string("[I2C] CS8416 Input7 to GND.\r\n");
-  I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
+  //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
   send_string("[I2C] ES9038 U22 Right Mute.\r\n");
-  ES9038_ADDR0_MUTE;		//mute
+  es9038_system_mute(ES9038_ADDR0,1);
   send_string("[I2C] ES9038 U52 Left Mute.\r\n");
-  ES9038_ADDR1_MUTE;		//mute
+  es9038_system_mute(ES9038_ADDR1,1);
+
   
   //PORTB_Bit6=1;   //Digital Power Enable
 
@@ -248,39 +274,39 @@ test_set_eeprom(0x1e, 0x01);
  test_set_eeprom(1, 0x1a);
 */
 
-  i=rom_I2C_Read(0);
+  //i=rom_I2C_Read(0);
   ////////처음 한번만
   if(i==0xff){
-    I2C_START();
-    I2C_SHOUT(0xa0);        //device address
-    I2C_SHOUT(0x00);        //Sub address   
-    I2C_SHOUT(0x00);       //
-    I2C_SHOUT(0x10);       //
-    I2C_SHOUT(0x10);       //check_sum
-    I2C_STOP();
+    //I2C_START();
+    //I2C_SHOUT(0xa0);        //device address
+    //I2C_SHOUT(0x00);        //Sub address   
+    //I2C_SHOUT(0x00);       //
+    //I2C_SHOUT(0x10);       //
+    //I2C_SHOUT(0x10);       //check_sum
+    //I2C_STOP();
     
     DelayTime_ms(5);  //5msec
     
-    I2C_START();
-    I2C_SHOUT(0xa0);        //device address
-    I2C_SHOUT(0x10);        //Sub address   
-    I2C_SHOUT(0x00);       //
-    I2C_SHOUT(0x00);       //
-    I2C_SHOUT(0x00);       //
-    I2C_SHOUT(0xff);       //vol(-999.999dB)
-    I2C_SHOUT(0x01);       //ch(4bits)+filter(3bits)+inverse(1bit)
-    I2C_STOP();
+    //I2C_START();
+    //I2C_SHOUT(0xa0);        //device address
+    //I2C_SHOUT(0x10);        //Sub address   
+    //I2C_SHOUT(0x00);       //
+    //I2C_SHOUT(0x00);       //
+    //I2C_SHOUT(0x00);       //
+    //I2C_SHOUT(0xff);       //vol(-999.999dB)
+    //I2C_SHOUT(0x01);       //ch(4bits)+filter(3bits)+inverse(1bit)
+    //I2C_STOP();
     
     DelayTime_ms(5);  //5msec
   }
   
-  init_rom_data0=rom_I2C_Read(0);
-  init_rom_data1=rom_I2C_Read(1);
-  init_rom_data2=rom_I2C_Read(2);
+  //init_rom_data0=rom_I2C_Read(0);
+  //init_rom_data1=rom_I2C_Read(1);
+  //init_rom_data2=rom_I2C_Read(2);
   rom_add_check_sum=init_rom_data0+init_rom_data1;
   
   if(rom_add_check_sum!=init_rom_data2) { //error
-    rom_check_sum_error();
+    //rom_check_sum_error();
   }
   else {
     test_check=init_rom_data0;
@@ -344,14 +370,14 @@ test_set_eeprom(0x1e, 0x01);
   rom_add_pt=test_check;
   
   if(rom_add_pt<0x07ff){
-    rom_cnt=rom_I2C_Read(rom_add_pt);
+    //rom_cnt=rom_I2C_Read(rom_add_pt);
     rom_cnt=rom_cnt<<8;
-    rom_cnt+=rom_I2C_Read(rom_add_pt+1);
+    //rom_cnt+=rom_I2C_Read(rom_add_pt+1);
     rom_cnt=rom_cnt<<8;
-    rom_cnt+=rom_I2C_Read(rom_add_pt+2);
+    //rom_cnt+=rom_I2C_Read(rom_add_pt+2);
     
-    vol_dB=rom_I2C_Read(rom_add_pt+3);
-    i=rom_I2C_Read(rom_add_pt+4);
+    //vol_dB=rom_I2C_Read(rom_add_pt+3);
+    //i=rom_I2C_Read(rom_add_pt+4);
     
     
     if(i<0x80) {    //channel 4bits, filter 3bits, inverse 1bit
@@ -402,14 +428,14 @@ test_set_eeprom(0x1e, 0x01);
 /////////////////////////////////////////////////////////////////////////////// 
 
   //initialize CS8416
-  I2C_Write(0x20, 0x00, 0x00);
-  I2C_Write(0x20, 0x01, 0x84);  
-  I2C_Write(0x20, 0x02, 0x09);              //GPO0 : Non-audio check
-  I2C_Write(0x20, 0x03, 0x50);              //GPO1 : RERR check,
+  //I2C_Write(0x20, 0x00, 0x00);
+  //I2C_Write(0x20, 0x01, 0x84);  
+  //I2C_Write(0x20, 0x02, 0x09);              //GPO0 : Non-audio check
+  //I2C_Write(0x20, 0x03, 0x50);              //GPO1 : RERR check,
   //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
   //I2C_Write(0x20, 0x04, 0x80);              // test CS8416 input0
   channel_change();
-  I2C_Write(0x20, 0x05, 0x85);
+  //I2C_Write(0x20, 0x05, 0x85);
   //I2C_Write(0x20, 0x06, 0x17);
   
   
@@ -426,12 +452,12 @@ test_set_eeprom(0x1e, 0x01);
   //I2C_Write(0x90, 0x0b, 0x85);
   //I2C_Write(0x90, 0x0b, 0x95); //DPLL_BANDWIDTH : Med-High
   //I2C_Write(0x90, 0x0b, 0x9d); //DPLL_BANDWIDTH : Highest
-  es9038_set_dpll_bw(0x0F,0x0F); //DPLL_BANDWIDTH : Highest
+  //es9038_set_dpll_bw(0x0F,0x0F); //DPLL_BANDWIDTH : Highest
   //I2C_Write(0x90, 0x0c, 0x20);
   //I2C_Write(0x90, 0x0f, 0x00);
   //I2C_Write(0x90, 0x11, 0x1d);
   //I2C_Write(0x90, 0x19, 0x01);
-  es9038_serial_data_config_automute(AUTOMUTE_RAMPNGND,I2S_MODE);
+  //es9038_serial_data_config_automute(AUTOMUTE_RAMPNGND,I2S_MODE);
   
   //I2C_Write(0x92, 0x0b, 0x85);
   //I2C_Write(0x92, 0x0b, 0x95); //DPLL_BANDWIDTH : Med-High
@@ -442,10 +468,9 @@ test_set_eeprom(0x1e, 0x01);
   //I2C_Write(0x92, 0x11, 0x9d);
   //I2C_Write(0x92, 0x19, 0x01);
   
-  //automute level : -102dB
-  //I2C_Write(0x90, 0x08, 120);
-  //I2C_Write(0x92, 0x08, 120);
-  es9038_set_automute_level(120); // set automute level -120dB
+  // set automute level -120dB
+  es9038_automute_level(ES9038_ADDR0,120);
+  es9038_automute_level(ES9038_ADDR1,120);
   
   volume_set();
   DelayTime_ms(10);  //5msec
@@ -472,7 +497,7 @@ test_set_eeprom(0x1e, 0x01);
   for(i=0; i<0x80; i++)     test_eeprom[i]=rom_I2C_Read(i);
   for(i=0; i<0x20; i++)     test_eeprom[i+0x80]=rom_I2C_Read(i+0x7e0);
   */
-  for(i=0; i<0x20; i++)     test_eeprom[i]=rom_I2C_Read(i);
+  //for(i=0; i<0x20; i++)     test_eeprom[i]=rom_I2C_Read(i);
 }
 
 

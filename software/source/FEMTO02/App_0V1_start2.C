@@ -10,6 +10,8 @@
 #include "es9038.h"     // added by jang 2017.9.16
 #include "initboard.c"
 
+unsigned char flag_usb_audio=0,flag_usb_audio_before=0;
+
 ///////////////////////////////////////////////////////////////////////////////
 void sample_rate_cal(){
   U8 temp;
@@ -21,12 +23,12 @@ void sample_rate_cal(){
   
   if( ( (ch_led_data!=7) && ess_lock_ck) || (ess_lock_ck && !ess_automute) ) {
     send_string("[I2C] Read Sampling rate.\r\n"); 
-    sample_rate=I2C_Read(0x90, 31);
+    //sample_rate=I2C_Read(0x90, 31);
     sample_rate<<=8;
-    sample_rate+=I2C_Read(0x90, 30);
-    sample_rate2=I2C_Read(0x92, 31);
+    //sample_rate+=I2C_Read(0x90, 30);
+    //sample_rate2=I2C_Read(0x92, 31);
     sample_rate2<<=8;
-    sample_rate2+=I2C_Read(0x92, 30);
+    //sample_rate2+=I2C_Read(0x92, 30);
     send_string("[I2C] Complete reading Sampling rate.\r\n"); 
         //0=44.1kHz,    1=48kHz,    2=88.2kHz,    3=96kHz,    4=176.4kHz,   5=196kHz
   
@@ -287,8 +289,8 @@ U8 data=0;
     else if(tmr_osc==30) {    //1.5sec
       //_system_init_1();
       es9018_reg10=0xce;			
-      I2C_Write(0x90, 0x0a, es9018_reg10);
-      I2C_Write(0x92, 0x0a, es9018_reg10);
+      //I2C_Write(0x90, 0x0a, es9018_reg10);
+      //I2C_Write(0x92, 0x0a, es9018_reg10);
       init_vol_dn(vol_dB);
       DelayTime_ms(50);  //50msec
       init_vol(vol_dB);
@@ -367,6 +369,9 @@ U8 data=0;
 ///////////////////////////////////////////////////////////////////////////////
 //U8 non_audio_flag=0;6
 void main(void){
+  int i;
+  unsigned char ch[41];
+  
   __enable_interrupt();
   Init_UART0(57600);    // added by jang 2017.9.15
   send_string("\r\nSystem started.\r\n");
@@ -374,9 +379,40 @@ void main(void){
   _system_init();
   //_system_init_1();
   send_string("System init Completed.\r\n");
+  
+  for(i=0;i<41;i++){
+    send_integer(i);
+    send_string(" ");
+    send_int2hex(AK4118A_read_register(AK4118A_I2C_ADDRESS(0),i));
+    if (((i+1)%8)==0) send_string("\r\n"); else send_string(" "); 
+  }
+  send_string("\r\nAK4118A REG ALL\r\n");
+  for(i=0;i<41;i++) ch[i]=0;
+  i2c_receive(0x21, ch, 41);
+  for(i=0;i<41;i++){
+    send_integer(i);
+    send_string(" ");
+    send_int2hex(ch[i]);
+    if (((i+1)%8)==0) send_string("\r\n"); else send_string(" "); 
+  }
+  send_string("\r\n\r\n");
+  
+  
+  
 
   while(1){
     if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
+    
+    if(UA_EN_READ & UA_EN_PIN) flag_usb_audio=1; else flag_usb_audio=0;
+    if(flag_usb_audio & !flag_usb_audio_before) {
+      flag_usb_audio_before=1;
+      send_string("USB Audio Activated.\r\n");
+    }
+    if(!flag_usb_audio & flag_usb_audio_before) {
+      flag_usb_audio_before=0;
+      send_string("USB Audio Deactivated.\r\n");
+    }
+    
     //if(tmr_osc_ck) _system_init_1();
     /*
     if(tmr_osc_ck){

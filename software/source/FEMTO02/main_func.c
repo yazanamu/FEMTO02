@@ -6,8 +6,8 @@ void ess_mute(){
   if(!key_func){
     mute_enable=!mute_enable;	//0 = mute, 	1 = unmute
     es9018_reg10=(es9018_reg10&0xce) + (!mute_enable);			//0xcf = mute, 			0xce = unmute
-    I2C_Write(0x90, 0x0a, es9018_reg10);
-    I2C_Write(0x92, 0x0a, es9018_reg10);
+    es9038_system_mute(ES9038_ADDR0,mute_enable);
+    es9038_system_mute(ES9038_ADDR1,mute_enable);
     dot_vol_hextodeci(vol_dB);
   }
  /*
@@ -23,14 +23,14 @@ void ess_mute(){
 void phase_ess(){
   
   if(!phase_data) { //phase on
-    I2C_Write(0x90, 13, 0xff);
-    I2C_Write(0x92, 13, 0xff);
+    //I2C_Write(0x90, 13, 0xff);
+    //I2C_Write(0x92, 13, 0xff);
   }
   else{ //phase off
-    I2C_Write(0x90, 13, 0);
-    I2C_Write(0x92, 13, 0);
+    //I2C_Write(0x90, 13, 0);
+    //I2C_Write(0x92, 13, 0);
   }
-  rom_write_multi();
+  //rom_write_multi();
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -39,22 +39,22 @@ void volume_set(){		//I2C write, dot-matrix
   //ES9018, i2c write
   U8 i;
   for(i=0; i<8; i++){
-    I2C_Write(0x90,i,vol_dB);	//Lch volume of DAC0
-    I2C_Write(0x92,i,vol_dB);	//Rch volume of DAC0
+    es9038_write_register(ES9038_ADDR0,ES9038_REG_VOLUME1_CONTROL+i,vol_dB);
+    es9038_write_register(ES9038_ADDR1,ES9038_REG_VOLUME1_CONTROL+i,vol_dB);
   }
-  rom_write_multi();
+  //rom_write_multi();
  
 }
 
 void init_vol_dn(U8 data){
   //gain
-  I2C_Write(0x90, 23, 0x7f-ess_lch_master_trim);
-  I2C_Write(0x92, 23, 0x7f-ess_rch_master_trim);
+  //I2C_Write(0x90, 23, 0x7f-ess_lch_master_trim);
+  //I2C_Write(0x92, 23, 0x7f-ess_rch_master_trim);
   //
   
   
-  I2C_Write(0x90, 20, 0xfe);
-  I2C_Write(0x92, 20, 0xfe);
+  //I2C_Write(0x90, 20, 0xfe);
+  //I2C_Write(0x92, 20, 0xfe);
   /*U8 i;
   if(data<199) data++;
   else           data=0xff;		//-127dB, display num = 00.0
@@ -66,8 +66,8 @@ void init_vol_dn(U8 data){
 }
 
 void init_vol(U8 data){
-  I2C_Write(0x90, 20, 0xff);
-  I2C_Write(0x92, 20, 0xff);
+  //I2C_Write(0x90, 20, 0xff);
+  //I2C_Write(0x92, 20, 0xff);
   /*
   U8 i;
   for(i=0; i<8; i++){
@@ -154,8 +154,8 @@ void channel_change(){
   U8 temp;
   
   if(mute_enable) {			//0 = mute, 	1 = unmute
-      I2C_Write(0x90, 0x0a, 0xcf);    //mute
-      I2C_Write(0x92, 0x0a, 0xcf);    //mute
+      //I2C_Write(0x90, 0x0a, 0xcf);    //mute
+      //I2C_Write(0x92, 0x0a, 0xcf);    //mute
     }
   
   if(ch_led_data==7) temp=1;    //USB mode     : I2S_SEL=1;      // Modified by Jang WS 2017.9.16
@@ -169,14 +169,15 @@ void channel_change(){
   //ch_led_data : 0=coax1,  1=coax2,    2=aes1,   3=aes2,   4=bnc,  5=opt1,   6=opt2,   7=usb
   interface_ch = interface_ch&0xc7;		// D5~D3 = 0
   interface_ch+=(ch_led_data<<3);
-  I2C_Write(0x20, 0x04, interface_ch);
+  //I2C_Write(0x20, 0x04, interface_ch);
   
   if(mute_enable) {			//0 = mute, 	1 = unmute
-      I2C_Write(0x90, 0x0a, 0xce);    //unmute
-      I2C_Write(0x92, 0x0a, 0xce);    //unmute
+
+      es9038_system_mute(ES9038_ADDR0,0);       //unmute
+      es9038_system_mute(ES9038_ADDR1,0);       //unmute
     }
   
-  rom_write_multi();
+  //rom_write_multi();
 
   //dot_vol_hextodeci(vol_dB);
 }
@@ -209,7 +210,7 @@ void ess_filter(){
   if(filter_flag==3) filter_flag=0;
   num=filter_flag; 
   
-  rom_write_multi();
+  //rom_write_multi();
   DelayTime_ms(5);  //5msec  
   
 /* 12-07-24 change 
@@ -276,16 +277,16 @@ void ess_filter(){
   }  */
   
   if(num==0){
-    I2C_Write(0x90, 14, 0x0b);
-    I2C_Write(0x92, 14, 0x0b);
+    //I2C_Write(0x90, 14, 0x0b);
+    //I2C_Write(0x92, 14, 0x0b);
   }
   else if(num==1){
-    I2C_Write(0x90, 14, 0x0d);
-    I2C_Write(0x92, 14, 0x0d);
+    //I2C_Write(0x90, 14, 0x0d);
+    //I2C_Write(0x92, 14, 0x0d);
   }
   else if(num==2){
-    I2C_Write(0x90, 14, 0x0f);
-    I2C_Write(0x92, 14, 0x0f);
+    //I2C_Write(0x90, 14, 0x0f);
+    //I2C_Write(0x92, 14, 0x0f);
   }
   
   if(num) DelayTime_ms(200);  //0.2sec
@@ -311,8 +312,8 @@ void femto_function(){
     filter_flag++;
     
     if(mute_enable) {			//0 = mute, 	1 = unmute
-      I2C_Write(0x90, 0x0a, 0xcf);    //mute
-      I2C_Write(0x92, 0x0a, 0xcf);    //mute
+      //I2C_Write(0x90, 0x0a, 0xcf);    //mute
+      //I2C_Write(0x92, 0x0a, 0xcf);    //mute
     }
     
     ess_filter();
@@ -321,8 +322,8 @@ void femto_function(){
     
     
     if(mute_enable) {			//0 = mute, 	1 = unmute
-      I2C_Write(0x90, 0x0a, 0xce);    //unmute
-      I2C_Write(0x92, 0x0a, 0xce);    //unmute
+      //I2C_Write(0x90, 0x0a, 0xce);    //unmute
+      //I2C_Write(0x92, 0x0a, 0xce);    //unmute
     }
     //rom_write_multi();
     //DelayTime_ms(10);  //10msec

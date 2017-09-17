@@ -2099,6 +2099,9 @@
   <file>
     <name>$PROJ_DIR$\App_0V1_start2.C</name>
   </file>
+  <file>
+    <name>$PROJ_DIR$\i2c_master.c</name>
+  </file>
 </project>
 
 
