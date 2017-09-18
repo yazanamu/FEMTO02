@@ -10,7 +10,12 @@
 #include "es9038.h"     // added by jang 2017.9.16
 #include "initboard.c"
 
-unsigned char flag_usb_audio=0,flag_usb_audio_before=0;
+unsigned char flag_usb_audio=1,         flag_usb_audio_before=1;
+unsigned char flag_dsd128=1,            flag_dsd128_before=1;
+unsigned char flag_dsd_on=1,            flag_dsd_on_before=1;
+unsigned char flag_usb_detect=0,        flag_usb_detect_before=0;
+
+void port_scan(void);
 
 ///////////////////////////////////////////////////////////////////////////////
 void sample_rate_cal(){
@@ -368,6 +373,8 @@ U8 data=0;
 
 ///////////////////////////////////////////////////////////////////////////////
 //U8 non_audio_flag=0;6
+
+
 void main(void){
   int i;
   unsigned char ch[41];
@@ -396,41 +403,54 @@ void main(void){
     if (((i+1)%8)==0) send_string("\r\n"); else send_string(" "); 
   }
   send_string("\r\n\r\n");
-  
-  
-  
 
   while(1){
-    if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
-    
-    if(UA_EN_READ & UA_EN_PIN) flag_usb_audio=1; else flag_usb_audio=0;
-    if(flag_usb_audio & !flag_usb_audio_before) {
-      flag_usb_audio_before=1;
-      send_string("USB Audio Activated.\r\n");
-    }
-    if(!flag_usb_audio & flag_usb_audio_before) {
-      flag_usb_audio_before=0;
-      send_string("USB Audio Deactivated.\r\n");
-    }
-    
-    //if(tmr_osc_ck) _system_init_1();
-    /*
-    if(tmr_osc_ck){
-      tmr_osc_ck2=1;
-      tmr_osc_ck=0;
-      //one time
-      if(KeyReady){
-        _system_init_se();
-        es9018_reg10=0xce;			
-        I2C_Write(0x90, 0x0a, es9018_reg10);
-        I2C_Write(0x92, 0x0a, es9018_reg10);
-        //led_start_flag=1;
-        KeyReady=0;
-      }
-      
-    }//end if
-    */
+    //if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
+    port_scan();
   }//end while
 }
 
+void port_scan(void)
+{
+  //detect USB Audio
+  if(UA_EN_READ & UA_EN_PIN) flag_usb_audio=1; else flag_usb_audio=0;
+  if(flag_usb_audio & !flag_usb_audio_before) {         // edge detect
+    flag_usb_audio_before=1;
+    send_string("[SA9127] USB Audio Activated.\r\n");
+  }
+  if(!flag_usb_audio & flag_usb_audio_before) {         // edge detect
+    flag_usb_audio_before=0;
+    send_string("[SA9127] USB Audio Deactivated.\r\n");
+  }
+  // detect dsd on
+  if(DSD_ON_READ & DSD_ON_PIN) flag_dsd_on=1; else flag_dsd_on=0;
+  if(flag_dsd_on & !flag_dsd_on_before) {         // edge detect
+    flag_dsd_on_before=1;
+    send_string("[SA9127] DSD mode detected.\r\n");
+  }
+  if(!flag_dsd_on & flag_dsd_on_before) {         // edge detect
+    flag_dsd_on_before=0;
+    send_string("[SA9127] PCM mode detected.\r\n");
+  }
+  // dsd128 detect
+  if(DSD128_READ & DSD128_PIN) flag_dsd128=1; else flag_dsd128=0;
+  if(flag_dsd128 & !flag_dsd128_before) {         // edge detect
+    flag_dsd128_before=1;
+    send_string("[SA9127] DSD 128 detected.\r\n");
+  }
+  if(!flag_dsd128 & flag_dsd128_before) {         // edge detect
+    flag_dsd128_before=0;
+    send_string("[SA9127] DSD 64 detected.\r\n");
+  }
+  // detect usb connected
+  if(USB_DET_PORT & USB_DET_PIN) flag_usb_detect=1; else flag_usb_detect=0;
+  if(flag_usb_detect & !flag_usb_detect_before) {         // edge detect
+    flag_usb_detect_before=1;
+    send_string("[SA9127] USB is in normal mode.\r\n");
+  }
+  if(!flag_usb_detect & flag_usb_detect_before) {         // edge detect
+    flag_usb_detect_before=0;
+    send_string("[SA9127] USB is in suspended.\r\n");
+  } 
+}
 

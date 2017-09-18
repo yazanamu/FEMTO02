@@ -27,7 +27,7 @@ void wait_mtime(unsigned int time){
 */
 void _system_init(void){
 U8 i;
-    send_string("Port init.\r\n");
+  send_string("Port init.\r\n");
 //DDR=1, PORT=1 --> 출력 High
 //DDR=1, PORT=0 --> 출력 Low
 //DDR=0, PORT=1 --> 입력(내부 Pull Up)
@@ -41,13 +41,18 @@ U8 i;
 //PORTG	:                                                                4(open)=Out,H      3(open)=Out,H     2(Dot_/CE1)=Out,H   1(Dot_/CE0)=Out,H   0(Dot_A4)=Out,L
 	
 // DDR Setting  
-    DDRA=0xff;      DDRB=0xbd;      DDRC=0xff;    DDRD=0x83;      DDRE=0x0A;      DDRF=0x0f;      DDRG=0x1f;
+  DDRA=0xff;      DDRB=0xbd;      DDRC=0xff;    DDRD=0x83;      DDRE=0x4A;      DDRF=0x0f;      DDRG=0x1f;
 //DDRA=0xff;      DDRB=0x3d;      DDRC=0xff;    DDRD=0x83;      DDRE=0x08;      DDRF=0x0f;      DDRG=0x1f;
 
 // PORT Setting   
     PORTA= 0x00;    PORTB=0x7f;     PORTC=0xff;      PORTD=0xff;     PORTE=0xff;     PORTF=0xf0;     PORTG=0x1e;
 //PORTA= 0x00;    PORTB=0xff;     PORTC=0xff;      PORTD=0xff;     PORTE=0xff;     PORTF=0xf0;     PORTG=0x1e;
-    
+
+  UA_EN_DDR_INIT; UA_EN_PORT_INIT;
+  DSD128_DDR_INIT; DSD128_PORT_INIT;
+  DSD_ON_DDR_INIT; DSD_ON_PORT_INIT;
+  USB_DET_DDR_INIT; USB_DET_PORT_INIT;
+  I2S_SEL_DDR_INIT; I2S_SEL_PORT_INIT;
 ///////////////////////////////////////////////////////////////////////////////
 
     // I2C Setting
@@ -119,27 +124,47 @@ U8 i;
     if (Is_there_AK4118A()) send_string("[I2C] AK4118A Found.\r\n");
     else send_string("[I2C] AK4118A not found.\r\n");
  
+    ////////////Initial ES9038 /////////////////////////
+    es9038_soft_reset(ES9038_ADDR0); es9038_soft_reset(ES9038_ADDR1);
+    send_string("[I2C] ES9038PRO Soft Reset complete.\r\n");
+
+    send_string("[I2C] ES9038 U22 Left Mute.\r\n");
+    es9038_system_mute(ES9038_ADDR0,1);		//mute
+    if(es9038_read_register(ES9038_ADDR0,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U22 Left Mute OK.\r\n");
+    else send_string("[I2C] ES9038 U22 Left Mute NG.\r\n");
+     send_string("[I2C] ES9038 U52 Right Mute.\r\n");
+    es9038_system_mute(ES9038_ADDR1,1);		//mute
+    if(es9038_read_register(ES9038_ADDR1,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U52 Right Mute OK.\r\n");
+    else send_string("[I2C] ES9038 U52 Right Mute NG.\r\n");
+
     send_string("[I2C] ES9038PRO Searching...\r\n");
     i=Is_there_ES9038();
     if (i==0) send_string("[I2C] ES9038PRO x2 not found.\r\n");
     else if(i==3) send_string("[I2C] ES9038PRO x2 found.\r\n");
     else if(i==1) send_string("[I2C] ES9038PRO olny left found.\r\n");
     else if(i==2) send_string("[I2C] ES9038PRO olny right found.\r\n");
+
+    es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DISABLE);
+    es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DISABLE);
+    es9038_audio_input_select(ES9038_ADDR0,INPUT_I2S);
+    es9038_audio_input_select(ES9038_ADDR1,INPUT_I2S);
+    send_string("[I2C] ES9038PRO Auto Select function disable complete.\r\n");
+    for(i=1;i<=8;i++) {
+      es9038_dac_channel_mapping(ES9038_ADDR0,i,INPUT_CH1);
+      es9038_dac_channel_mapping(ES9038_ADDR1,i,INPUT_CH2);
+    }
+    send_string("[I2C] ES9038PRO Channel mapping complete.\r\n");
+    
+    
+    
     
     send_string("[I2C] CS8416 Input7 to GND.\r\n");
     //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
-    send_string("[I2C] ES9038 U22 Left Mute.\r\n");
-    ES9038_ADDR0_MUTE;		//mute
-    if(es9038_read_register(ES9038_ADDR0,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U22 Left Mute OK.\r\n");
-    else send_string("[I2C] ES9038 U22 Left Mute NG.\r\n");
-    
-    send_string("[I2C] ES9038 U52 Right Mute.\r\n");
-    ES9038_ADDR1_MUTE;		//mute
-    if(es9038_read_register(ES9038_ADDR1,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U52 Right Mute OK.\r\n");
-    else send_string("[I2C] ES9038 U52 Right Mute NG.\r\n");
 	
-
-
+    es9038_system_mute(ES9038_ADDR0,0); // disable mute
+    es9038_system_mute(ES9038_ADDR1,0); // disable mute
+    send_string("[I2C] ES9038 Mute Off.\r\n");
+    
     //Dot matrix clear
     send_string("[SPI] DOT Matrix Clear.\r\n");
     dot_matrix_clear();
@@ -250,10 +275,10 @@ void _system_init_se(void){
   //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
   send_string("[I2C] CS8416 Input7 to GND.\r\n");
   //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
-  send_string("[I2C] ES9038 U22 Right Mute.\r\n");
-  es9038_system_mute(ES9038_ADDR0,1);
-  send_string("[I2C] ES9038 U52 Left Mute.\r\n");
-  es9038_system_mute(ES9038_ADDR1,1);
+  //send_string("[I2C] ES9038 U22 Right Mute.\r\n");
+  //es9038_system_mute(ES9038_ADDR0,1);
+  //send_string("[I2C] ES9038 U52 Left Mute.\r\n");
+  //es9038_system_mute(ES9038_ADDR1,1);
 
   
   //PORTB_Bit6=1;   //Digital Power Enable

@@ -17,7 +17,7 @@
 #define ES9038_REG_VOLUME 0x10        // 0x10~0x17
 #define ES9038_REG_JITTER_DPLLBW 0x0C
 
-#define ES9038_REG_CHIP_ID_STATUS 0x40
+#define ES9038_REG_CHIP_ID_STATUS  0x40
 #define ES9038_REG_VOLUME1_CONTROL 0x16
 #define ES9038_REG_VOLUME2_CONTROL 0x11
 #define ES9038_REG_VOLUME3_CONTROL 0x12
@@ -34,6 +34,11 @@
 
 #define ES9038_SYSTEM_SOFT_RESET        0x01<<0
 #define ES9038_GPIO_INPUT_SEL(x)        (((x)&0x03)<<6)
+#define ES9038_INPUT_AUTO_SEL(x)        (((x)&0x03)<<2)
+enum auto_select {AUTO_SEL_DISABLE, AUTO_SEL_DSD_I2S, AUTO_SEL_SPDIF_I2S, AUTO_SEL_DSD_SPDIF_I2S};
+#define ES9038_INPUT_SEL(x)             (((x)&0x03)<<0)
+enum input_select {INPUT_I2S, INPUT_SPDIF, INPUT_DSD=4};
+
 #define ES9038_VOLUME_CFG_STEREO_MODE   0x01<<2
 #define ES9038_VOLUME_CFG_CH1_VOL       0x01<<1
 #define ES9038_VOLUME_CFG_LATCH_VOL     0x01<<0
@@ -54,6 +59,7 @@
 #define ES9038_DAC_CH6_MAP(x)           (((x)&0x0F)<<4)
 #define ES9038_DAC_CH7_MAP(x)           (((x)&0x0F)<<0)
 #define ES9038_DAC_CH8_MAP(x)           (((x)&0x0F)<<4)
+enum ch_input {INPUT_CH1, INPUT_CH2, INPUT_CH3, INPUT_CH4, INPUT_CH5, INPUT_CH6, INPUT_CH7, INPUT_CH8};
 
 
 
@@ -105,11 +111,6 @@ void es9038_write_register(unsigned char devaddr, unsigned char regaddr, unsigne
   i2c_writeReg(devaddr, regaddr, &data, 1);
 }
 
-void es9038_resetb(void)
-{
-  
-}
-
 void es9038_dac_mute_on(void)
 {
   DAC_MUTE_DDR |= DAC_MUTE_PIN;
@@ -153,6 +154,28 @@ void es9038_ch1_volume(unsigned char devaddr, unsigned char onoff)
   es9038_write_register(devaddr,ES9038_REG_GPIO_INPUT_SEL_VOLUME_CONFIG,reg);
 }
 
+void es9038_audio_auto_select(unsigned char devaddr, unsigned char select)
+{
+  unsigned char reg;
+  
+  reg=es9038_read_register(devaddr,ES9038_REG_INPUT_SEL);
+  reg&=~(ES9038_INPUT_AUTO_SEL(0x03));
+  reg|=ES9038_INPUT_AUTO_SEL(select);
+  es9038_write_register(devaddr,ES9038_REG_INPUT_SEL,reg);
+}
+
+void es9038_audio_input_select(unsigned char devaddr, unsigned char select)
+{
+  unsigned char reg;
+  
+  reg=es9038_read_register(devaddr,ES9038_REG_INPUT_SEL);
+  reg&=~ES9038_INPUT_SEL(0x03);
+  reg|=ES9038_INPUT_SEL(select);
+  es9038_write_register(devaddr,ES9038_REG_INPUT_SEL,reg);
+}
+
+
+
 void es9038_automute_level(unsigned char devaddr, unsigned char level)
 {
   es9038_write_register(devaddr,ES9038_REG_AUTOMUTE_LEVEL,level & 0x3F);
@@ -163,11 +186,72 @@ void es9038_set_volume(unsigned char volume)
   unsigned char i;
   
   for (i=0;i<8;i++) {
-    //I2C_Write(ES9038_ADDR0,REG_VOLUME+i,volume);
-    //I2C_Write(ES9038_ADDR1,REG_VOLUME+i,volume);
+    es9038_write_register(ES9038_ADDR0,ES9038_REG_VOLUME1_CONTROL+i,volume);
+    es9038_write_register(ES9038_ADDR1,ES9038_REG_VOLUME1_CONTROL+i,volume);
+  }
+}
+
+void es9038_dac_channel_mapping(unsigned char devaddr,unsigned char dac_ch,unsigned char input_ch)
+{
+  unsigned char reg;
+  
+  switch (dac_ch) {
+    case 1:
+      reg=es9038_read_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC12);
+      reg&=~ES9038_DAC_CH1_MAP(0xF);
+      reg|=ES9038_DAC_CH1_MAP(input_ch);
+      es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC12,reg);
+      break;
+    case 2:
+      reg=es9038_read_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC12);
+      reg&=~ES9038_DAC_CH2_MAP(0xF);
+      reg|=ES9038_DAC_CH2_MAP(input_ch);
+      es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC12,reg);
+      break;
+    case 3:
+      reg=es9038_read_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC34);
+      reg&=~ES9038_DAC_CH3_MAP(0xF);
+      reg|=ES9038_DAC_CH3_MAP(input_ch);
+      es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC34,reg);
+      break;
+    case 4:
+      reg=es9038_read_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC34);
+      reg&=~ES9038_DAC_CH4_MAP(0xF);
+      reg|=ES9038_DAC_CH4_MAP(input_ch);
+      es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC34,reg);
+      break;
+    case 5:
+      reg=es9038_read_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC56);
+      reg&=~ES9038_DAC_CH5_MAP(0xF);
+      reg|=ES9038_DAC_CH5_MAP(input_ch);
+      es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC56,reg);
+      break;
+    case 6:
+      reg=es9038_read_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC56);
+      reg&=~ES9038_DAC_CH6_MAP(0xF);
+      reg|=ES9038_DAC_CH6_MAP(input_ch);
+      es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC56,reg);
+      break;
+    case 7:
+      reg=es9038_read_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC78);
+      reg&=~ES9038_DAC_CH7_MAP(0xF);
+      reg|=ES9038_DAC_CH7_MAP(input_ch);
+      es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC78,reg);
+      break;
+    case 8:
+      reg=es9038_read_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC78);
+      reg&=~ES9038_DAC_CH8_MAP(0xF);
+      reg|=ES9038_DAC_CH8_MAP(input_ch);
+      es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC78,reg);
+      break;
   }
 }
 
 
+
+void es9038_soft_reset(unsigned char devaddr)
+{
+  es9038_write_register(devaddr,ES9038_REG_SYSTEM,ES9038_SYSTEM_SOFT_RESET);
+}
 
 #endif

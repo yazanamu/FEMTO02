@@ -6,80 +6,79 @@
   <configuration>
     <name>Debug</name>
     <outputs>
-      <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.__cstat.et</file>
-      <file>$PROJ_DIR$\Debug\Obj\uart.pbi</file>
-      <file>$TOOLKIT_DIR$\inc\inavr.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.r90</file>
-      <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\Femto_0V2_DA1D985F_114_NAMI.pbd</file>
-      <file>$PROJ_DIR$\App_0V1_start2.C</file>
-      <file>$PROJ_DIR$\remocon.c</file>
+      <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$PROJ_DIR$\Debug\List\i2c_master.s90</file>
+      <file>$PROJ_DIR$\Debug\Obj\i2c_master.__cstat.et</file>
+      <file>$PROJ_DIR$\Debug\Obj\i2c_master.pbi</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgm128.xcl</file>
+      <file>$TOOLKIT_DIR$\inc\clib\string.h</file>
+      <file>$PROJ_DIR$\twi.h</file>
+      <file>$PROJ_DIR$\es9038.h</file>
       <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
-      <file>$PROJ_DIR$\ioport_128.c</file>
       <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
-      <file>$PROJ_DIR$\main_func.c</file>
-      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul.r90</file>
-      <file>$PROJ_DIR$\Debug\Exe\FEMTO02.hex</file>
       <file>$PROJ_DIR$\dot_matrix_func.C</file>
+      <file>$TOOLKIT_DIR$\lib\clib\cl3s-ec_mul.r90</file>
       <file>$PROJ_DIR$\Debug\List\App_0V1_start2.s90</file>
-      <file>$PROJ_DIR$\Debug\Obj\uart.__cstat.et</file>
-      <file>$PROJ_DIR$\InitBoard.c</file>
-      <file>$TOOLKIT_DIR$\inc\iom128.h</file>
+      <file>$PROJ_DIR$\uart.c</file>
+      <file>$PROJ_DIR$\uart.h</file>
+      <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom128.inc</file>
+      <file>$PROJ_DIR$\ioport_128.c</file>
+      <file>$PROJ_DIR$\Debug\Exe\FEMTO02.hex</file>
+      <file>$TOOLKIT_DIR$\inc\inavr.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.__cstat.et</file>
+      <file>$PROJ_DIR$\Debug\Obj\Femto_0V2_DA1D985F_114_NAMI.pbd</file>
+      <file>$PROJ_DIR$\Debug\Obj\i2c_master.r90</file>
+      <file>$PROJ_DIR$\ak4118a.h</file>
+      <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
+      <file>$PROJ_DIR$\main_func.c</file>
+      <file>$PROJ_DIR$\initboard.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\uart.pbi</file>
       <file>$PROJ_DIR$\define.h</file>
       <file>$PROJ_DIR$\Debug\List\App_0V1_start2.lst</file>
       <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.pbi</file>
+      <file>$TOOLKIT_DIR$\inc\iom128.h</file>
+      <file>$PROJ_DIR$\App_0V1_start2.C</file>
       <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\uart.r90</file>
-      <file>$PROJ_DIR$\Debug\List\FEMTO02.map</file>
-      <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
-      <file>$PROJ_DIR$\uart.c</file>
-      <file>$TOOLKIT_DIR$\src\template\cfgm128.xcl</file>
-      <file>$PROJ_DIR$\I2C.h</file>
-      <file>$PROJ_DIR$\uart.h</file>
-      <file>$TOOLKIT_DIR$\inc\clib\string.h</file>
-      <file>$PROJ_DIR$\es9038.h</file>
-      <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom128.inc</file>
-      <file>$PROJ_DIR$\initboard.h</file>
-      <file>$PROJ_DIR$\ak4118A.h</file>
-      <file>$PROJ_DIR$\twi.h</file>
-      <file>$PROJ_DIR$\Debug\List\i2c_master.lst</file>
-      <file>$PROJ_DIR$\Debug\List\i2c_master.s90</file>
+      <file>$PROJ_DIR$\Debug\Obj\uart.__cstat.et</file>
       <file>$PROJ_DIR$\i2c_master.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\uart.r90</file>
+      <file>$PROJ_DIR$\remocon.c</file>
+      <file>$PROJ_DIR$\InitBoard.c</file>
+      <file>$PROJ_DIR$\Debug\Obj\App_0V1_start2.pbi</file>
+      <file>$PROJ_DIR$\Debug\List\FEMTO02.map</file>
       <file>$PROJ_DIR$\i2c_master.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\i2c_master.r90</file>
-      <file>$PROJ_DIR$\Debug\Obj\i2c_master.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\i2c_master.__cstat.et</file>
+      <file>$PROJ_DIR$\Debug\List\i2c_master.lst</file>
     </outputs>
     <file>
       <name>[ROOT_NODE]</name>
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 13 25</file>
+          <file> 17 40</file>
         </tool>
       </outputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\App_0V1_start2.C</name>
+      <name>$PROJ_DIR$\uart.c</name>
       <outputs>
         <tool>
           <name>__cstat</name>
-          <file> 0</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 22</file>
+          <file> 33</file>
         </tool>
         <tool>
           <name>ICCAVR</name>
-          <file> 15 20 3</file>
+          <file> 36</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 26</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
-          <name>ICCAVR</name>
-          <file> 18 23 33 2 8 31 4 19 30 32 40 34 17 9 26 21 14 11 7 35</file>
+          <name>BICOMP</name>
+          <file> 14</file>
         </tool>
       </inputs>
     </file>
@@ -88,36 +87,40 @@
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 25</file>
+          <file> 40</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 28 10 3 41 12</file>
+          <file> 4 9 35 21 11</file>
         </tool>
       </inputs>
     </file>
     <file>
-      <name>$PROJ_DIR$\uart.c</name>
+      <name>$PROJ_DIR$\App_0V1_start2.C</name>
       <outputs>
         <tool>
           <name>__cstat</name>
-          <file> 16</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 1</file>
+          <file> 19</file>
         </tool>
         <tool>
           <name>ICCAVR</name>
-          <file> 24</file>
+          <file> 12 28 35</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 39</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
+          <name>ICCAVR</name>
+          <file> 30 32 15 18 8 5 23 27 14 7 41 25 38 16 0 29 10 24 37 22</file>
+        </tool>
+        <tool>
           <name>BICOMP</name>
-          <file> 30</file>
+          <file> 25 18 24 14 15 41 23 5 38 16 0 29 27 7 32 8 30 10 37 22</file>
         </tool>
       </inputs>
     </file>
@@ -126,21 +129,25 @@
       <outputs>
         <tool>
           <name>__cstat</name>
-          <file> 43</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 42</file>
+          <file> 2</file>
         </tool>
         <tool>
           <name>ICCAVR</name>
-          <file> 38 37 41</file>
+          <file> 1 42 21</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 3</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 18 23 33 36 40</file>
+          <file> 30 32 15 6 41</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 6 32 30 41 15</file>
         </tool>
       </inputs>
     </file>
