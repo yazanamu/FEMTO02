@@ -2099,10 +2099,34 @@
     </settings>
   </configuration>
   <file>
-    <name>$PROJ_DIR$\App_0V1_start2.C</name>
+    <name>$PROJ_DIR$\ak4118a.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\dot_matrix_func.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\es9038.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\i2c_master.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\initboard.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\ioport_128.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\main.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\main_func.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\remocon.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\uart.c</name>
   </file>
 </project>
 

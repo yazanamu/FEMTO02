@@ -213,7 +213,7 @@
         </option>
         <option>
           <name>GenDeviceSelectMenu</name>
-          <state>m128	ATmega128</state>
+          <state>m128a	ATmega128A</state>
         </option>
         <option>
           <name>OGProductVersion</name>
@@ -682,7 +682,7 @@
         </option>
         <option>
           <name>AsmOutputFile</name>
-          <state></state>
+          <state>$FILE_BNAME$.r90</state>
         </option>
         <option>
           <name>AStdIncCheck</name>
@@ -791,7 +791,7 @@
         </option>
         <option>
           <name>XclFile</name>
-          <state>$TOOLKIT_DIR$\src\template\cfgm128.xcl</state>
+          <state>$TOOLKIT_DIR$\src\template\cfgm128a.xcl</state>
         </option>
         <option>
           <name>XclFileSlave</name>
@@ -907,7 +907,7 @@
         </option>
         <option>
           <name>ExtraOutputFile</name>
-          <state>Femto_0V2_DA1D985F_114_NAMI.a90</state>
+          <state>Femto02.a90</state>
         </option>
         <option>
           <name>ExtraOutputFormat</name>
@@ -2097,10 +2097,34 @@
     </settings>
   </configuration>
   <file>
-    <name>$PROJ_DIR$\App_0V1_start2.C</name>
+    <name>$PROJ_DIR$\ak4118a.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\dot_matrix_func.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\es9038.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\i2c_master.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\initboard.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\ioport_128.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\main.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\main_func.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\remocon.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\uart.c</name>
   </file>
 </project>
 

@@ -1,3 +1,6 @@
+#ifndef _AVR_IOPORT_128_H
+#define _AVR_IOPORT_128_H
+
 /////////////////////////////////////////////////
 //
 //	 Title		: ioport.c
@@ -9,13 +12,13 @@
 //	 		First coded.
 //
 /////////////////////////////////////////////////
-//#define		PPCA		1
-//#define		PPCB		2
-//#define		PPCC		3
-//#define		PPCD		4
-//#define		PPCE		5
-//#define		PPCF		6
-//#define		PPCG		7
+#define		PPCA		1
+#define		PPCB		2
+#define		PPCC		3
+#define		PPCD		4
+#define		PPCE		5
+#define		PPCF		6
+#define		PPCG		7
 
 //void _outport(unsigned char, char);
 //unsigned char _inport(unsigned char);
@@ -23,3 +26,5 @@
 //void _outbit(unsigned char, unsigned char, char);
 //void _port_init(unsigned char, unsigned char);
 //void _bit_init(unsigned char, unsigned char, char);
+
+#endif

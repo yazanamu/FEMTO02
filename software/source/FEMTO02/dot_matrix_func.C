@@ -1,4 +1,14 @@
-void dot_matrix_clear(){
+#include <iom128.h>
+#include "define.h"
+#include "dot_matrix_func.h"
+
+extern unsigned char dot_light_reg;
+extern unsigned char dot_string[16];
+extern unsigned char mute_enable;
+extern unsigned char ess_volume[4];
+
+
+void dot_matrix_clear(void){
   DOT_CLR_FLAG = 0;
   dot_light_reg=0;
 }
@@ -6,8 +16,9 @@ void dot_matrix_clear(){
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //
-void dot_string_digit(){
-  U8 i,j, xdigit;
+void dot_string_digit(void){
+  U8 i,j,xdigit;
+  U16 k;
   xdigit=0;
   DOT_CLR_FLAG=1;  
   DOT_ADDR3=1;
@@ -25,27 +36,28 @@ void dot_string_digit(){
       if(i) M2_DOT_ENABLE=0;	              //M2 enable
       else M1_DOT_ENABLE=0;	//M1 enable
       
-      DelayTime(8); //about 0.5us
+      k=8;while(k--); //about 0.5us
       DOT_WR=0;
-      DelayTime(8); //about 0.5us
+      k=8;while(k--); //about 0.5us
   
       DOT_DATA=dot_string[i*8+j];
-      DelayTime(16); //about 1us
+      k=16;while(k--); //about 1us
       DOT_WR=1;
       
       if(i) M2_DOT_ENABLE=1;	              //M2 enable
       else M1_DOT_ENABLE=1;	//M1 enable
       
-      DelayTime(16); //about 1us
+      k=16;while(k--); //about 1us
       xdigit++;
     }
-    DelayTime(1600);  //0.1msec
+    k=1600;while(k--);  //0.1msec
     xdigit=0;
   }
 }
 
 
-void dot_matrix_digit(U8 data, U8 xdigit){
+void dot_matrix_digit(unsigned char data, unsigned char xdigit){
+  U16 k;
   DOT_CLR_FLAG=1;  
   DOT_ADDR3=1;
   if(xdigit==0){ DOT_ADDR2=0; DOT_ADDR1=0; DOT_ADDR0=0;}
@@ -56,21 +68,22 @@ void dot_matrix_digit(U8 data, U8 xdigit){
   else if(xdigit==5){ DOT_ADDR2=1; DOT_ADDR1=0; DOT_ADDR0=1;}
   else if(xdigit==6){ DOT_ADDR2=1; DOT_ADDR1=1; DOT_ADDR0=0;}
   else if(xdigit==7){ DOT_ADDR2=1; DOT_ADDR1=1; DOT_ADDR0=1;}
-  DelayTime(8); //about 0.5us
+  k=8;while(k--); //about 0.5us
   
   M1_DOT_ENABLE=0;	//enable
-  DelayTime(8); //about 0.5us
+  k=8;while(k--); //about 0.5us
   DOT_WR=0;
-  DelayTime(8); //about 0.5us
+  k=8;while(k--); //about 0.5us
   
   DOT_DATA=data;
-  DelayTime(16); //about 1us
+  k=16;while(k--); //about 1us
   DOT_WR=1;
   M1_DOT_ENABLE=1;	//disable
-  DelayTime(16); //about 1us
+  k=16;while(k--); //about 1us
 }
 
-void dot_matrix_digit2(U8 data, U8 xdigit){
+void dot_matrix_digit2(unsigned char data, unsigned char xdigit){
+  U16 k;
   DOT_CLR_FLAG=1;  
   DOT_ADDR3=1;
   if(xdigit==0){ DOT_ADDR2=0; DOT_ADDR1=0; DOT_ADDR0=0;}
@@ -81,25 +94,26 @@ void dot_matrix_digit2(U8 data, U8 xdigit){
   else if(xdigit==5){ DOT_ADDR2=1; DOT_ADDR1=0; DOT_ADDR0=1;}
   else if(xdigit==6){ DOT_ADDR2=1; DOT_ADDR1=1; DOT_ADDR0=0;}
   else if(xdigit==7){ DOT_ADDR2=1; DOT_ADDR1=1; DOT_ADDR0=1;}
-  DelayTime(8); //about 0.5us
+  k=8;while(k--); //about 0.5us
   
   M2_DOT_ENABLE=0;	//enable
-  DelayTime(8); //about 0.5us
+  k=8;while(k--); //about 0.5us
   DOT_WR=0;
-  DelayTime(8); //about 0.5us
+  k=8;while(k--); //about 0.5us
   
   DOT_DATA=data;
-  DelayTime(16); //about 1us
+  k=16;while(k--); //about 1us
   DOT_WR=1;
   M2_DOT_ENABLE=1;	//disable
-  DelayTime(16); //about 1us
+  k=16;while(k--); //about 1us
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //Bright 4digit or 8digit
 
-void dot_matrix_bright(U8 bright){
+void dot_matrix_bright(unsigned char bright){
   U8 i;
+  U16 k;
 //bright = (0 = 100%), (1 = 80%), (2 = 53%), (3 = 40%), (4 = 27%), (5 = 20%), (6 = 13%), (7 = 0%)
   for(i=0; i<8; i++){
     DOT_CLR_FLAG=1;
@@ -112,18 +126,18 @@ void dot_matrix_bright(U8 bright){
     else if(i==5){ DOT_ADDR2=1; DOT_ADDR1=0; DOT_ADDR0=1;}
     else if(i==6){ DOT_ADDR2=1; DOT_ADDR1=1; DOT_ADDR0=0;}
     else if(i==7){ DOT_ADDR2=1; DOT_ADDR1=1; DOT_ADDR0=1;}
-    DelayTime(8); //about 0.5us
+    k=8;while(k--); //about 0.5us
     
     M1_DOT_ENABLE=0;	//enable
-    DelayTime(8); //about 0.5us
+    k=8;while(k--); //about 0.5us
     DOT_WR=0;
-    DelayTime(8); //about 0.5us
+    k=8;while(k--); //about 0.5us
     
     DOT_DATA=bright;
-    DelayTime(16); //about 1us
+    k=16;while(k--); //about 1us
     DOT_WR=1;
     M1_DOT_ENABLE=1;	//disable
-    DelayTime(16); //about 1us
+    k=16;while(k--); //about 1us
   }
   
   for(i=0; i<8; i++){
@@ -137,25 +151,25 @@ void dot_matrix_bright(U8 bright){
     else if(i==5){ DOT_ADDR2=1; DOT_ADDR1=0; DOT_ADDR0=1;}
     else if(i==6){ DOT_ADDR2=1; DOT_ADDR1=1; DOT_ADDR0=0;}
     else if(i==7){ DOT_ADDR2=1; DOT_ADDR1=1; DOT_ADDR0=1;}
-    DelayTime(8); //about 0.5us
+    k=8;while(k--); //about 0.5us
     
     M2_DOT_ENABLE=0;	//enable
-    DelayTime(8); //about 0.5us
+    k=8;while(k--); //about 0.5us
     DOT_WR=0;
-    DelayTime(8); //about 0.5us
+    k=8;while(k--); //about 0.5us
     
     DOT_DATA=bright;
-    DelayTime(16); //about 1us
+    k=16;while(k--); //about 1us
     DOT_WR=1;
     M2_DOT_ENABLE=1;	//disable
-    DelayTime(16); //about 1us
+    k=16;while(k--); //about 1us
   }
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-void dot_0x_hexadecimal(U8 number)	/* display hexadecimal number with 0x */
+void dot_0x_hexadecimal(unsigned char number)	/* display hexadecimal number with 0x */
 {
   unsigned char i, character;
 
@@ -169,7 +183,8 @@ void dot_0x_hexadecimal(U8 number)	/* display hexadecimal number with 0x */
   }
 }
 
-void dot_vol_hextodeci(U8 number)	/* display hexadecimal number with 0x */
+#define DIV 20
+void dot_vol_hextodeci(unsigned char number)	/* display hexadecimal number with 0x */
 {
   unsigned char character, div, i;
 
@@ -204,14 +219,14 @@ void dot_vol_hextodeci(U8 number)	/* display hexadecimal number with 0x */
     //dot_matrix_digit2('0',7);
   }
   else{           //display xx.x
-    div = 20;
+    //div = 20;
     number=200-number;
     
     for(i=0; i<2; i++){				// display number
-      character = number / div;
+      character = number / DIV;
       ess_volume[i]=character + '0',(4+i);
       //dot_matrix_digit2(character + '0',(4+i));
-      number %= div;
+      number %= DIV;
       div /= 10;
     }
     if(number){
@@ -232,7 +247,7 @@ void dot_vol_hextodeci(U8 number)	/* display hexadecimal number with 0x */
   
 }
 
-void dot_matrix_set(){
+void dot_matrix_set(void){
   DOT_CLR_FLAG = 1;		//remove CLR(dot-matrix)
   dot_light_reg=1;			//DOT_CLR_FLAG = 1 -> dot_light_reg=1
 

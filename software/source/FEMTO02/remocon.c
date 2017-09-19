@@ -1,3 +1,14 @@
+#include <iom128.h>
+#include "define.h"
+#include "main_func.h"
+#include "remocon.h"
+
+extern unsigned char rom_save_flag;
+extern unsigned int rom_tmr;
+extern unsigned char init_setting_check;
+extern unsigned char key_condition;
+extern unsigned char key_func;
+
 ///////////////////////////////////////////////////////////////////////////////
 // This represent remocon status.
 char _flg_on_remocon=0;
@@ -24,6 +35,9 @@ char _flg_allow_remocon_repeat;
 //new remocon
 U16 cnt_remocon=0;
 
+//test remocon data
+unsigned char IR_data[20];
+unsigned char IR_data_flag=0;
 
 char bit_input;
 

@@ -1,8 +1,37 @@
+#include <iom128.h>
+#include "define.h"
+#include "main_func.h"
+#include "es9038.h"
+#include "dot_matrix_func.h"
+
+
+extern unsigned char key_func;
+extern unsigned char mute_enable;
+extern unsigned char es9018_reg10;
+extern unsigned char vol_dB;
+extern unsigned char phase_data;
+extern unsigned char mute_enable;
+extern unsigned char ch_led_data;
+extern unsigned char i2s_flag;
+extern unsigned char interface_ch;
+extern unsigned char rom_save_flag2;
+extern unsigned char filter_flag;
+extern void DelayTime_ms(unsigned int time_end);
+extern unsigned int rom_tmr;
+extern unsigned char key_condition;
+extern unsigned char dot_string[16];
+extern unsigned char filter_name[3][8];
+extern unsigned char phase_name[8];
+extern unsigned char normal_name[8];
+extern unsigned int key_func_tmr;
+extern void es9038_system_mute(unsigned char devaddr, unsigned char onoff);
+
+extern void es9038_write_register(unsigned char devaddr, unsigned char regaddr, unsigned char data);
 
 //////////////////////////////////////////////////////////////////////
 U8 test_osc=1;
 //ES9018
-void ess_mute(){
+void ess_mute(void){
   if(!key_func){
     mute_enable=!mute_enable;	//0 = mute, 	1 = unmute
     es9018_reg10=(es9018_reg10&0xce) + (!mute_enable);			//0xcf = mute, 			0xce = unmute
@@ -20,7 +49,7 @@ void ess_mute(){
 }
 
 //////////////////////////////////////////////////////////////////////
-void phase_ess(){
+void phase_ess(void){
   
   if(!phase_data) { //phase on
     //I2C_Write(0x90, 13, 0xff);
@@ -35,7 +64,7 @@ void phase_ess(){
 
 //////////////////////////////////////////////////////////////////////
 
-void volume_set(){		//I2C write, dot-matrix
+void volume_set(void){		//I2C write, dot-matrix
   //ES9018, i2c write
   U8 i;
   for(i=0; i<8; i++){
@@ -78,7 +107,7 @@ void init_vol(U8 data){
 }
 
 
-void audio_level_sp_down(){
+void audio_level_sp_down(void){
   //display num = 100 - (reg/2)
   //audio_level++;	//reg(#0~#7)
   U8 temp;
@@ -95,7 +124,7 @@ void audio_level_sp_down(){
   }
 }
 
-void audio_level_sp_up(){
+void audio_level_sp_up(void){
   //display num = 100 - (reg/2)
   //audio_level--;	//reg(#0~#7)
   U8 temp;
@@ -114,7 +143,7 @@ void audio_level_sp_up(){
 }
 
 
-void audio_level_down(){
+void audio_level_down(void){
   //display num = 100 - (reg/2)
   //audio_level++;	//reg(#0~#7)
   U8 temp;
@@ -132,7 +161,7 @@ void audio_level_down(){
   }
 }
 
-void audio_level_up(){
+void audio_level_up(void){
   //display num = 100 - (reg/2)
   //audio_level--;	//reg(#0~#7)
   U8 temp;
@@ -150,12 +179,12 @@ void audio_level_up(){
   }
 }
 
-void channel_change(){
+void channel_change(void){
   U8 temp;
   
   if(mute_enable) {			//0 = mute, 	1 = unmute
-      //I2C_Write(0x90, 0x0a, 0xcf);    //mute
-      //I2C_Write(0x92, 0x0a, 0xcf);    //mute
+      es9038_system_mute(ES9038_ADDR0,1);       //mute
+      es9038_system_mute(ES9038_ADDR1,1);       //mute
     }
   
   if(ch_led_data==7) temp=1;    //USB mode     : I2S_SEL=1;      // Modified by Jang WS 2017.9.16
@@ -182,7 +211,7 @@ void channel_change(){
   //dot_vol_hextodeci(vol_dB);
 }
 
-void channel_up(){
+void channel_up(void){
   //channel_vol_save();
   if(!key_func){
     if(ch_led_data<7) ch_led_data++;
@@ -191,7 +220,7 @@ void channel_up(){
   }
 }
 
-void channel_down(){
+void channel_down(void){
   //channel_vol_save();
   if(!key_func){
     if(ch_led_data) ch_led_data--;
@@ -200,7 +229,7 @@ void channel_down(){
   }
 }
 
-void ess_filter(){
+void ess_filter(void){
 //  S32 coeff;
 //  U8 i,c,num; 
   U8 num;
@@ -298,8 +327,7 @@ void ess_filter(){
   
 }
 
-
-void femto_function(){
+void femto_function(void){
   U8 i;
   
   if(key_func==1 || key_func==2)  key_condition=1;  //inverse or filter
@@ -312,8 +340,8 @@ void femto_function(){
     filter_flag++;
     
     if(mute_enable) {			//0 = mute, 	1 = unmute
-      //I2C_Write(0x90, 0x0a, 0xcf);    //mute
-      //I2C_Write(0x92, 0x0a, 0xcf);    //mute
+      es9038_system_mute(ES9038_ADDR0,1);       //mute
+      es9038_system_mute(ES9038_ADDR1,1);       //mute
     }
     
     ess_filter();
@@ -322,8 +350,8 @@ void femto_function(){
     
     
     if(mute_enable) {			//0 = mute, 	1 = unmute
-      //I2C_Write(0x90, 0x0a, 0xce);    //unmute
-      //I2C_Write(0x92, 0x0a, 0xce);    //unmute
+      es9038_system_mute(ES9038_ADDR0,0);       //unmute
+      es9038_system_mute(ES9038_ADDR1,0);       //unmute
     }
     //rom_write_multi();
     //DelayTime_ms(10);  //10msec

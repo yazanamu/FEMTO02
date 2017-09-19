@@ -1,16 +1,49 @@
-#include "Define.h"
-#include "ioport_128.c"
-//#include "I2C.h"
-#include "dot_matrix_func.c"
-#include "main_func.c"
-#include "remocon.c"
-#include "uart.h" // added by jang 2017.9.15
+#include <iom128.h>
+#include <inavr.h>
+#include "define.h"
+#include "ioport_128.h"
 #include "initboard.h"  // added by jang 2017.9.17
+#include "dot_matrix_func.h"
+#include "main_func.h"
+#include "remocon.h"
+#include "uart.h" // added by jang 2017.9.15
 #include "i2c_master.h" // added by jang 2017.9.17
 #include "ak4118a.h" // added by jang 2017.9.17
+#include "es9038.h"// added by jang 2017.9.19
+
+extern U8 dot_string[16];
+extern U8 ess_lch_master_trim;
+extern U8 ess_rch_master_trim;
+
+extern unsigned char tmr_osc;
+extern unsigned char rom_add_check_sum;
+extern unsigned int rom_add_pt;
+extern unsigned long rom_cnt;
+extern unsigned char ch_led_data;
+extern unsigned char filter_flag;
+extern unsigned char phase_data;
+extern unsigned char vol_dB;
+extern unsigned char ch_led_data;
+extern unsigned char dot_light_reg;
+
+extern unsigned char AK4118A_read_register(unsigned char devaddr, unsigned char regaddr);
+extern void send_string(char *p);
+extern unsigned char Is_there_AK4118A(void);
+
+extern void es9038_soft_reset(unsigned char devaddr);
+extern void es9038_system_mute(unsigned char devaddr, unsigned char onoff);
+extern unsigned char es9038_read_register(unsigned char devaddr, unsigned char regaddr);
+extern unsigned char Is_there_ES9038(void);
+extern void es9038_audio_auto_select(unsigned char devaddr, unsigned char select);
+extern void es9038_dac_channel_mapping(unsigned char devaddr,unsigned char dac_ch,unsigned char input_ch);
+extern void es9038_automute_level(unsigned char devaddr, unsigned char level);
 
 U16 mtime_length = 0;
 U8 mtime_flag = 0;
+
+
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -144,11 +177,9 @@ U8 i;
     else if(i==1) send_string("[I2C] ES9038PRO olny left found.\r\n");
     else if(i==2) send_string("[I2C] ES9038PRO olny right found.\r\n");
 
-    es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DISABLE);
-    es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DISABLE);
-    es9038_audio_input_select(ES9038_ADDR0,INPUT_I2S);
-    es9038_audio_input_select(ES9038_ADDR1,INPUT_I2S);
-    send_string("[I2C] ES9038PRO Auto Select function disable complete.\r\n");
+    es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DSD_I2S);
+    es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DSD_I2S);
+    send_string("[I2C] ES9038PRO Auto Select function DSD/I2S complete.\r\n");
     for(i=1;i<=8;i++) {
       es9038_dac_channel_mapping(ES9038_ADDR0,i,INPUT_CH1);
       es9038_dac_channel_mapping(ES9038_ADDR1,i,INPUT_CH2);
@@ -223,7 +254,7 @@ U8 init_rom_add1=0;
 U8 init_rom_add2=0;
 U8 init_rom_address_data=0;
 
-void rom_check_sum_error(){
+void rom_check_sum_error(void){
   U16 i=0x0a;
   
   while(i<=0x7fa){
@@ -250,7 +281,7 @@ void rom_check_sum_error(){
   //I2C_SHOUT(init_rom_add2); 
   //I2C_STOP();
     
-  DelayTime_ms(10);  //5msec
+  delay_ms(10);  //5msec
   
   if(test_check<0x7ff) {      
     //I2C_START();
@@ -263,14 +294,14 @@ void rom_check_sum_error(){
     //I2C_SHOUT(0x01);       //ch(4bits)+filter(3bits)+inverse(1bit)
     //I2C_STOP();
       
-    DelayTime_ms(10);  //5msec
+    delay_ms(10);  //5msec
   }
   
 }
 
 
 void _system_init_se(void){
-  U16 i;
+  U16 i=0;
   
   //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
   send_string("[I2C] CS8416 Input7 to GND.\r\n");
@@ -310,7 +341,7 @@ test_set_eeprom(0x1e, 0x01);
     //I2C_SHOUT(0x10);       //check_sum
     //I2C_STOP();
     
-    DelayTime_ms(5);  //5msec
+    delay_ms(5);  //5msec
     
     //I2C_START();
     //I2C_SHOUT(0xa0);        //device address
@@ -322,7 +353,7 @@ test_set_eeprom(0x1e, 0x01);
     //I2C_SHOUT(0x01);       //ch(4bits)+filter(3bits)+inverse(1bit)
     //I2C_STOP();
     
-    DelayTime_ms(5);  //5msec
+    delay_ms(5);  //5msec
   }
   
   //init_rom_data0=rom_I2C_Read(0);
@@ -363,7 +394,7 @@ test_set_eeprom(0x1e, 0x01);
       filter_flag=0x00;
       phase_data=0x01;
     
-      DelayTime_ms(5);  //5msec
+      delay_ms(5);  //5msec
     }
     else{
       I2C_START();
@@ -373,7 +404,7 @@ test_set_eeprom(0x1e, 0x01);
       I2C_SHOUT(test_check&0xff);       
       I2C_STOP();
     
-      DelayTime_ms(10);  //5msec
+      delay_ms(10);  //5msec
       
       I2C_START();
       I2C_SHOUT((0xa0 + ((test_check>>7) & 0x000e)));        //device address
@@ -385,7 +416,7 @@ test_set_eeprom(0x1e, 0x01);
       I2C_SHOUT(0x01);       //ch(4bits)+filter(3bits)+inverse(1bit)
       I2C_STOP();
     
-    DelayTime_ms(10);  //5msec
+    delay_ms(10);  //5msec
       
     }
   }
@@ -427,7 +458,7 @@ test_set_eeprom(0x1e, 0x01);
   /*
     //////////write check
     rom_write_multi();
-    DelayTime_ms(10);  //5msec
+    delay_ms(10);  //5msec
     
     rom_cnt=rom_I2C_Read(rom_add_pt);
     rom_cnt=rom_cnt<<8;
@@ -446,7 +477,7 @@ test_set_eeprom(0x1e, 0x01);
       filter_flag=0x00;
       phase_data=0x01;
       rom_write_multi();
-      DelayTime_ms(10);  //5msec
+      delay_ms(10);  //5msec
     }
     //////////
     */
@@ -498,9 +529,9 @@ test_set_eeprom(0x1e, 0x01);
   es9038_automute_level(ES9038_ADDR1,120);
   
   volume_set();
-  DelayTime_ms(10);  //5msec
+  delay_ms(10);  //5msec
   phase_ess();
-  DelayTime_ms(10);  //5msec
+  delay_ms(10);  //5msec
   ess_filter();
   
 //Dot-matrix & LED Display
@@ -526,3 +557,8 @@ test_set_eeprom(0x1e, 0x01);
 }
 
 
+void delay_ms(unsigned int ms) {
+  unsigned int i, k;
+  
+  for(i=0; i<=ms+1; i++) { k=16000;while(k--); } //1msec
+}

@@ -1,8 +1,12 @@
 #ifndef _AVR_INITBOARD_H
 #define _AVR_INITBOARD_H
 
+#ifndef XTAL
 #define XTAL 16000000UL
+#endif
+#ifndef F_CPU
 #define F_CPU XTAL
+#endif
 
 #define DOT_PORT 	PORTA
 #define DOT_DDR 	DDRA
@@ -158,11 +162,10 @@
 #define SELECT_USB    I2S_SEL_PORT|=I2S_SEL_PIN
 #define SELECT_AK4118 I2S_SEL_PORT&=~I2S_SEL_PIN
 
-void power_enable(void)
-{
-  
-}
-
+void _system_init(void);
+void rom_check_sum_error(void);
+void _system_init_se(void);
+void delay_ms(unsigned int ms);
 
 
 
