@@ -61,6 +61,8 @@
 #define AK4118A_RECONIZE_27H        0x0
 #define AK4118A_RECONIZE_28H        0x10
 
+unsigned char Is_there_AK4118A(unsigned char ic_addr);
+
 #endif
 
 

@@ -11,9 +11,11 @@
 #include "ak4118a.h" // added by jang 2017.9.17
 #include "es9038.h"// added by jang 2017.9.19
 
-extern U8 dot_string[16];
-extern U8 ess_lch_master_trim;
-extern U8 ess_rch_master_trim;
+#define AK4118_IC_ADDR AK4118A_I2C_ADDRESS(0)
+
+extern unsigned char dot_string[16];
+extern unsigned char ess_lch_master_trim;
+extern unsigned char ess_rch_master_trim;
 
 extern unsigned char tmr_osc;
 extern unsigned char rom_add_check_sum;
@@ -28,7 +30,7 @@ extern unsigned char dot_light_reg;
 
 extern unsigned char AK4118A_read_register(unsigned char devaddr, unsigned char regaddr);
 extern void send_string(char *p);
-extern unsigned char Is_there_AK4118A(void);
+extern unsigned char Is_there_AK4118A(unsigned char ic_addr);
 
 extern void es9038_soft_reset(unsigned char devaddr);
 extern void es9038_system_mute(unsigned char devaddr, unsigned char onoff);
@@ -154,9 +156,9 @@ U8 i;
     EIFR =  (1<<INTF2) | (1<<INTF3) | (1<<INTF4) | (1<<INTF5) | (1<<INTF6) | (1<<INTF7);
     
     send_string("[I2C] AK4118A Searching...\r\n");
-    if (Is_there_AK4118A()) send_string("[I2C] AK4118A Found.\r\n");
+    if (Is_there_AK4118A(AK4118_IC_ADDR)) send_string("[I2C] AK4118A Found.\r\n");
     else send_string("[I2C] AK4118A not found.\r\n");
- 
+    
     ////////////Initial ES9038 /////////////////////////
     es9038_soft_reset(ES9038_ADDR0); es9038_soft_reset(ES9038_ADDR1);
     send_string("[I2C] ES9038PRO Soft Reset complete.\r\n");

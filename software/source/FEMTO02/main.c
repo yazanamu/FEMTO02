@@ -13,6 +13,7 @@ unsigned char flag_usb_audio=1,         flag_usb_audio_before=1;
 unsigned char flag_dsd128=1,            flag_dsd128_before=1;
 unsigned char flag_dsd_on=1,            flag_dsd_on_before=1;
 unsigned char flag_usb_detect=0,        flag_usb_detect_before=0;
+unsigned char flag_key_int=0;
 enum front_key { KEY_LEFT=1, KEY_VOLUP, KEY_MUTE, KEY_RIGHT, KEY_VOLDOWN, KEY_INVERSE, KEY_FILTER };
 
 extern unsigned char AK4118A_read_register(unsigned char devaddr, unsigned char regaddr);
@@ -391,13 +392,16 @@ S32 f2_coeff_st2[16]={
 };
 
 
+void key_scan(void);
+void port_scan(void);
+
 void DelayTime(unsigned int time_end) { while(time_end--); }
 
 void DelayTime_ms(unsigned int time_end){  //msec
   unsigned int i, k;
   for(i=0; i<=time_end+1; i++) { k=16000;while(k--); } //1msec
 }
-void port_scan(void);
+
 
 ///////////////////////////////////////////////////////////////////////////////
 void sample_rate_cal(){
@@ -522,64 +526,9 @@ __interrupt void INT4_Handler(void)
 //Button Key
 // falling edge
 #pragma vector = INT3_vect
-__interrupt void INT3_Handler(void)
+__interrupt void INT3_Handler(void)     // falling edge
 {
-  U8 data=0;
-  
-  key_int_flag=0;
-  data=KEY_DATA2;
-  data<<=1;
-  data+=KEY_DATA1;
-  data<<=1;
-  data+=KEY_DATA0;
-  
-  // data =1 : ch-dn,   2: vol-up,  3 : mute,   4 : ch-up,  5 : vol-dn,   6 : inverse,  7 : filter
-  if(tmr_osc_ck){
-    //channel down
-    if(data==KEY_LEFT){
-      channel_down();
-    }
-  
-    //volume up
-    else if(data==KEY_VOLUP) {
-      audio_level_up();                            //Master Volume Up
-    }
-  
-    //mute
-    else if(data==KEY_MUTE){
-      ess_mute();	//mute
-    }
-  
-    //channel up
-    else if(data==KEY_RIGHT){
-      channel_up();
-    }
-  
-    //volume down
-    else if(data==KEY_VOLDOWN){
-      audio_level_down();                        //Master Volume Down
-    }
-  
-    //inverse
-    else if(data==KEY_INVERSE){
-      if(!key_condition) key_func=1;
-      else key_func=3;
-      femto_function();
-      //phase_write();	//phase
-      //phase_ess();
-    }
-  
-    //filter
-    else if(data==KEY_FILTER){
-      if(!key_condition) key_func=2;
-      else key_func=4;
-      femto_function();
-      //filter_led<<=1;
-      //if(filter_led>0x04)  filter_led=1;	//filter1
-      //ess_filter(filter_led);
-    }
-    key_int_flag=1;
-  }
+  flag_key_int=1;
 }
 /*
 //if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
@@ -758,8 +707,6 @@ U8 data=0;
 
 
 void main(void){
-  int i;
-  unsigned char ch[41];
   
   __enable_interrupt();
   Init_UART0(57600);    // added by jang 2017.9.15
@@ -768,28 +715,50 @@ void main(void){
   _system_init();
   //_system_init_1();
   send_string("System init Completed.\r\n");
-  
-  for(i=0;i<41;i++){
-    send_integer(i);
-    send_string(" ");
-    send_int2hex(AK4118A_read_register(AK4118A_I2C_ADDRESS(0),i));
-    if (((i+1)%8)==0) send_string("\r\n"); else send_string(" "); 
-  }
-  send_string("\r\nAK4118A REG ALL\r\n");
-  for(i=0;i<41;i++) ch[i]=0;
-  i2c_receive(0x21, ch, 41);
-  for(i=0;i<41;i++){
-    send_integer(i);
-    send_string(" ");
-    send_int2hex(ch[i]);
-    if (((i+1)%8)==0) send_string("\r\n"); else send_string(" "); 
-  }
-  send_string("\r\n\r\n");
 
-  while(1){
+while(1){
     //if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
     port_scan();
+    if (flag_key_int) {
+      flag_key_int=0;
+      key_scan();
+    }
   }//end while
+}
+
+void key_scan(void)
+{
+  unsigned char key_data=0;
+
+  key_data = (INKEY1_READ & INKEY1_READ_MASK) >> INKEY1_READ_LOC;
+  send_string("Key code = ");
+  send_int2hex(key_data);
+  send_string("\r\n");
+  if(tmr_osc_ck)
+    switch(key_data) {
+      case KEY_LEFT:
+        channel_down();
+        break;
+      case KEY_VOLUP:
+        audio_level_up();
+        break;
+      case KEY_MUTE:
+        ess_mute();
+        break;
+      case KEY_RIGHT:
+        channel_up();
+        break;
+      case KEY_VOLDOWN:
+        audio_level_down();
+        break;
+      case KEY_INVERSE:
+        if(!key_condition) key_func=1; else key_func=3;
+        femto_function();
+        break;
+      case KEY_FILTER:
+        if(!key_condition) key_func=2; else key_func=4;
+        femto_function();
+    } // end of switch
 }
 
 void port_scan(void)
