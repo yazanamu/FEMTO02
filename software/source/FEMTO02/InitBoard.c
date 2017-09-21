@@ -39,6 +39,11 @@ extern unsigned char Is_there_ES9038(void);
 extern void es9038_audio_auto_select(unsigned char devaddr, unsigned char select);
 extern void es9038_dac_channel_mapping(unsigned char devaddr,unsigned char dac_ch,unsigned char input_ch);
 extern void es9038_automute_level(unsigned char devaddr, unsigned char level);
+extern void es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
+
+extern void send_integer(unsigned char ch);
+extern void send_int2hex(unsigned char ch);
+//extern void phase_ess(void);
 
 U16 mtime_length = 0;
 U8 mtime_flag = 0;
@@ -182,19 +187,21 @@ U8 i;
     es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DSD_I2S);
     es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DSD_I2S);
     send_string("[I2C] ES9038PRO Auto Select function DSD/I2S complete.\r\n");
-    for(i=1;i<=8;i++) {
-      es9038_dac_channel_mapping(ES9038_ADDR0,i,INPUT_CH1);
-      es9038_dac_channel_mapping(ES9038_ADDR1,i,INPUT_CH2);
-    }
+
+    for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR0,i,INPUT_CH1);
+    for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR1,i,INPUT_CH2);
     send_string("[I2C] ES9038PRO Channel mapping complete.\r\n");
     
-    
-    
+    es9038_set_volume(ES9038_ADDR0,ES9038_MAX_VOLUME);
+    es9038_set_volume(ES9038_ADDR1,ES9038_MAX_VOLUME);
+    send_string("[I2C] ES9038PRO Volume Max complete.\r\n");
     
     send_string("[I2C] CS8416 Input7 to GND.\r\n");
     //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
 	
+    
     es9038_system_mute(ES9038_ADDR0,0); // disable mute
+    
     es9038_system_mute(ES9038_ADDR1,0); // disable mute
     send_string("[I2C] ES9038 Mute Off.\r\n");
     
@@ -532,7 +539,7 @@ test_set_eeprom(0x1e, 0x01);
   
   volume_set();
   delay_ms(10);  //5msec
-  phase_ess();
+  //phase_ess();
   delay_ms(10);  //5msec
   ess_filter();
   

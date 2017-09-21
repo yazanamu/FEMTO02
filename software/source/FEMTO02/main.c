@@ -14,6 +14,7 @@ unsigned char flag_dsd128=1,            flag_dsd128_before=1;
 unsigned char flag_dsd_on=1,            flag_dsd_on_before=1;
 unsigned char flag_usb_detect=0,        flag_usb_detect_before=0;
 unsigned char flag_key_int=0;
+unsigned char flag_mute=0,              flag_mute_before=0;
 enum front_key { KEY_LEFT=1, KEY_VOLUP, KEY_MUTE, KEY_RIGHT, KEY_VOLDOWN, KEY_INVERSE, KEY_FILTER };
 
 extern unsigned char AK4118A_read_register(unsigned char devaddr, unsigned char regaddr);
@@ -21,7 +22,7 @@ extern void send_string(char *p);
 extern int Init_UART0(unsigned long baud);
 extern void send_integer(unsigned char ch);
 extern void send_int2hex(unsigned char ch);
-extern void es9038_set_volume(unsigned char volume);
+extern void es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
 
 U16 rom_add_pt=0;
 U32 rom_cnt=0;
@@ -77,7 +78,7 @@ U8 display_num=100;
 //volume
 U8 ess_lch_master_trim=0;
 U8 ess_rch_master_trim=0;
-U8 vol_dB=0xff;
+unsigned char vol_dB=ES9038_MAX_VOLUME, vol_dB_before=ES9038_MAX_VOLUME;
 //U8 ch0_vol_dB=0;
 //U8 ch1_vol_dB=0;
 //U8 ch2_vol_dB=0;
@@ -92,7 +93,6 @@ U8 usb_sr=48; 		//USB 48=48kHz affiliation,  44=44.1kHz affiliation
 
 U8 button_data=0;
 U8 filter_flag=0;
-U8 mute_enable=1;
 U8 key_func=0;
 U16 key_func_tmr=0;
 U8 key_condition=0;
@@ -105,49 +105,6 @@ U8 es9018_lock_flag=0;
 U16 dac_audio_timer=0;
 U16 sample_rate=0;
 U16 sample_rate2=0;
-/*
-U32 max38=0xd000000;
-
-U32 min44=0xEB00000;
-U32 max44=0xEC00000;
-
-U32 min48=0xF000000;
-U32 max48=0x10A00000;
-
-U32 min88=0x1D000000;
-U32 max88=0x1E000000;
-
-U32 min96=0x1F000000;
-U32 max96=0x20A00000;
-
-U32 min176=0x3A000000;
-U32 max176=0x3BA00000;
-
-U32 min192=0x3F000000;
-U32 max192=0x40A00000;
-
-U32 min352=0x4F000000;
-
-
-U16 min44=0x907;
-U16 max44=0x909;
-
-U16 min48=0x9D3;
-U16 max48=0x9D5;
-
-U16 min88=0x120F;
-U16 max88=0x1211;
-
-U16 min96=0x13A8;
-U16 max96=0x13AA;
-
-U16 min176=0x241F;
-U16 max176=0x2421;
-
-U16 min192=0x2751;
-U16 max192=0x2753;
-
-*/
 
 U16 min44=0x8CE;
 U16 max44=0x937;
@@ -394,7 +351,7 @@ S32 f2_coeff_st2[16]={
 
 void key_scan(void);
 void port_scan(void);
-
+void flag_scan(void);
 void DelayTime(unsigned int time_end) { while(time_end--); }
 
 void DelayTime_ms(unsigned int time_end){  //msec
@@ -405,7 +362,7 @@ void DelayTime_ms(unsigned int time_end){  //msec
 
 ///////////////////////////////////////////////////////////////////////////////
 void sample_rate_cal(){
-  U8 temp;
+  //U8 temp;
   
   //if ( (old_ess_lock_ck!=ess_lock_ck) || (old_ess_automute!=ess_automute) ) {
     
@@ -458,14 +415,15 @@ void sample_rate_cal(){
   if(exMute!=old_exMute) {
     old_exMute=exMute;
    
-    if(!old_exMute) temp=vol_dB;
-    else temp=224;    //-114dB
+    //if(!old_exMute) temp=vol_dB;
+    //else temp=224;    //-114dB
       
     //for(i=0; i<8; i++){
     //  I2C_Write(0x90,i,temp);	//Lch volume of DAC0
     //  I2C_Write(0x92,i,temp);	//Rch volume of DAC0
     //}
-    es9038_set_volume(temp);
+    //es9038_set_volume(ES9038_ADDR0,temp);
+    //es9038_set_volume(ES9038_ADDR1,temp);
   }
   
 }
@@ -629,7 +587,7 @@ U8 data=0;
       //I2C_Write(0x92, 0x0a, es9018_reg10);
       init_vol_dn(vol_dB);
       DelayTime_ms(50);  //50msec
-      init_vol(vol_dB);
+      //init_vol(vol_dB);
       dot_vol_hextodeci(vol_dB);
       tmr_osc_ck=1;
       init_setting_check=1;   //include remocon interrupt,
@@ -719,6 +677,7 @@ void main(void){
 while(1){
     //if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
     port_scan();
+    flag_scan();
     if (flag_key_int) {
       flag_key_int=0;
       key_scan();
@@ -759,6 +718,23 @@ void key_scan(void)
         if(!key_condition) key_func=2; else key_func=4;
         femto_function();
     } // end of switch
+}
+
+void flag_scan(void)
+{
+  if(flag_mute != flag_mute_before) {
+    flag_mute_before=flag_mute;
+    if (flag_mute) send_string("[ES9038] Mute on.\r\n");
+    else send_string("[ES9038] Mute off.\r\n");
+  }
+  if(vol_dB!=vol_dB_before) {
+    if (vol_dB>vol_dB_before) send_string("[ES9038] Volume decresed. - ");
+    else send_string("[ES9038] Volume incresed. - ");
+    send_integer(vol_dB); send_string("\r\n");
+    vol_dB_before=vol_dB;
+    es9038_set_volume(ES9038_ADDR0,vol_dB);
+    es9038_set_volume(ES9038_ADDR1,vol_dB);
+  }
 }
 
 void port_scan(void)

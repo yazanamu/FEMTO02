@@ -107,16 +107,6 @@ void es9038_automute_level(unsigned char devaddr, unsigned char level)
   es9038_write_register(devaddr,ES9038_REG_AUTOMUTE_LEVEL,level & 0x3F);
 }
 
-void es9038_set_volume(unsigned char volume)
-{
-  unsigned char i;
-  
-  for (i=0;i<8;i++) {
-    es9038_write_register(ES9038_ADDR0,ES9038_REG_VOLUME1_CONTROL+i,volume);
-    es9038_write_register(ES9038_ADDR1,ES9038_REG_VOLUME1_CONTROL+i,volume);
-  }
-}
-
 void es9038_dac_channel_mapping(unsigned char devaddr,unsigned char dac_ch,unsigned char input_ch)
 {
   unsigned char reg;
@@ -171,6 +161,22 @@ void es9038_dac_channel_mapping(unsigned char devaddr,unsigned char dac_ch,unsig
       es9038_write_register(devaddr,ES9038_REG_DAC_CH_MAPPING_DAC78,reg);
       break;
   }
+}
+
+void es9038_set_ch1_volume_for_all(unsigned char devaddr,unsigned char onoff)
+{
+  unsigned char reg;
+  
+  reg=es9038_read_register(devaddr,ES9038_REG_GPIO_INPUT_SEL_VOLUME_CONFIG);
+  if (onoff) reg|=ES9038_VOLUME_CFG_CH1_VOL; else reg&=~ES9038_VOLUME_CFG_CH1_VOL;
+  es9038_write_register(devaddr,ES9038_REG_GPIO_INPUT_SEL_VOLUME_CONFIG,reg);
+  
+}
+
+void es9038_set_volume(unsigned char devaddr,unsigned char volume_db)
+{
+  es9038_set_ch1_volume_for_all(devaddr,1);
+  es9038_write_register(devaddr, ES9038_REG_VOLUME1_CONTROL,volume_db);
 }
 
 

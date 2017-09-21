@@ -4,7 +4,7 @@
 
 extern unsigned char dot_light_reg;
 extern unsigned char dot_string[16];
-extern unsigned char mute_enable;
+extern unsigned char flag_mute;
 extern unsigned char ess_volume[4];
 
 
@@ -188,7 +188,7 @@ void dot_vol_hextodeci(unsigned char number)	/* display hexadecimal number with 
 {
   unsigned char character, div, i;
 
-  if(!mute_enable){
+  if(flag_mute){
     ess_volume[0]='M';
     ess_volume[1]='U';
     ess_volume[2]='T';

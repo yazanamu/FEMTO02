@@ -6,11 +6,11 @@
 
 
 extern unsigned char key_func;
-extern unsigned char mute_enable;
+extern unsigned char flag_mute;
 extern unsigned char es9018_reg10;
 extern unsigned char vol_dB;
 extern unsigned char phase_data;
-extern unsigned char mute_enable;
+extern unsigned char flag_mute;
 extern unsigned char ch_led_data;
 extern unsigned char i2s_flag;
 extern unsigned char interface_ch;
@@ -33,10 +33,9 @@ U8 test_osc=1;
 //ES9018
 void ess_mute(void){
   if(!key_func){
-    mute_enable=!mute_enable;	//0 = mute, 	1 = unmute
-    es9018_reg10=(es9018_reg10&0xce) + (!mute_enable);			//0xcf = mute, 			0xce = unmute
-    es9038_system_mute(ES9038_ADDR0,mute_enable);
-    es9038_system_mute(ES9038_ADDR1,mute_enable);
+    flag_mute=!flag_mute;	//0 = mute, 	1 = unmute
+    es9038_system_mute(ES9038_ADDR0,flag_mute);
+    es9038_system_mute(ES9038_ADDR1,flag_mute);
     dot_vol_hextodeci(vol_dB);
   }
  /*
@@ -47,22 +46,6 @@ void ess_mute(void){
  else I2C_Write(0x20, 0x04, 0xb8);
  */
 }
-
-//////////////////////////////////////////////////////////////////////
-void phase_ess(void){
-  
-  if(!phase_data) { //phase on
-    //I2C_Write(0x90, 13, 0xff);
-    //I2C_Write(0x92, 13, 0xff);
-  }
-  else{ //phase off
-    //I2C_Write(0x90, 13, 0);
-    //I2C_Write(0x92, 13, 0);
-  }
-  //rom_write_multi();
-}
-
-//////////////////////////////////////////////////////////////////////
 
 void volume_set(void){		//I2C write, dot-matrix
   //ES9018, i2c write
@@ -93,19 +76,6 @@ void init_vol_dn(U8 data){
   }
  */
 }
-
-void init_vol(U8 data){
-  //I2C_Write(0x90, 20, 0xff);
-  //I2C_Write(0x92, 20, 0xff);
-  /*
-  U8 i;
-  for(i=0; i<8; i++){
-    I2C_Write(0x90,i,data);	//Lch volume of DAC0
-    I2C_Write(0x92,i,data);	//Rch volume of DAC0
-  }
-*/
-}
-
 
 void audio_level_sp_down(void){
   //display num = 100 - (reg/2)
@@ -148,7 +118,7 @@ void audio_level_down(void){
   //audio_level++;	//reg(#0~#7)
   U8 temp;
   if(!key_func){
-    if(!mute_enable) ess_mute();    //mute condition
+    if(flag_mute) ess_mute();    //mute condition
     temp=vol_dB;
   
     if(vol_dB<199) vol_dB++;
@@ -166,7 +136,7 @@ void audio_level_up(void){
   //audio_level--;	//reg(#0~#7)
   U8 temp;
   if(!key_func){
-    if(!mute_enable) ess_mute();    //mute condition
+    if(flag_mute) ess_mute();    //mute condition
     temp=vol_dB;
   
     if(vol_dB==0xff) vol_dB=199;
@@ -182,7 +152,7 @@ void audio_level_up(void){
 void channel_change(void){
   U8 temp;
   
-  if(mute_enable) {			//0 = mute, 	1 = unmute
+  if(flag_mute) {			//0 = mute, 	1 = unmute
       es9038_system_mute(ES9038_ADDR0,1);       //mute
       es9038_system_mute(ES9038_ADDR1,1);       //mute
     }
@@ -200,7 +170,7 @@ void channel_change(void){
   interface_ch+=(ch_led_data<<3);
   //I2C_Write(0x20, 0x04, interface_ch);
   
-  if(mute_enable) {			//0 = mute, 	1 = unmute
+  if(!flag_mute) {			//0 = mute, 	1 = unmute
 
       es9038_system_mute(ES9038_ADDR0,0);       //unmute
       es9038_system_mute(ES9038_ADDR1,0);       //unmute
@@ -334,12 +304,12 @@ void femto_function(void){
   
   else if(key_func==3){ //change inverse
     phase_data=!phase_data;
-    phase_ess();
+    //phase_ess();
   }
   else if(key_func==4){ //change filter
     filter_flag++;
     
-    if(mute_enable) {			//0 = mute, 	1 = unmute
+    if(flag_mute) {			//0 = mute, 	1 = unmute
       es9038_system_mute(ES9038_ADDR0,1);       //mute
       es9038_system_mute(ES9038_ADDR1,1);       //mute
     }
@@ -349,7 +319,7 @@ void femto_function(void){
     DelayTime_ms(5);  //5msec
     
     
-    if(mute_enable) {			//0 = mute, 	1 = unmute
+    if(!flag_mute) {			//0 = mute, 	1 = unmute
       es9038_system_mute(ES9038_ADDR0,0);       //unmute
       es9038_system_mute(ES9038_ADDR1,0);       //unmute
     }
