@@ -40,6 +40,10 @@ enum PORT128 {PPCA=1,PPCB,PPCC,PPCD,PPCE,PPCF,PPCG};
 #define uint16_t unsigned int
 #define uint32_t unsigned long
 
+#define EEPROM_ADDR_VERSION 0x0
+#define EEPROM_ADDR_VOLUME 0x10
+#define EEPROM_ADDR_MODE 0x20
+#define EEPROM_ADDR_MUTE 0x30
 
 //EEPROM
 //rom_add_pt : 주소데이터의 시작 주소(1Byte)
@@ -47,6 +51,11 @@ enum PORT128 {PPCA=1,PPCB,PPCC,PPCD,PPCE,PPCF,PPCG};
 //rom_address : 데이터의 주소(2Bytes)
 //rom_data_cnt : 데이터의 카운트(1Byte)
 //rom_data : 데이터(총 2Bytes: 볼륨 8bits, 채널 4bits, 필터 3bits, 위상 1bit)
+
+__eeprom const unsigned char version[16] @ EEPROM_ADDR_VERSION;
+__eeprom const unsigned char volume @ EEPROM_ADDR_VOLUME;
+__eeprom const unsigned char mode @ EEPROM_ADDR_MODE;
+__eeprom const unsigned char mute @ EEPROM_ADDR_MUTE;
 
 
 #define DOT_DATA	PORTA

@@ -2,27 +2,69 @@
 #include <inavr.h>
 #include <string.h>
 #include "define.h"
-#include "uart.h" // added by jang 2017.9.15
-#include "es9038.h"     // added by jang 2017.9.16
-#include "initboard.h"  // added by jang 2017.9.18
-#include "main_func.h"  // added by jang 2017.9.19
-#include "dot_matrix_func.h" // added by jang 2017.9.19
-#include "ak4118a.h" // added by jang 2017.9.19
+#include "uart.h"               // added by jang 2017.9.15
+#include "es9038.h"             // added by jang 2017.9.16
+#include "initboard.h"          // added by jang 2017.9.18
+#include "main_func.h"          // added by jang 2017.9.19
+#include "dot_matrix_func.h"    // added by jang 2017.9.19
+#include "ak4118a.h"            // added by jang 2017.9.19
+
+
+#define AK4118A_I2C_ADDR AK4118A_I2C_ADDRESS(0)
+
 
 unsigned char flag_usb_audio=1,         flag_usb_audio_before=1;
 unsigned char flag_dsd128=1,            flag_dsd128_before=1;
 unsigned char flag_dsd_on=1,            flag_dsd_on_before=1;
 unsigned char flag_usb_detect=0,        flag_usb_detect_before=0;
 unsigned char flag_key_int=0;
+unsigned int  flag_longkey_count=0;
+unsigned char flag_longkey=0;
 unsigned char flag_mute=0,              flag_mute_before=0;
-enum front_key { KEY_LEFT=1, KEY_VOLUP, KEY_MUTE, KEY_RIGHT, KEY_VOLDOWN, KEY_INVERSE, KEY_FILTER };
+enum front_key { KEY_LEFT=1, KEY_VOLUP, KEY_MUTE, KEY_RIGHT, KEY_VOLDOWN, \
+                 KEY_INVERSE, KEY_FILTER };
+
+char flag_input_mode=0, flag_input_mode_before=0;
+char flag_filter=0; // Filter mode F1~F7 
+                    // F1:Fast Roll-Off, Minimum Phase Filter
+                    // F2: Apdizing, Fast Roll-Off, Linear Phase Filter
+                    // F3: Fast Roll-Off, Linear Phase Filter
+                    // F4: Slow Roll-Off, Linear Phase Filter
+                    // F5: Slow Roll-Off, Minimum Phase Filter
+                    // F6: Hybrid, Fast Roll-Off, Minimum Phase Filter
+                    // F7: Brickwall Filter
+char flag_headphone_output=0; // H=Headphone out, L=Line out
+char flag_sampling_rate=0;
+unsigned int flag_first_display=55600;    // delay initial display
+
+enum input_mode { MODE_COAX1, MODE_COAX2, MODE_AES1, MODE_AES2, MODE_BNC, \
+                  MODE_OPT1, MODE_OPT2, MODE_USB };
+
+unsigned char flag_refresh_display=0;
+
+unsigned char flag_timer_100ms=0;
 
 extern unsigned char AK4118A_read_register(unsigned char devaddr, unsigned char regaddr);
 extern void send_string(char *p);
 extern int Init_UART0(unsigned long baud);
 extern void send_integer(unsigned char ch);
-extern void send_int2hex(unsigned char ch);
+extern void send_byte2hex(unsigned char ch);
 extern void es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
+
+extern void AK4118A_power_down(unsigned char devaddr, unsigned char onoff);
+extern unsigned char AK4118A_input_select(unsigned char devaddr, unsigned char channel);
+
+extern void display_dot_matrix(void);
+extern unsigned char need_display_update(char *str1, char *str2);
+extern unsigned int message_delay;
+extern char display_default_strings[17];
+extern char display_message_strings[17];
+extern char dot_strings[17];
+extern char *display_ess_volume;
+extern char *ch_name[8];
+extern char *sr_name[7];
+
+
 
 U16 rom_add_pt=0;
 U32 rom_cnt=0;
@@ -138,40 +180,12 @@ U8 KeyReady=1;
 
 U8 I2C_error=0;
 
-U8 ch_name[8][6] = {
-  "COAX1 ",
-  "COAX2 ",
-  " AES1 ",
-  " AES2 ",
-  " BNC  ",
-  " OPT1 ",
-  " OPT2 ",
-  " USB  "
-};
-U8 sr_name[7][6] = {
-  " 44.1 ",
-  " 48.0 ",
-  " 88.2 ",
-  " 96.0 ",
-  "176.4 ",
-  "192.0 ",
-  "      "
-};
-U8 filter_name[3][8] = {
-  "FILTER1 ",
-  "FILTER2 ",
-  "FILTER3 "
-};
-U8 phase_name[8]={" INVERSE"};
-U8 normal_name[8]={"  NORMAL"};
 
 U8 ch_data;
 U8 sr_data;
 U8 filter_data;
 U8 inverse_data;
 
-U8 dot_string[16];
-U8 ess_volume[4];
 
 
 //sr_minphase_stage1 & sr_minphase_stage2,  Slow Roll-off
@@ -484,9 +498,13 @@ __interrupt void INT4_Handler(void)
 //Button Key
 // falling edge
 #pragma vector = INT3_vect
-__interrupt void INT3_Handler(void)     // falling edge
+__interrupt void INT3_Handler(void)     // inkey1 falling edge
 {
-  flag_key_int=1;
+  if (INKEY1_READ & INKEY1_PIN) flag_longkey_count=0;
+  else {
+    flag_key_int=1;
+    flag_longkey_count=1;
+  }
 }
 /*
 //if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
@@ -504,7 +522,7 @@ U8 init_sr_led=1;
 #pragma vector = TIMER0_OVF_vect
 __interrupt void TIMER0_OVF_Handler(void)
 {
-  U8 i;
+  //U8 i;
   
   TCNT0=255-250; //500usec 
   // 16MHz / 32prescaling = 500kHz
@@ -523,12 +541,14 @@ __interrupt void TIMER0_OVF_Handler(void)
     
     else {         // channel and sample rate, volume
       if(led_tmr==200){   //0.1sec      
-        for(i=0; i<16; i++){
-          if(i<6) dot_string[i]=ch_name[ch_led_data][i];
-          else if(i<12) dot_string[i]=sr_name[sr_led_data][i-6];
-          else  dot_string[i]=ess_volume[i-12];
-        }
-        dot_string_digit();
+        //for(i=0; i<16; i++){
+        //  if(i<6) dot_string[i]=ch_name[flag_input_mode][i];
+        //  else if(i<12) dot_string[i]=sr_name[sr_led_data][i-6];
+        //  else  dot_string[i]=display_ess_volume[i-12];
+        //}
+        flag_timer_100ms=1;
+        
+        //dot_string_digit();
         //for(i=0; i<5; i++)        dot_matrix_digit ( ch_name[ch_led_data][i],i ); 
         //dot_vol_hextodeci(vol_dB);
       }
@@ -564,22 +584,25 @@ __interrupt void TIMER1_OVF_Handler(void)
 U8 data=0;
 //U16 temp;
   //TCNT1=0xffff-1563; //0.1sec 
-  TCNT1=0xffff-781; //0.05sec 
-  // 16MHz / 1024precaling = 15.625kHz
-  // T= 1 / 15.625Hz = 64usec
-  // 64usec X 1563 = 0.1sec
-  // 64usec X 781 = 50msec
-  
+  //TCNT1=0xffff-781; //0.05sec 
+  // 16MHz / 1024prescaling = 15.625kHz T = 1/15.625kHz = 64us 64usec X 1563 = 0.1sec 64usec X 781 = 50msec
+  // 16MHz / 256 prescaling = 62.5kHz T = 1/62.5kHz = 16 us n=10000/16=625
+  TCNT1=0xffff-625;  //10ms
+  flag_refresh_display=1; // refresh display
+  if(flag_longkey_count) {
+    flag_longkey_count++;
+    if ((flag_longkey_count%50)==0) flag_longkey=1; // every 0.5s
+    if ((flag_longkey_count>300)&&(flag_longkey_count%5)==0) flag_longkey=1; // every 0.1s
+  }
   //test
+  
   if(tmr_osc) {
+    /*
     if(tmr_osc<31) tmr_osc++;
     if(tmr_osc==10) {   //0.5sec
       //_system_init_1();
       _system_init_se();
     }
-    /*else if(tmr_osc==60) {    //3sec
-      _system_init_se();
-    }*/
     else if(tmr_osc==30) {    //1.5sec
       //_system_init_1();
       es9018_reg10=0xce;			
@@ -592,7 +615,7 @@ U8 data=0;
       tmr_osc_ck=1;
       init_setting_check=1;   //include remocon interrupt,
     }
-    
+    */
     if(tmr_osc_ck){
       
       if(!KEY_FLAG){
@@ -623,39 +646,39 @@ U8 data=0;
           rom_tmr=0;
         }
       }
-      /*
-      if(IR_data_flag ){
+      ///////////////////////////////////////////////////////////////////
+      //if(IR_data_flag ){
       //if(IR_data_flag && Time_50ms>1){
         //Time_50ms=0;
         //IR_data[IR_data_flag]=_remocon_data;
 
-        if(IR_data[IR_data_flag]==0x80) {                             //Master Volume Up
+        //if(IR_data[IR_data_flag]==0x80) {                             //Master Volume Up
           //if(new_repeat_flag) { for(test_i=0; test_i<3; test_i++) audio_level_up(); }
           //else audio_level_up();
-          if(IR_data[IR_data_flag]==0x80 && IR_data[IR_data_flag+1]==0x80) {
-            audio_level_sp_up();
-            IR_data_flag--;
-          }
-          else audio_level_up();
-        }
-        else if(IR_data[IR_data_flag]==0xA8) {                         //Master Volume Down
+          //if(IR_data[IR_data_flag]==0x80 && IR_data[IR_data_flag+1]==0x80) {
+            //audio_level_sp_up();
+            //IR_data_flag--;
+          //}
+          //else audio_level_up();
+        //}
+        //else if(IR_data[IR_data_flag]==0xA8) {                         //Master Volume Down
           //if(new_repeat_flag) { for(test_i=0; test_i<3; test_i++) audio_level_down();}
           //else audio_level_down();
-          if(IR_data[IR_data_flag]==0xA8 && IR_data[IR_data_flag+1]==0xA8) {
-            audio_level_sp_down();
-            IR_data_flag--;
-          }
-          else audio_level_down();
-        }
+          //if(IR_data[IR_data_flag]==0xA8 && IR_data[IR_data_flag+1]==0xA8) {
+            //audio_level_sp_down();
+            //IR_data_flag--;
+          //}
+          //else audio_level_down();
+        //}
           
-        IR_data_flag--;
-      }
-    */  
-      
+        //IR_data_flag--;
+      //}
+    //////////////////////////////////////////////////////////////////////  
       
     }
-  }		
-	
+  
+  }	
+  
   Time_50ms++;
 	
 }
@@ -673,14 +696,23 @@ void main(void){
   _system_init();
   //_system_init_1();
   send_string("System init Completed.\r\n");
-
-while(1){
+  _system_init_se();
+  send_string("System init se Completed.\r\n");
+  tmr_osc_ck=1;
+  init_setting_check=1;   //include remocon interrupt,
+  volume_set();
+  dot_vol_hextodeci(vol_dB);
+  
+  
+  
+  while(1){
+    if (flag_first_display) flag_first_display--;
     //if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
     port_scan();
     flag_scan();
-    if (flag_key_int) {
-      flag_key_int=0;
-      key_scan();
+    if (need_display_update(display_default_strings,dot_strings)) {
+      display_dot_matrix();
+      dot_string_digit();
     }
   }//end while
 }
@@ -691,37 +723,62 @@ void key_scan(void)
 
   key_data = (INKEY1_READ & INKEY1_READ_MASK) >> INKEY1_READ_LOC;
   send_string("Key code = ");
-  send_int2hex(key_data);
+  send_byte2hex(key_data);
   send_string("\r\n");
-  if(tmr_osc_ck)
+  //if(tmr_osc_ck) {
     switch(key_data) {
       case KEY_LEFT:
+        message_delay=MESSAGE_DELAY_OFF;
         channel_down();
         break;
       case KEY_VOLUP:
+        message_delay=MESSAGE_DELAY_OFF;
         audio_level_up();
         break;
       case KEY_MUTE:
+        message_delay=MESSAGE_DELAY_OFF;
         ess_mute();
         break;
       case KEY_RIGHT:
+        message_delay=MESSAGE_DELAY_OFF;
         channel_up();
         break;
       case KEY_VOLDOWN:
+        message_delay=MESSAGE_DELAY_OFF;
         audio_level_down();
         break;
       case KEY_INVERSE:
-        if(!key_condition) key_func=1; else key_func=3;
-        femto_function();
+        message_delay=DEFAULT_MESSAGE_DELAY;
+        //if(!key_condition) key_func=1; else key_func=3;
+        //femto_function();
         break;
       case KEY_FILTER:
-        if(!key_condition) key_func=2; else key_func=4;
-        femto_function();
-    } // end of switch
+        message_delay=DEFAULT_MESSAGE_DELAY;
+        //if(!key_condition) key_func=2; else key_func=4;
+        //femto_function();
+  //  } // end of switch
+
+  }
 }
 
 void flag_scan(void)
 {
+  if (flag_key_int) {
+    flag_key_int=0;
+    key_scan();
+  }
+  if (flag_longkey) {
+    flag_longkey=0;
+    key_scan();
+  }
+  if (flag_refresh_display) {
+    flag_refresh_display=0;
+    dot_string_digit();
+  }
+  if(flag_timer_100ms) {
+    flag_timer_100ms=0;
+    display_dot_matrix();
+  }
   if(flag_mute != flag_mute_before) {
     flag_mute_before=flag_mute;
     if (flag_mute) send_string("[ES9038] Mute on.\r\n");
@@ -729,12 +786,73 @@ void flag_scan(void)
   }
   if(vol_dB!=vol_dB_before) {
     if (vol_dB>vol_dB_before) send_string("[ES9038] Volume decresed. - ");
-    else send_string("[ES9038] Volume incresed. - ");
+    else send_string("[ES9038] Volume incresed. - "); 
     send_integer(vol_dB); send_string("\r\n");
     vol_dB_before=vol_dB;
     es9038_set_volume(ES9038_ADDR0,vol_dB);
     es9038_set_volume(ES9038_ADDR1,vol_dB);
   }
+  if(flag_input_mode!=flag_input_mode_before) {
+
+    flag_input_mode_before=flag_input_mode;
+ 
+    switch(flag_input_mode) {
+      case MODE_COAX1:
+        AK4118A_power_down(AK4118A_I2C_ADDR, OFF);
+        send_string("[I2C] AK4118A Wake up.\r\n");
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_COAX1)) \
+          send_string("[I2C] COAX1 Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        SELECT_AK4118;
+        break;
+        
+      case MODE_COAX2:
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_COAX2)) \
+          send_string("[I2C] COAX2 Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        break;
+        
+      case MODE_AES1:
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_AES1)) \
+          send_string("[I2C] AES1 Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        break;
+        
+      case MODE_AES2:
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_AES2)) \
+          send_string("[I2C] AES2 Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        break;
+        
+      case MODE_BNC:
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_BNC)) \
+          send_string("[I2C] BNC Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        break;
+        
+      case MODE_OPT1:
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_OPT1)) \
+          send_string("[I2C] OPT1 Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        break;
+        
+      case MODE_OPT2:
+        AK4118A_power_down(AK4118A_I2C_ADDR, OFF);
+        send_string("[I2C] AK4118A Wake up.\r\n");
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_OPT2)) \
+          send_string("[I2C] OPT2 Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        SELECT_AK4118;
+        break;
+        
+      case MODE_USB:
+        AK4118A_power_down(AK4118A_I2C_ADDR, ON);
+        send_string("[I2C] AK4118A Power down.\r\n");
+        SELECT_USB;
+        break;
+    }
+    
+  } 
 }
 
 void port_scan(void)

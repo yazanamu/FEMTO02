@@ -100,8 +100,6 @@ void es9038_audio_input_select(unsigned char devaddr, unsigned char select)
   es9038_write_register(devaddr,ES9038_REG_INPUT_SEL,reg);
 }
 
-
-
 void es9038_automute_level(unsigned char devaddr, unsigned char level)
 {
   es9038_write_register(devaddr,ES9038_REG_AUTOMUTE_LEVEL,level & 0x3F);
@@ -179,11 +177,19 @@ void es9038_set_volume(unsigned char devaddr,unsigned char volume_db)
   es9038_write_register(devaddr, ES9038_REG_VOLUME1_CONTROL,volume_db);
 }
 
-
-
 void es9038_soft_reset(unsigned char devaddr)
 {
   es9038_write_register(devaddr,ES9038_REG_SYSTEM,ES9038_SYSTEM_SOFT_RESET);
+}
+
+void es9038_set_dpll_bw_dsd(unsigned char devaddr,unsigned char bandwidth)
+{
+  unsigned char reg;
+  
+  reg=es9038_read_register(devaddr,ES9038_REG_JITTER_DPLLBW);
+  reg&=~ES9038_DPLL_BW_DSD(0xF);
+  reg|=ES9038_DPLL_BW_DSD(bandwidth);
+  es9038_write_register(devaddr,ES9038_REG_JITTER_DPLLBW,reg);  
 }
 
 void es9038_18db_channel_gain_control(unsigned char devaddr,unsigned char ch, unsigned char onoff)
@@ -196,3 +202,29 @@ void es9038_18db_channel_gain_control(unsigned char devaddr,unsigned char ch, un
   es9038_write_register(devaddr,ES9038_REG_18DB_CHANNEL_GAIN,reg); 
 }
 
+unsigned int es9038_read_sampling_rate(unsigned char devaddr)
+{
+  unsigned long dpll_num=0;
+  unsigned char reg;
+  int i;
+  
+  for(i=3;i>=0;i--) {
+    reg = es9038_read_register(devaddr,ES9038_REG_DPLL_NUM+i);
+    dpll_num |= reg;
+    if (i==0) break;
+    dpll_num <<=8;
+  }
+  if (es9038_is_dsd_mode(devaddr)) return (unsigned int)(42.95 * dpll_num / 1000);
+  else return (unsigned int)(42.95 * dpll_num / 1000 / 64);
+  
+}
+
+unsigned char es9038_is_dsd_mode(unsigned char devaddr)
+{
+  unsigned char reg;
+  
+  reg=es9038_read_register(devaddr,ES9038_REG_STATUS);
+  
+  if (reg & ES9038_STATUS_DSD_PCM) return 1;
+  else return 0;
+}

@@ -13,7 +13,7 @@
 
 #define AK4118_IC_ADDR AK4118A_I2C_ADDRESS(0)
 
-extern unsigned char dot_string[16];
+extern char dot_strings[17];
 extern unsigned char ess_lch_master_trim;
 extern unsigned char ess_rch_master_trim;
 
@@ -40,9 +40,11 @@ extern void es9038_audio_auto_select(unsigned char devaddr, unsigned char select
 extern void es9038_dac_channel_mapping(unsigned char devaddr,unsigned char dac_ch,unsigned char input_ch);
 extern void es9038_automute_level(unsigned char devaddr, unsigned char level);
 extern void es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
+extern void es9038_audio_input_select(unsigned char devaddr, unsigned char select);
+extern void es9038_set_dpll_bw_dsd(unsigned char devaddr,unsigned char bandwidth);
 
 extern void send_integer(unsigned char ch);
-extern void send_int2hex(unsigned char ch);
+extern void send_byte2hex(unsigned char ch);
 //extern void phase_ess(void);
 
 U16 mtime_length = 0;
@@ -104,8 +106,13 @@ U8 i;
    
     //Timer Setting
     send_string("Timer setting.\r\n");
+    //Timer0
     TCCR0 = (0<<FOC0) | (0<<WGM00) | (0<<COM01) | (0<<COM00) |(0<<WGM01) | (0<< CS02)| (1<< CS01)| (1<< CS00);	// 32prescaling
-    TCCR1B = (1<< CS12)| (0<< CS11)| (1<< CS10);	// 1024precaling
+    //Timer1
+    //TCCR1B = (1<< CS12)| (0<< CS11)| (1<< CS10);	// 1024precaling
+    TCCR1B = (1<< CS12)| (0<< CS11)| (0<< CS10);	// 256precaling
+    
+    //Timer2 - remocon
     TCCR2 = (0<<FOC2) | (0<<WGM20) | (0<<COM21) | (0<<COM20) |(0<<WGM21) | (0<< CS22)| (1<< CS21)| (0<< CS20);	// 8prescaling, remocon
     
     TCNT2 = 0xff - TIMER0_CNT;
@@ -120,7 +127,7 @@ U8 i;
     // TOIE0 : Timer / Counter0 Overflow Interrupt Enable.
     // '1' : Timer / Counter0 Overflow Interrupt enabled.
     // '0' : Timer / Counter0 Overflow Interrupt disabled.
-    TIMSK = (1<<TOIE2) | (1<<TOIE1) | (1<<TOIE0);
+    TIMSK = (1<<TOIE2) | (1<<TOIE1) | (1<<TOIE0);       // Timer1 Interrupt Enable, Timer2 Interrupt Enable, Timer3 Interrupt Enable
     // Timer / Counter Interrupt Flag Register.
     // OCF0 : Output Compare Flag.
     // TOV0 : Timer / Overflow Flag.
@@ -151,8 +158,9 @@ U8 i;
     //INT7~INT2 : SelMCLK(7),	Lock-Lch(6),	REMOCON(5),	USB_Lock(4),	Inkey2(3),	CS8415-AUDIO(2)
     EIMSK = 0xFC;
     
-    //  falling edge : Inkey2(3),	rising edge : CS8415-AUDIO(2), 	Reserved : (INT1), (INT0)
-    EICRA = (1<<ISC31) | (0<<ISC30) | (1<<ISC21) | (0<<ISC20) | (0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
+    //  falling&rising edge : Inkey2(3),	rising edge : CS8415-AUDIO(2), 	Reserved : (INT1), (INT0)
+    //EICRA = (1<<ISC31) | (0<<ISC30) | (1<<ISC21) | (0<<ISC20) | (0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
+    EICRA = (0<<ISC31) | (1<<ISC30) | (1<<ISC21) | (0<<ISC20) | (0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
     
     // Any logical change :  SelMCLK(7),	Lock-Lch(6),	REMOCON(5),	USB_Lock(4)
     EICRB =  (0<<ISC41) | (1<<ISC40) | (0<<ISC51) | (1<<ISC50) | (0<<ISC61) | (1<<ISC60) | (0<<ISC71) | (1<<ISC70);
@@ -187,7 +195,14 @@ U8 i;
     es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DSD_I2S);
     es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DSD_I2S);
     send_string("[I2C] ES9038PRO Auto Select function DSD/I2S complete.\r\n");
+    //es9038_audio_input_select(ES9038_ADDR0,INPUT_DSD);
+    //es9038_audio_input_select(ES9038_ADDR1,INPUT_DSD);
+    //es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DISABLE);
+    //es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DISABLE);
+    //send_string("[I2C] ES9038PRO function DSD complete.\r\n");
 
+    
+    
     for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR0,i,INPUT_CH1);
     for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR1,i,INPUT_CH2);
     send_string("[I2C] ES9038PRO Channel mapping complete.\r\n");
@@ -205,9 +220,14 @@ U8 i;
     es9038_system_mute(ES9038_ADDR1,0); // disable mute
     send_string("[I2C] ES9038 Mute Off.\r\n");
     
+    es9038_set_dpll_bw_dsd(ES9038_ADDR0,DPLL_HIGHEST);
+    es9038_set_dpll_bw_dsd(ES9038_ADDR1,DPLL_HIGHEST);
+    send_string("[I2C] ES9038 DSD DPLL Highest.\r\n");
+    
     //Dot matrix clear
     send_string("[SPI] DOT Matrix Clear.\r\n");
     dot_matrix_clear();
+    
 
 ///////////////////////////////////////////////////////////////////////////////
 //I2C
@@ -222,7 +242,7 @@ U8 i;
       //interrupt enable
   __enable_interrupt(); 
   
-   for(i=0; i<16; i++) dot_string[i]=' ';
+   for(i=0; i<16; i++) dot_strings[i]=' ';
 
 
 ///////////////////////////////////////////////////////////////////////////////  
@@ -564,7 +584,6 @@ test_set_eeprom(0x1e, 0x01);
   */
   //for(i=0; i<0x20; i++)     test_eeprom[i]=rom_I2C_Read(i);
 }
-
 
 void delay_ms(unsigned int ms) {
   unsigned int i, k;

@@ -19,15 +19,19 @@ extern unsigned char filter_flag;
 extern void DelayTime_ms(unsigned int time_end);
 extern unsigned int rom_tmr;
 extern unsigned char key_condition;
-extern unsigned char dot_string[16];
-extern unsigned char filter_name[3][8];
-extern unsigned char phase_name[8];
-extern unsigned char normal_name[8];
+extern char *dot_strings;
+extern char *filter_name[3];
+extern char *phase_name;
+extern char *normal_name;
 extern unsigned int key_func_tmr;
+extern unsigned char flag_refresh_display;
+extern char flag_input_mode;
+
 extern void es9038_system_mute(unsigned char devaddr, unsigned char onoff);
 
 extern void es9038_write_register(unsigned char devaddr, unsigned char regaddr, unsigned char data);
 
+extern void display_dot_matrix(void);
 //////////////////////////////////////////////////////////////////////
 U8 test_osc=1;
 //ES9018
@@ -88,7 +92,7 @@ void audio_level_sp_down(void){
     else               vol_dB=0xff;		//-127dB, display num = 00.0
   
     if(temp!=vol_dB) {
-      volume_set();
+      volume_set();     // set es9038
       dot_vol_hextodeci(vol_dB);
     }
   }
@@ -106,7 +110,7 @@ void audio_level_sp_up(void){
     else vol_dB=0;
   
     if(temp!=vol_dB) {
-      volume_set();
+      volume_set();     // set es9038
       dot_vol_hextodeci(vol_dB);
     }
   }
@@ -116,37 +120,41 @@ void audio_level_sp_up(void){
 void audio_level_down(void){
   //display num = 100 - (reg/2)
   //audio_level++;	//reg(#0~#7)
-  U8 temp;
+  //U8 temp;
   if(!key_func){
     if(flag_mute) ess_mute();    //mute condition
-    temp=vol_dB;
+    //temp=vol_dB;
   
     if(vol_dB<199) vol_dB++;
     else               vol_dB=0xff;		//-127dB, display num = 00.0
   
-    if(temp!=vol_dB) {
-      volume_set();
-      dot_vol_hextodeci(vol_dB);
-    }
+    //if(temp!=vol_dB) {
+    volume_set();     // set es9038
+    dot_vol_hextodeci(vol_dB);
+    display_dot_matrix();
+    //dot_vol_hextodeci(vol_dB);
+    //}
   }
 }
 
 void audio_level_up(void){
   //display num = 100 - (reg/2)
   //audio_level--;	//reg(#0~#7)
-  U8 temp;
-  if(!key_func){
-    if(flag_mute) ess_mute();    //mute condition
-    temp=vol_dB;
+  //U8 temp;
+  //if(!key_func){
+  if(flag_mute) ess_mute();    //mute condition
+    //temp=vol_dB;
   
-    if(vol_dB==0xff) vol_dB=199;
-    else if(vol_dB>0) vol_dB--;
-  
-    if(temp!=vol_dB) {
-      volume_set();
-      dot_vol_hextodeci(vol_dB);
-    }
-  }
+  if(vol_dB>0) vol_dB--;
+  if(vol_dB>199) vol_dB=199;
+    
+    //if(temp!=vol_dB) {
+  volume_set();     // set es9038
+  dot_vol_hextodeci(vol_dB);
+  display_dot_matrix();
+    //dot_vol_hextodeci(vol_dB);
+    //}
+  //}
 }
 
 void channel_change(void){
@@ -184,8 +192,10 @@ void channel_change(void){
 void channel_up(void){
   //channel_vol_save();
   if(!key_func){
-    if(ch_led_data<7) ch_led_data++;
-    else ch_led_data=0;
+    flag_input_mode++;
+    flag_input_mode&=0x07;
+    //if(ch_led_data<7) ch_led_data++;
+    //else ch_led_data=0;
     channel_change();
   }
 }
@@ -193,8 +203,10 @@ void channel_up(void){
 void channel_down(void){
   //channel_vol_save();
   if(!key_func){
-    if(ch_led_data) ch_led_data--;
-    else ch_led_data=7;
+    flag_input_mode--;
+    flag_input_mode&=0x07;
+    //if(ch_led_data) ch_led_data--;
+    //else ch_led_data=7;
     channel_change();
   }
 }
@@ -328,13 +340,14 @@ void femto_function(void){
   }
   
   for(i=0; i<16; i++) {
-    if(i<8) dot_string[i]=filter_name[filter_flag][i];
+    if(i<8) dot_strings[i]=filter_name[filter_flag][i];
     else {
-      if(!phase_data) dot_string[i]=phase_name[i-8];  //phase on
-      else dot_string[i]=normal_name[i-8];   //phase off
+      if(!phase_data) dot_strings[i]=phase_name[i-8];  //phase on
+      else dot_strings[i]=normal_name[i-8];   //phase off
     }
   }
   
   key_func_tmr=0;
-  dot_string_digit();
+  flag_refresh_display=1; // refresh display
+  //dot_string_digit();
 }

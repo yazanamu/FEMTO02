@@ -1,6 +1,7 @@
 #ifndef _AVR_ES9038_H_
 #define _AVR_ES9038_H_
 
+#define ES9038_XI_CLK 100000000L
 
 #define ES9038_ADDR0  0x90      // Left channel
 #define ES9038_ADDR1  0x92      // Right channel
@@ -28,10 +29,13 @@
 #define ES9038_REG_VOLUME7_CONTROL 0x16
 #define ES9038_REG_VOLUME8_CONTROL 0x17
 #define ES9038_REG_MASTER_TRIM 0x18 //32bit
+#define ES9038_REG_STATUS       27        
+#define ES9038_REG_DPLL_NUM     28  //32bit
 #define ES9038_REG_DAC_CH_MAPPING_DAC12 0x26
 #define ES9038_REG_DAC_CH_MAPPING_DAC34 0x27
 #define ES9038_REG_DAC_CH_MAPPING_DAC56 0x28
 #define ES9038_REG_DAC_CH_MAPPING_DAC78 0x29
+
 
 #define ES9038_REG_18DB_CHANNEL_GAIN 0x3E       //Register 62
 
@@ -47,8 +51,9 @@ enum input_select {INPUT_I2S, INPUT_SPDIF, INPUT_DSD=4};
 #define ES9038_VOLUME_CFG_LATCH_VOL     0x01<<0
 #define ES9038_FILTER_SHAPE(x)          (((x)&0x07)<<5)
 #define ES9038_FILTER_IIR_BW(x)         (((x)&0x03)<<1)
-#define ES9038_DPLL_BW_SERIAL(x)        (((x)&0x04)<<4)
-#define ES9038_DPLL_BW_DSD(x)           (((x)&0x04)<<0)
+#define ES9038_DPLL_BW_SERIAL(x)        (((x)&0x0F)<<4)
+#define ES9038_DPLL_BW_DSD(x)           (((x)&0x0F)<<0)
+enum dpdd_bw { DPLL_OFF, DPLL_LOWEST, DPLL_2, DPLL_3, DPLL_4, DPLL_5, DPLL_6, DPLL_7, DPLL_8, DPLL_9, DPLL_10, DPLL_11, DPLL_12, DPLL_13, DPLL_14, DPLL_HIGHEST };
 
 #define ES9038_SYSTEM_MUTE              0x01<<0
 #define ES9038_AUTOMUTE_TIME(x)         (x)
@@ -62,10 +67,18 @@ enum input_select {INPUT_I2S, INPUT_SPDIF, INPUT_DSD=4};
 #define ES9038_DAC_CH6_MAP(x)           (((x)&0x0F)<<4)
 #define ES9038_DAC_CH7_MAP(x)           (((x)&0x0F)<<0)
 #define ES9038_DAC_CH8_MAP(x)           (((x)&0x0F)<<4)
+
+#define ES9038_STATUS_DSD_PCM           0x01<<3
+#define ES9038_STATUS_SPDIF_VALID       0x01<<2
+#define ES9038_STATUS_SPDIF_EN          0x01<<1
+#define ES9038_STATUS_LOCK              0x01<<0
+
+
 enum ch_input {INPUT_CH1, INPUT_CH2, INPUT_CH3, INPUT_CH4, INPUT_CH5, INPUT_CH6, INPUT_CH7, INPUT_CH8};
 
 #define ES9038_CHIP_ID(x) (((x)&0x3F)<<2)
 #define ES9038PRO_CHIP_ID 0x2A
+
 
 enum automute_cfg { AUTOMUTE_NORMAL, AUTOMUTE_ONLYMUTE, AUTOMUTE_ALLGND, AUTOMUTE_RAMPNGND };
 enum serial_mode { I2S_MODE, LEFTJUST_MODE, RIGHTJUST_MODE };
@@ -73,5 +86,7 @@ enum serial_mode { I2S_MODE, LEFTJUST_MODE, RIGHTJUST_MODE };
 
 #define ES9038_ADDR0_MUTE es9038_write_register(ES9038_ADDR0,ES9038_REG_FILTERBW_MUTE,0x41)
 #define ES9038_ADDR1_MUTE es9038_write_register(ES9038_ADDR1,ES9038_REG_FILTERBW_MUTE,0x41)
+
+unsigned char es9038_is_dsd_mode(unsigned char devaddr);
 
 #endif

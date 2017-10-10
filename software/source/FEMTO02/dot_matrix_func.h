@@ -1,6 +1,10 @@
 #ifndef AVR_DOT_MATRIX_FUNC_H
 #define AVR_DOT_MATRIX_FUNC_H
 
+
+#define DEFAULT_MESSAGE_DELAY 6 // 3 sconds delay
+#define MESSAGE_DELAY_OFF 0
+
 void dot_matrix_clear(void);
 void dot_string_digit(void);
 void dot_matrix_digit(unsigned char data, unsigned char xdigit);
