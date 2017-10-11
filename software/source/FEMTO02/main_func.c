@@ -116,47 +116,6 @@ void audio_level_sp_up(void){
   }
 }
 
-
-void audio_level_down(void){
-  //display num = 100 - (reg/2)
-  //audio_level++;	//reg(#0~#7)
-  //U8 temp;
-  if(!key_func){
-    if(flag_mute) ess_mute();    //mute condition
-    //temp=vol_dB;
-  
-    if(vol_dB<199) vol_dB++;
-    else               vol_dB=0xff;		//-127dB, display num = 00.0
-  
-    //if(temp!=vol_dB) {
-    volume_set();     // set es9038
-    dot_vol_hextodeci(vol_dB);
-    display_dot_matrix();
-    //dot_vol_hextodeci(vol_dB);
-    //}
-  }
-}
-
-void audio_level_up(void){
-  //display num = 100 - (reg/2)
-  //audio_level--;	//reg(#0~#7)
-  //U8 temp;
-  //if(!key_func){
-  if(flag_mute) ess_mute();    //mute condition
-    //temp=vol_dB;
-  
-  if(vol_dB>0) vol_dB--;
-  if(vol_dB>199) vol_dB=199;
-    
-    //if(temp!=vol_dB) {
-  volume_set();     // set es9038
-  dot_vol_hextodeci(vol_dB);
-  display_dot_matrix();
-    //dot_vol_hextodeci(vol_dB);
-    //}
-  //}
-}
-
 void channel_change(void){
   U8 temp;
   
@@ -187,6 +146,12 @@ void channel_change(void){
   //rom_write_multi();
 
   //dot_vol_hextodeci(vol_dB);
+}
+
+void audio_level_up(void) {
+}
+
+void audio_level_down(void) {
 }
 
 void channel_up(void){

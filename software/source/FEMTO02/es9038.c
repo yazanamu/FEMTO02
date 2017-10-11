@@ -208,12 +208,12 @@ unsigned int es9038_read_sampling_rate(unsigned char devaddr)
   unsigned char reg;
   int i;
   
-  for(i=3;i>=0;i--) {
+  for(i=3;i>=0;i++) {
     reg = es9038_read_register(devaddr,ES9038_REG_DPLL_NUM+i);
     dpll_num |= reg;
-    if (i==0) break;
-    dpll_num <<=8;
+    if (i>0) dpll_num <<=8;
   }
+
   if (es9038_is_dsd_mode(devaddr)) return (unsigned int)(42.95 * dpll_num / 1000);
   else return (unsigned int)(42.95 * dpll_num / 1000 / 64);
   
@@ -221,10 +221,12 @@ unsigned int es9038_read_sampling_rate(unsigned char devaddr)
 
 unsigned char es9038_is_dsd_mode(unsigned char devaddr)
 {
-  unsigned char reg;
+  //unsigned char reg;
   
-  reg=es9038_read_register(devaddr,ES9038_REG_STATUS);
+  //reg=es9038_read_register(devaddr,ES9038_REG_STATUS);
   
-  if (reg & ES9038_STATUS_DSD_PCM) return 1;
-  else return 0;
+  //if (reg & ES9038_STATUS_DSD_PCM) return 1;
+  //else 
+  return 0;
 }
+
