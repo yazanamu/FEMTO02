@@ -11,6 +11,7 @@
 
 #define AK4118A_I2C_ADDR AK4118A_I2C_ADDRESS(0)
 
+unsigned long system_clock=0;
 unsigned char flag_usb_audio=1,         flag_usb_audio_before=1;
 unsigned char flag_dsd128=1,            flag_dsd128_before=1;
 unsigned char flag_dsd_on=1,            flag_dsd_on_before=1;
@@ -33,7 +34,7 @@ char flag_filter=0, flag_filter_before=0; // Filter mode F1~F7
                     // F7: Brickwall Filter
 unsigned char flag_headphone_output=0, flag_headphone_output_before=0; // H=Headphone out, L=Line out
 unsigned int flag_sampling_rate=0, flag_sampling_rate_before=0;
-unsigned int flag_first_display=20000;    // delay initial display
+unsigned int flag_first_display=60000;    // delay initial display
 
 enum input_mode { MODE_COAX1, MODE_COAX2, MODE_AES1, MODE_AES2, MODE_BNC, \
                   MODE_OPT1, MODE_OPT2, MODE_USB };
@@ -60,7 +61,7 @@ extern unsigned char need_display_update(char *str1, char *str2);
 extern unsigned int message_delay;
 extern char display_default_strings[17];
 extern char display_message_strings[17];
-extern char dot_strings[17];
+extern char *dot_strings;
 extern char *display_ess_volume;
 extern char *ch_name[8];
 extern char *sr_name[7];
@@ -592,7 +593,7 @@ U8 data=0;
   flag_refresh_display=1; // refresh display
   if(flag_longkey_count) {
     flag_longkey_count++;
-    if ((flag_longkey_count%50)==0) flag_longkey=1; // every 0.5s
+    if ((flag_longkey_count%25)==0) flag_longkey=1; // every 0.25s
     if ((flag_longkey_count>300)&&(flag_longkey_count%5)==0) flag_longkey=1; // every 0.1s
   }
   //test
@@ -774,9 +775,16 @@ void key_scan(void)
         break;
         
     case KEY_INVERSE:
-        if (flag_headphone_output) flag_headphone_output=0;
-        else flag_headphone_output=1;
-        
+        if (flag_headphone_output) {
+          flag_headphone_output=0;
+          HP_MUTE_ON;
+          LINE_MUTE_OFF;
+        }
+        else {
+          flag_headphone_output=1;
+          LINE_MUTE_ON;
+          HP_MUTE_OFF;
+        }
         // test
         //sr_led_data=determine_sampling_rate();
         
@@ -785,7 +793,7 @@ void key_scan(void)
 
     } // end of switch
 }
-
+///////////////////////////////////////////////////////////////////////////////
 unsigned char determine_sampling_rate(void)
 {
   unsigned int sampling_rate;
@@ -805,7 +813,7 @@ unsigned char determine_sampling_rate(void)
   else if (sampling_rate<400) return 11;   // 384
   else                        return 12;   // 512
 }
-
+///////////////////////////////////////////////////////////////////////////////
 void flag_scan(void)
 {
   if (flag_key_int) {
@@ -908,10 +916,18 @@ void port_scan(void)
   if(flag_usb_audio & !flag_usb_audio_before) {         // edge detect
     flag_usb_audio_before=1;
     send_string("[SA9127] USB Audio Activated.\r\n");
+    if (flag_input_mode==MODE_USB) {
+      DAC_MUTE_OFF;
+      send_string("[MCU] DAC Mute disable.\r\n");
+    }
   }
   if(!flag_usb_audio & flag_usb_audio_before) {         // edge detect
     flag_usb_audio_before=0;
     send_string("[SA9127] USB Audio Deactivated.\r\n");
+    if (flag_input_mode==MODE_USB) {
+      DAC_MUTE_ON;
+      send_string("[MCU] DAC Mute enable.\r\n");
+    }
   }
   // detect dsd on
   if(DSD_ON_READ & DSD_ON_PIN) flag_dsd_on=1; else flag_dsd_on=0;

@@ -20,7 +20,7 @@ extern void DelayTime_ms(unsigned int time_end);
 extern unsigned int rom_tmr;
 extern unsigned char key_condition;
 extern char *dot_strings;
-extern char *filter_name[3];
+extern char *filter_name[7];
 extern char *phase_name;
 extern char *normal_name;
 extern unsigned int key_func_tmr;

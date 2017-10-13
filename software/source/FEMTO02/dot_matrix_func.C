@@ -23,7 +23,7 @@ extern unsigned char dot_light_reg;
 char display_default_strings[]="CH SAM VOLU FI O";
 //char display_message_strings[]="Message Message ";
 char *display_first_strings  = "FEMTO2 SIGNATURE";
-char dot_strings[]=            "1234567890123456";
+char *dot_strings =            "1234567890123456";
 //char display_mute_strings[] =  "      MUTE      ";
 char *display_inputsource= &display_default_strings[COLUMN_CH];
 char *display_samplingrate=&display_default_strings[COLUMN_SR];

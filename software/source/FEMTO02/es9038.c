@@ -230,3 +230,13 @@ unsigned char es9038_is_dsd_mode(unsigned char devaddr)
   return 0;
 }
 
+void es9038_set_volume_rate(unsigned char devaddr, unsigned char volume_rate)
+{
+  unsigned char reg;
+  
+  reg=es9038_read_register(devaddr,ES9038_REG_VOLUME_RAMP_RATE);
+  reg&=~ES9038_VOLUME_RATE(0x7);
+  reg|=ES9038_VOLUME_RATE(volume_rate);
+  es9038_write_register(devaddr,ES9038_REG_VOLUME_RAMP_RATE,reg); 
+}
+

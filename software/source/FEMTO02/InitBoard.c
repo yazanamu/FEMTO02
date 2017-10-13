@@ -13,7 +13,7 @@
 
 #define AK4118_IC_ADDR AK4118A_I2C_ADDRESS(0)
 
-extern char dot_strings[17];
+extern char *dot_strings;
 extern unsigned char ess_lch_master_trim;
 extern unsigned char ess_rch_master_trim;
 
@@ -42,6 +42,8 @@ extern void es9038_automute_level(unsigned char devaddr, unsigned char level);
 extern void es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
 extern void es9038_audio_input_select(unsigned char devaddr, unsigned char select);
 extern void es9038_set_dpll_bw_dsd(unsigned char devaddr,unsigned char bandwidth);
+extern void es9038_set_volume_rate(unsigned char devaddr, unsigned char volume_rate);
+
 
 extern void send_integer(unsigned char ch);
 extern void send_byte2hex(unsigned char ch);
@@ -95,6 +97,8 @@ U8 i;
   DSD_ON_DDR_INIT; DSD_ON_PORT_INIT;
   USB_DET_DDR_INIT; USB_DET_PORT_INIT;
   I2S_SEL_DDR_INIT; I2S_SEL_PORT_INIT;
+  HP_MUTE_DDR_INIT; HP_MUTE_PORT_INIT;
+  LINE_MUTE_DDR_INIT; LINE_MUTE_PORT_INIT;
 ///////////////////////////////////////////////////////////////////////////////
 
     // I2C Setting
@@ -195,13 +199,6 @@ U8 i;
     es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DSD_I2S);
     es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DSD_I2S);
     send_string("[I2C] ES9038PRO Auto Select function DSD/I2S complete.\r\n");
-    //es9038_audio_input_select(ES9038_ADDR0,INPUT_DSD);
-    //es9038_audio_input_select(ES9038_ADDR1,INPUT_DSD);
-    //es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DISABLE);
-    //es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DISABLE);
-    //send_string("[I2C] ES9038PRO function DSD complete.\r\n");
-
-    
     
     for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR0,i,INPUT_CH1);
     for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR1,i,INPUT_CH2);
@@ -211,12 +208,15 @@ U8 i;
     es9038_set_volume(ES9038_ADDR1,ES9038_MAX_VOLUME);
     send_string("[I2C] ES9038PRO Volume Max complete.\r\n");
     
-    send_string("[I2C] CS8416 Input7 to GND.\r\n");
+    es9038_set_volume_rate(ES9038_ADDR0,7);
+    es9038_set_volume_rate(ES9038_ADDR1,7);
+    send_string("[I2C] ES9038PRO Volume Ramp Rate = 7.\r\n");
+    
+    
+    //send_string("[I2C] CS8416 Input7 to GND.\r\n");
     //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
-	
     
     es9038_system_mute(ES9038_ADDR0,0); // disable mute
-    
     es9038_system_mute(ES9038_ADDR1,0); // disable mute
     send_string("[I2C] ES9038 Mute Off.\r\n");
     
@@ -333,7 +333,7 @@ void _system_init_se(void){
   U16 i=0;
   
   //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
-  send_string("[I2C] CS8416 Input7 to GND.\r\n");
+  //send_string("[I2C] CS8416 Input7 to GND.\r\n");
   //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
   //send_string("[I2C] ES9038 U22 Right Mute.\r\n");
   //es9038_system_mute(ES9038_ADDR0,1);
@@ -573,7 +573,7 @@ test_set_eeprom(0x1e, 0x01);
   DOT_ADDR4=1;
   dot_matrix_bright(3);		//Bright 27%  
   
-  PORTB_Bit7=1;       //Analog Power Enable
+  //PORTB_Bit7=1;       //Analog Power Enable
 /*  
  for(i=0; i<0x30; i++) reset_eeprom(i);
  for(i=0; i<0x20; i++)  reset_eeprom(i+0x7e0);
