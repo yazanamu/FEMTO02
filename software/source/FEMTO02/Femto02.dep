@@ -210,7 +210,7 @@
         </tool>
         <tool>
           <name>ICCAVR</name>
-          <file> 56 50 53</file>
+          <file> 50</file>
         </tool>
         <tool>
           <name>__cstat</name>

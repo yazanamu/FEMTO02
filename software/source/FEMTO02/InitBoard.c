@@ -75,7 +75,7 @@ void wait_mtime(unsigned int time){
 void _system_init(void)
 {
   U8 i;
-  unsigned int status;
+  //unsigned int status;
 
   send_string("Port init.\r\n");
 //DDR=1, PORT=1 --> Ãâ·Â High
@@ -105,8 +105,8 @@ void _system_init(void)
   I2S_SEL_DDR_INIT; I2S_SEL_PORT_INIT;
   HP_MUTE_DDR_INIT; HP_MUTE_PORT_INIT;
   LINE_MUTE_DDR_INIT; LINE_MUTE_PORT_INIT;
-  AK_INT0_DDR_INIT; AK_INT0_PORT_INIT;
-  AK_INT1_DDR_INIT; AK_INT1_PORT_INIT;
+  //AK_INT0_DDR_INIT; AK_INT0_PORT_INIT;
+  //AK_INT1_DDR_INIT; AK_INT1_PORT_INIT;
   
 ///////////////////////////////////////////////////////////////////////////////
 

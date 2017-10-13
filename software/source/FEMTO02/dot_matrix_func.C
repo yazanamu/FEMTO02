@@ -72,6 +72,8 @@ char *ouput_name[2] = {
 };
 
 char *volume_name = "VOLU ";
+char *phase_name=" INVERSE";
+char *normal_name="  NORMAL";
 
 void dot_matrix_clear(void){
   DOT_CLR_FLAG = 0;
