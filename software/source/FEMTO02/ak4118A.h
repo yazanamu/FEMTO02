@@ -35,6 +35,19 @@
 #define AK4118A_REG_RX_CHANNEL_STATUS_BYTE5 0x27
 #define AK4118A_REG_TX_CHANNEL_STATUS_BYTE5 0x28
 
+#define AK4118A_QINT                (0x01<<7)
+#define AK4118A_AUTO                (0x01<<6)
+#define AK4118A_CINT                (0x01<<5)
+#define AK4118A_UNLCK               (0x01<<4)
+#define AK4118A_DTSCD               (0x01<<3)
+#define AK4118A_PEM                 (0x01<<2)
+#define AK4118A_AUDION              (0x01<<1)
+#define AK4118A_PAR                 (0x01<<0)
+
+#define AK4118A_STATUS1_FS(x)               (((x)&0x0F)<<4)
+#define AK4118A_STATUS1_QCRC                (0x01<<1)
+#define AK4118A_STATUS1_CCRC                (0x01<<0)
+
 #define AK4118A_CLK_PWR_CS12        (0x01<<7)
 #define AK4118A_CLK_PWR_BCU         (0x01<<6)
 #define AK4118A_CLK_PWR_CM(x)       (((x)&0x03)<<4)

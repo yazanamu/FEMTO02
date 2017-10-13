@@ -21,10 +21,8 @@
 extern unsigned char dot_light_reg;
 
 char display_default_strings[]="CH SAM VOLU FI O";
-//char display_message_strings[]="Message Message ";
 char *display_first_strings  = "FEMTO2 SIGNATURE";
 char *dot_strings =            "1234567890123456";
-//char display_mute_strings[] =  "      MUTE      ";
 char *display_inputsource= &display_default_strings[COLUMN_CH];
 char *display_samplingrate=&display_default_strings[COLUMN_SR];
 char *display_ess_volume = &display_default_strings[COLUMN_VOL];
@@ -58,14 +56,15 @@ char *sr_name[13] = {
   "384 ",
   "512 "
 };
-char *filter_name[7] = {
+char *filter_name[8] = {
   "F1 ",
   "F2 ",
   "F3 ",
   "F4 ",
   "F5 ",
   "F6 ",
-  "F7 "
+  "F7 ",
+  "F8 "
 };
 char *ouput_name[2] = {
   "L",
@@ -73,8 +72,6 @@ char *ouput_name[2] = {
 };
 
 char *volume_name = "VOLU ";
-char *phase_name=" INVERSE";
-char *normal_name="  NORMAL";
 
 void dot_matrix_clear(void){
   DOT_CLR_FLAG = 0;

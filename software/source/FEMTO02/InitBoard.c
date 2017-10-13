@@ -44,6 +44,9 @@ extern void es9038_audio_input_select(unsigned char devaddr, unsigned char selec
 extern void es9038_set_dpll_bw_dsd(unsigned char devaddr,unsigned char bandwidth);
 extern void es9038_set_volume_rate(unsigned char devaddr, unsigned char volume_rate);
 
+extern unsigned int AK4118A_read_status(unsigned char devaddr);
+extern void AK4118A_reset(unsigned char devaddr);
+extern void AK4118A_power_down(unsigned char devaddr);
 
 extern void send_integer(unsigned char ch);
 extern void send_byte2hex(unsigned char ch);
@@ -69,8 +72,11 @@ void wait_mtime(unsigned int time){
 	mtime_flag=0;
 }
 */
-void _system_init(void){
-U8 i;
+void _system_init(void)
+{
+  U8 i;
+  unsigned int status;
+
   send_string("Port init.\r\n");
 //DDR=1, PORT=1 --> 출력 High
 //DDR=1, PORT=0 --> 출력 Low
@@ -99,6 +105,9 @@ U8 i;
   I2S_SEL_DDR_INIT; I2S_SEL_PORT_INIT;
   HP_MUTE_DDR_INIT; HP_MUTE_PORT_INIT;
   LINE_MUTE_DDR_INIT; LINE_MUTE_PORT_INIT;
+  AK_INT0_DDR_INIT; AK_INT0_PORT_INIT;
+  AK_INT1_DDR_INIT; AK_INT1_PORT_INIT;
+  
 ///////////////////////////////////////////////////////////////////////////////
 
     // I2C Setting
@@ -223,6 +232,17 @@ U8 i;
     es9038_set_dpll_bw_dsd(ES9038_ADDR0,DPLL_HIGHEST);
     es9038_set_dpll_bw_dsd(ES9038_ADDR1,DPLL_HIGHEST);
     send_string("[I2C] ES9038 DSD DPLL Highest.\r\n");
+    
+    //////////// AK4118A Initialize ///////////
+    //AK4118A_power_down(AK4118_IC_ADDR); // AK4118A power down
+    //send_string("[I2C] AK4118A power down.\r\n");
+    //status=AK4118A_read_status(AK4118_IC_ADDR);
+    //if (status>>8) {
+      //send_string("[I2C] AK4118A Error found.\r\n Error code = ");
+      //send_integer(status>>8);
+      //send_string("\r\n");
+    //}
+    
     
     //Dot matrix clear
     send_string("[SPI] DOT Matrix Clear.\r\n");

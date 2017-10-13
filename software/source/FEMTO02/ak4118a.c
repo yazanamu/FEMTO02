@@ -31,19 +31,25 @@ unsigned char Is_there_AK4118A(unsigned char ic_addr)
 
 void AK4118A_reset(unsigned char devaddr)
 {
-  unsigned char reset = ~AK4118A_CLK_PWR_RSTN;
+  unsigned char reg;
   
-  i2c_writeReg(devaddr, AK4118A_REG_CLK_POWER_DN_CTL, &reset, 1);
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_CLK_POWER_DN_CTL);
+  reg &=~AK4118A_CLK_PWR_RSTN;
+  i2c_writeReg(devaddr, AK4118A_REG_CLK_POWER_DN_CTL, &reg, 1);
 }
 
-void AK4118A_power_down(unsigned char devaddr, unsigned char onoff)
+void AK4118A_power_down(unsigned char devaddr)
 {
   unsigned char reg;
   
   reg = AK4118A_read_register(devaddr, AK4118A_REG_CLK_POWER_DN_CTL);
-  if (onoff) reg &=~AK4118A_CLK_PWR_PWN; else reg |=AK4118A_CLK_PWR_PWN;
-  
+  reg &=~AK4118A_CLK_PWR_PWN;
   i2c_writeReg(devaddr, AK4118A_REG_CLK_POWER_DN_CTL, &reg, 1);
+}
+
+unsigned char AK4118A_read_current_channel(unsigned char devaddr)
+{  
+  return (AK4118A_read_register(devaddr, AK4118A_REG_IN_OUT_CTL1)&0x07);  
 }
 
 unsigned char AK4118A_input_select(unsigned char devaddr, unsigned char channel)
@@ -54,7 +60,16 @@ unsigned char AK4118A_input_select(unsigned char devaddr, unsigned char channel)
   reg &= ~AK4118A_CONTROL1_IPS(0x07);
   reg |= AK4118A_CONTROL1_IPS(channel);
   i2c_writeReg(devaddr, AK4118A_REG_IN_OUT_CTL1, &reg, 1);
+
+  if (AK4118A_CONTROL1_IPS(channel)==(AK4118A_read_current_channel(devaddr))) return 1; else return 0;
+}
+
+unsigned int AK4118A_read_status(unsigned char devaddr)
+{
+  unsigned int ret_value;
   
-  reg = AK4118A_read_register(devaddr, AK4118A_REG_IN_OUT_CTL1);
-  if (AK4118A_CONTROL1_IPS(channel)==(reg&0x07)) return 1; else return 0;
+  ret_value = AK4118A_read_register(devaddr, AK4118A_REG_RECEIVER_STATUS0);
+  ret_value <<= 8;
+  ret_value |= AK4118A_read_register(devaddr, AK4118A_REG_RECEIVER_STATUS1);
+  return ret_value;
 }

@@ -16,6 +16,8 @@ unsigned char flag_usb_audio=1,         flag_usb_audio_before=1;
 unsigned char flag_dsd128=1,            flag_dsd128_before=1;
 unsigned char flag_dsd_on=1,            flag_dsd_on_before=1;
 unsigned char flag_usb_detect=0,        flag_usb_detect_before=0;
+unsigned char flag_ak4118a_int0=0;
+unsigned char flag_ak4118a_int1=0;
 unsigned char flag_key_int=0;
 unsigned int  flag_longkey_count=0;
 unsigned char flag_longkey=0;
@@ -36,8 +38,8 @@ unsigned char flag_headphone_output=0, flag_headphone_output_before=0; // H=Head
 unsigned int flag_sampling_rate=0, flag_sampling_rate_before=0;
 unsigned int flag_first_display=60000;    // delay initial display
 
-enum input_mode { MODE_COAX1, MODE_COAX2, MODE_AES1, MODE_AES2, MODE_BNC, \
-                  MODE_OPT1, MODE_OPT2, MODE_USB };
+enum input_mode { MODE_COAX1, MODE_COAX2, MODE_AES1, MODE_OPT1, MODE_OPT2, \
+                  MODE_OPT3, MODE_OPT4, MODE_USB };
 
 unsigned char flag_refresh_display=0;
 
@@ -857,7 +859,7 @@ void flag_scan(void)
         if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_COAX1)) \
           send_string("[I2C] COAX1 Selected.\r\n");
         else send_string("Comm error.\r\n");
-        SELECT_AK4118;
+        SELECT_AK4118A;
         break;
         
       case MODE_COAX2:
@@ -872,18 +874,6 @@ void flag_scan(void)
         else send_string("Comm error.\r\n");
         break;
         
-      case MODE_AES2:
-        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_AES2)) \
-          send_string("[I2C] AES2 Selected.\r\n");
-        else send_string("Comm error.\r\n");
-        break;
-        
-      case MODE_BNC:
-        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_BNC)) \
-          send_string("[I2C] BNC Selected.\r\n");
-        else send_string("Comm error.\r\n");
-        break;
-        
       case MODE_OPT1:
         if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_OPT1)) \
           send_string("[I2C] OPT1 Selected.\r\n");
@@ -891,12 +881,24 @@ void flag_scan(void)
         break;
         
       case MODE_OPT2:
-        AK4118A_power_down(AK4118A_I2C_ADDR, OFF);
-        send_string("[I2C] AK4118A Wake up.\r\n");
         if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_OPT2)) \
           send_string("[I2C] OPT2 Selected.\r\n");
         else send_string("Comm error.\r\n");
-        SELECT_AK4118;
+        break;
+        
+      case MODE_OPT3:
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_OPT3)) \
+          send_string("[I2C] OPT3 Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        break;
+        
+      case MODE_OPT4:
+        AK4118A_power_down(AK4118A_I2C_ADDR, OFF);
+        send_string("[I2C] AK4118A Wake up.\r\n");
+        if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_OPT4)) \
+          send_string("[I2C] OPT4 Selected.\r\n");
+        else send_string("Comm error.\r\n");
+        SELECT_AK4118A;
         break;
         
       case MODE_USB:
@@ -958,6 +960,13 @@ void port_scan(void)
   if(!flag_usb_detect & flag_usb_detect_before) {         // edge detect
     flag_usb_detect_before=0;
     send_string("[SA9127] USB is in suspended.\r\n");
-  } 
+  }
+  
+  //detect AK4118A INT0
+  if(AK_INT0_PORT & AK_INT0_PIN) flag_ak4118a_int0=1; else flag_ak4118a_int0=0;
+  
+  //detect AK4118A INT1
+  if(AK_INT1_PORT & AK_INT1_PIN) flag_ak4118a_int1=1; else flag_ak4118a_int1=0;
+  
 }
 
