@@ -20,7 +20,9 @@ unsigned char flag_ak4118a_int0=0;
 unsigned char flag_ak4118a_int1=0;
 unsigned char flag_key_int=0;
 unsigned int  flag_longkey_count=0;
-unsigned char flag_longkey=0;
+unsigned int  flag_longkey=0;
+unsigned char flag_voluplongkey=0;
+unsigned char flag_voldownlongkey=0;
 unsigned char flag_mute=0,              flag_mute_before=0;
 enum front_key { KEY_LEFT=1, KEY_VOLUP, KEY_MUTE, KEY_RIGHT, KEY_VOLDOWN, \
                  KEY_INVERSE, KEY_FILTER };
@@ -53,8 +55,11 @@ extern void send_integer(unsigned char ch);
 extern void send_byte2hex(unsigned char ch);
 extern void es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
 extern unsigned int es9038_read_sampling_rate(unsigned char devaddr);
-extern void AK4118A_power_down(unsigned char devaddr, unsigned char onoff);
+extern void AK4118A_power_down(unsigned char devaddr);
 extern unsigned char AK4118A_input_select(unsigned char devaddr, unsigned char channel);
+extern unsigned char AK4118A_read_current_channel(unsigned char devaddr);
+extern void AK4118A_BCU_enable(unsigned char devaddr);
+extern void AK4118A_BCU_disable(unsigned char devaddr);
 extern void display_dot_matrix(unsigned char ch, unsigned char sr,unsigned char volume,\
                         unsigned char filter,unsigned char headphone,\
                         unsigned char first_display,\
@@ -504,7 +509,9 @@ __interrupt void INT4_Handler(void)
 #pragma vector = INT3_vect
 __interrupt void INT3_Handler(void)     // inkey1 falling edge
 {
-  if (INKEY1_READ & INKEY1_PIN) flag_longkey_count=0;
+  if (INKEY1_READ & INKEY1_PIN) {       // if key pressed
+    flag_longkey_count=0;
+  }
   else {
     flag_key_int=1;
     flag_longkey_count=1;
@@ -593,10 +600,10 @@ U8 data=0;
   // 16MHz / 256 prescaling = 62.5kHz T = 1/62.5kHz = 16 us n=10000/16=625
   TCNT1=0xffff-625;  //10ms
   flag_refresh_display=1; // refresh display
-  if(flag_longkey_count) {
+  if (flag_longkey_count) {
     flag_longkey_count++;
     if ((flag_longkey_count%25)==0) flag_longkey=1; // every 0.25s
-    if ((flag_longkey_count>300)&&(flag_longkey_count%5)==0) flag_longkey=1; // every 0.1s
+    if ((flag_longkey_count>150)&&(flag_longkey_count%5)==0) flag_longkey=1; // every 0.1s
   }
   //test
   
@@ -726,7 +733,7 @@ void main(void){
 
 void key_scan(void)
 {
-  unsigned char key_data=0;
+  unsigned char key_data=0,i;
 
   key_data = (INKEY1_READ & INKEY1_READ_MASK) >> INKEY1_READ_LOC;
   send_string("Key code = ");
@@ -741,6 +748,7 @@ void key_scan(void)
         break;
         
       case KEY_VOLUP:
+        flag_voluplongkey = 1;
         if(flag_mute) ess_mute();
         if(vol_dB>0) vol_dB--;
         if(vol_dB>199) vol_dB=199;
@@ -762,6 +770,7 @@ void key_scan(void)
         break;
 
       case KEY_VOLDOWN:
+        flag_voldownlongkey = 1;
         if(flag_mute) ess_mute();
         if(vol_dB<199) vol_dB++;
         else vol_dB=0xFF;
@@ -774,6 +783,11 @@ void key_scan(void)
         flag_filter++;
         if (flag_filter>6) flag_filter=0;
         flag_display_update =1;
+        send_string("AK4118A Resigter =\r\n");
+        for(i=0;i<=0x28;i++) {
+          send_byte2hex(AK4118A_read_register(AK4118A_I2C_ADDR,i));
+          if (((i+1)%8)==0) send_string("\r\n"); else send_string(" ");
+        }
         break;
         
     case KEY_INVERSE:
@@ -854,12 +868,15 @@ void flag_scan(void)
  
     switch(flag_input_mode) {
       case MODE_COAX1:
-        AK4118A_power_down(AK4118A_I2C_ADDR, OFF);
         send_string("[I2C] AK4118A Wake up.\r\n");
         if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_COAX1)) \
           send_string("[I2C] COAX1 Selected.\r\n");
         else send_string("Comm error.\r\n");
         SELECT_AK4118A;
+        AK4118A_BCU_enable(AK4118A_I2C_ADDR);
+        send_string("BCU enable.\r\n");
+        I2S_SEL_OFF;
+        send_string("[MCU] I2S_SEL LOW.\r\n");
         break;
         
       case MODE_COAX2:
@@ -893,18 +910,23 @@ void flag_scan(void)
         break;
         
       case MODE_OPT4:
-        AK4118A_power_down(AK4118A_I2C_ADDR, OFF);
         send_string("[I2C] AK4118A Wake up.\r\n");
         if (AK4118A_input_select(AK4118A_I2C_ADDR, MODE_OPT4)) \
           send_string("[I2C] OPT4 Selected.\r\n");
         else send_string("Comm error.\r\n");
         SELECT_AK4118A;
+        AK4118A_BCU_enable(AK4118A_I2C_ADDR);
+        send_string("BCU enable.\r\n");
+        I2S_SEL_OFF;
+        send_string("[MCU] I2S_SEL LOW.\r\n");
         break;
         
       case MODE_USB:
-        AK4118A_power_down(AK4118A_I2C_ADDR, ON);
         send_string("[I2C] AK4118A Power down.\r\n");
+        AK4118A_input_select(AK4118A_I2C_ADDR, MODE_USB);       // AK4118A Off
         SELECT_USB;
+        AK4118A_BCU_disable(AK4118A_I2C_ADDR);
+        send_string("BCU enable.\r\n");
         break;
     }
     
@@ -921,6 +943,8 @@ void port_scan(void)
     if (flag_input_mode==MODE_USB) {
       DAC_MUTE_OFF;
       send_string("[MCU] DAC Mute disable.\r\n");
+      LINE_MUTE_OFF;
+      send_string("[MCU] Line Relay ON.\r\n");
     }
   }
   if(!flag_usb_audio & flag_usb_audio_before) {         // edge detect
@@ -929,6 +953,8 @@ void port_scan(void)
     if (flag_input_mode==MODE_USB) {
       DAC_MUTE_ON;
       send_string("[MCU] DAC Mute enable.\r\n");
+      LINE_MUTE_ON;
+      send_string("[MCU] Line Relay OFF.\r\n");
     }
   }
   // detect dsd on
@@ -936,10 +962,14 @@ void port_scan(void)
   if(flag_dsd_on & !flag_dsd_on_before) {         // edge detect
     flag_dsd_on_before=1;
     send_string("[SA9127] DSD mode detected.\r\n");
+    I2S_SEL_OFF;
+    send_string("[MCU] DSD Selected.\r\n");
   }
   if(!flag_dsd_on & flag_dsd_on_before) {         // edge detect
     flag_dsd_on_before=0;
     send_string("[SA9127] PCM mode detected.\r\n");
+    I2S_SEL_ON;
+    send_string("[MCU] I2S Selected.\r\n");
   }
   // dsd128 detect
   if(DSD128_READ & DSD128_PIN) flag_dsd128=1; else flag_dsd128=0;

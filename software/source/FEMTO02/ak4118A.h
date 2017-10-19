@@ -76,6 +76,15 @@
 #define AK4118A_RECONIZE_27H        0x0
 #define AK4118A_RECONIZE_28H        0x10
 
+#define AK4118A_DETECT_CH7          (0x01<<7)
+#define AK4118A_DETECT_CH6          (0x01<<6)
+#define AK4118A_DETECT_CH5          (0x01<<5)
+#define AK4118A_DETECT_CH4          (0x01<<4)
+#define AK4118A_DETECT_CH3          (0x01<<3)
+#define AK4118A_DETECT_CH2          (0x01<<2)
+#define AK4118A_DETECT_CH1          (0x01<<1)
+#define AK4118A_DETECT_CH0          (0x01<<0)
+
 unsigned char Is_there_AK4118A(unsigned char ic_addr);
 
 #endif

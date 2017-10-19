@@ -61,7 +61,8 @@ unsigned char AK4118A_input_select(unsigned char devaddr, unsigned char channel)
   reg |= AK4118A_CONTROL1_IPS(channel);
   i2c_writeReg(devaddr, AK4118A_REG_IN_OUT_CTL1, &reg, 1);
 
-  if (AK4118A_CONTROL1_IPS(channel)==(AK4118A_read_current_channel(devaddr))) return 1; else return 0;
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_IN_OUT_CTL1);
+  if (AK4118A_CONTROL1_IPS(channel)==(reg&0x07)) return 1; else return 0;
 }
 
 unsigned int AK4118A_read_status(unsigned char devaddr)
@@ -72,4 +73,81 @@ unsigned int AK4118A_read_status(unsigned char devaddr)
   ret_value <<= 8;
   ret_value |= AK4118A_read_register(devaddr, AK4118A_REG_RECEIVER_STATUS1);
   return ret_value;
+}
+
+void AK4118A_TX0_enable(unsigned char devaddr)
+{
+  unsigned char reg;
+  
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_IN_OUT_CTL0);
+  reg |=AK4118A_CONTROL0_TX0E;
+  i2c_writeReg(devaddr, AK4118A_REG_IN_OUT_CTL0, &reg, 1);
+}
+ 
+void AK4118A_TX1_enable(unsigned char devaddr)
+{
+  unsigned char reg;
+  
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_IN_OUT_CTL0);
+  reg |=AK4118A_CONTROL0_TX1E;
+  i2c_writeReg(devaddr, AK4118A_REG_IN_OUT_CTL0, &reg, 1);
+}
+ 
+void AK4118A_TX0_disable(unsigned char devaddr)
+{
+  unsigned char reg;
+  
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_IN_OUT_CTL0);
+  reg &=~AK4118A_CONTROL0_TX0E;
+  i2c_writeReg(devaddr, AK4118A_REG_IN_OUT_CTL0, &reg, 1);
+}
+
+void AK4118A_TX1_disable(unsigned char devaddr)
+{
+  unsigned char reg;
+  
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_IN_OUT_CTL0);
+  reg &=~AK4118A_CONTROL0_TX1E;
+  i2c_writeReg(devaddr, AK4118A_REG_IN_OUT_CTL0, &reg, 1);
+}
+
+unsigned char AK4118A_read_channel_detect(unsigned char devaddr)
+{  
+  return (AK4118A_read_register(devaddr, AK4118A_REG_STC_DAT_DETECT));  
+}
+
+unsigned char AK4118A_read_sampling_freq(unsigned char devaddr)
+{ 
+  unsigned char reg;
+  
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_RECEIVER_STATUS1);
+  reg>>=4;
+  return reg;  
+}
+          
+void AK4118A_BCU_enable(unsigned char devaddr)
+{
+  unsigned char reg;
+  
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_CLK_POWER_DN_CTL);
+  reg |=AK4118A_CLK_PWR_BCU;
+  i2c_writeReg(devaddr, AK4118A_REG_CLK_POWER_DN_CTL, &reg, 1);
+}
+void AK4118A_BCU_disable(unsigned char devaddr)
+{
+  unsigned char reg;
+  
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_CLK_POWER_DN_CTL);
+  reg &=~AK4118A_CLK_PWR_BCU;
+  i2c_writeReg(devaddr, AK4118A_REG_CLK_POWER_DN_CTL, &reg, 1);
+}
+
+void AK4118A_set_audio_format(unsigned char devaddr, unsigned char mode)
+{
+  unsigned char reg;
+  
+  reg = AK4118A_read_register(devaddr, AK4118A_REG_FORMAT_DE_EM_CTL);
+  reg &= ~AK4118A_FORMAT_DIF(0x07);
+  reg |= AK4118A_FORMAT_DIF(mode);
+  i2c_writeReg(devaddr, AK4118A_REG_FORMAT_DE_EM_CTL, &reg, 1);
 }

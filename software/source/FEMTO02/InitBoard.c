@@ -11,7 +11,7 @@
 #include "ak4118a.h" // added by jang 2017.9.17
 #include "es9038.h"// added by jang 2017.9.19
 
-#define AK4118_IC_ADDR AK4118A_I2C_ADDRESS(0)
+#define AK4118A_IC_ADDR AK4118A_I2C_ADDRESS(0)
 
 extern char *dot_strings;
 extern unsigned char ess_lch_master_trim;
@@ -47,6 +47,9 @@ extern void es9038_set_volume_rate(unsigned char devaddr, unsigned char volume_r
 extern unsigned int AK4118A_read_status(unsigned char devaddr);
 extern void AK4118A_reset(unsigned char devaddr);
 extern void AK4118A_power_down(unsigned char devaddr);
+extern void AK4118A_TX0_disable(unsigned char devaddr);
+extern void AK4118A_TX1_disable(unsigned char devaddr);
+extern void AK4118A_set_audio_format(unsigned char devaddr, unsigned char mode);
 
 extern void send_integer(unsigned char ch);
 extern void send_byte2hex(unsigned char ch);
@@ -75,7 +78,7 @@ void wait_mtime(unsigned int time){
 void _system_init(void)
 {
   U8 i;
-  //unsigned int status;
+  unsigned int status=0;
 
   send_string("Port init.\r\n");
 //DDR=1, PORT=1 --> Ãâ·Â High
@@ -182,7 +185,7 @@ void _system_init(void)
     EIFR =  (1<<INTF2) | (1<<INTF3) | (1<<INTF4) | (1<<INTF5) | (1<<INTF6) | (1<<INTF7);
     
     send_string("[I2C] AK4118A Searching...\r\n");
-    if (Is_there_AK4118A(AK4118_IC_ADDR)) send_string("[I2C] AK4118A Found.\r\n");
+    if (Is_there_AK4118A(AK4118A_IC_ADDR)) send_string("[I2C] AK4118A Found.\r\n");
     else send_string("[I2C] AK4118A not found.\r\n");
     
     ////////////Initial ES9038 /////////////////////////
@@ -234,15 +237,17 @@ void _system_init(void)
     send_string("[I2C] ES9038 DSD DPLL Highest.\r\n");
     
     //////////// AK4118A Initialize ///////////
-    //AK4118A_power_down(AK4118_IC_ADDR); // AK4118A power down
+    //AK4118A_power_down(AK4118A_IC_ADDR); // AK4118A power down
     //send_string("[I2C] AK4118A power down.\r\n");
-    //status=AK4118A_read_status(AK4118_IC_ADDR);
-    //if (status>>8) {
-      //send_string("[I2C] AK4118A Error found.\r\n Error code = ");
-      //send_integer(status>>8);
-      //send_string("\r\n");
-    //}
-    
+    status=AK4118A_read_status(AK4118A_IC_ADDR);
+    if (status>>8) {
+      send_string("[I2C] AK4118A Error found.\r\n Error code = ");
+      send_integer(status>>8);
+      send_string("\r\n");
+    }
+    AK4118A_TX0_disable(AK4118A_IC_ADDR);
+    AK4118A_TX1_disable(AK4118A_IC_ADDR);
+    AK4118A_set_audio_format(AK4118A_IC_ADDR, 5);
     
     //Dot matrix clear
     send_string("[SPI] DOT Matrix Clear.\r\n");

@@ -56,15 +56,14 @@ char *sr_name[13] = {
   "384 ",
   "512 "
 };
-char *filter_name[8] = {
+char *filter_name[7] = {
   "F1 ",
   "F2 ",
   "F3 ",
   "F4 ",
   "F5 ",
   "F6 ",
-  "F7 ",
-  "F8 "
+  "F7 "
 };
 char *ouput_name[2] = {
   "L",
