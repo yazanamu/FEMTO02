@@ -26,14 +26,14 @@ void es9038_serial_data_config_automute(unsigned char automute, unsigned char se
 
 unsigned char es9038_read_register(unsigned char devaddr, unsigned char regaddr)
 {
-  unsigned char data;
+  char data;
 
   i2c_readReg(devaddr, regaddr, &data, 1);
   
   return data;
 }
 
-void es9038_write_register(unsigned char devaddr, unsigned char regaddr, unsigned char data)
+void es9038_write_register(unsigned char devaddr, unsigned char regaddr, char data)
 {
   i2c_writeReg(devaddr, regaddr, &data, 1);
 }

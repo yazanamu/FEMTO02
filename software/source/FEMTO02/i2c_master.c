@@ -79,7 +79,7 @@ unsigned char i2c_read_nack(void)
 	return TWDR;
 }
 
-unsigned char i2c_transmit(unsigned char address, unsigned char* data, unsigned int length)
+unsigned char i2c_transmit(unsigned char address, char* data, unsigned int length)
 {
 	if (i2c_start(address | I2C_WRITE)) return 1;
 	
@@ -93,7 +93,7 @@ unsigned char i2c_transmit(unsigned char address, unsigned char* data, unsigned 
 	return 0;
 }
 
-unsigned char i2c_receive(unsigned char address, unsigned char* data, unsigned int length)
+unsigned char i2c_receive(unsigned char address, char* data, unsigned int length)
 {
 	if (i2c_start(address | I2C_READ)) return 1;
 	
@@ -108,7 +108,7 @@ unsigned char i2c_receive(unsigned char address, unsigned char* data, unsigned i
 	return 0;
 }
 
-unsigned char i2c_writeReg(unsigned char devaddr, unsigned char regaddr, unsigned char* data, unsigned int length)
+unsigned char i2c_writeReg(unsigned char devaddr, unsigned char regaddr, char* data, unsigned int length)
 {
 	if (i2c_start(devaddr | 0x00)) return 1;
 
@@ -124,7 +124,7 @@ unsigned char i2c_writeReg(unsigned char devaddr, unsigned char regaddr, unsigne
 	return 0;
 }
 
-unsigned char i2c_readReg(unsigned char devaddr, unsigned char regaddr, unsigned char* data, unsigned int length)
+unsigned char i2c_readReg(unsigned char devaddr, unsigned char regaddr, char* data, unsigned int length)
 {
 	if (i2c_start(devaddr)) return 1;
 

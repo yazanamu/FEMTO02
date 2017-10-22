@@ -10,6 +10,7 @@
 #include "i2c_master.h" // added by jang 2017.9.17
 #include "ak4118a.h" // added by jang 2017.9.17
 #include "es9038.h"// added by jang 2017.9.19
+#include "at24c16.h"            // added by jang 2017.10.22
 
 #define AK4118A_IC_ADDR AK4118A_I2C_ADDRESS(0)
 
@@ -25,6 +26,7 @@ extern unsigned char ch_led_data;
 extern unsigned char filter_flag;
 extern unsigned char phase_data;
 extern unsigned char vol_dB;
+extern unsigned char vol_dB_HP;
 extern unsigned char ch_led_data;
 extern unsigned char dot_light_reg;
 
@@ -51,9 +53,39 @@ extern void AK4118A_TX0_disable(unsigned char devaddr);
 extern void AK4118A_TX1_disable(unsigned char devaddr);
 extern void AK4118A_set_audio_format(unsigned char devaddr, unsigned char mode);
 
+extern unsigned char flag_input_mode;
+extern unsigned char vol_dB;
+extern unsigned char vol_dB_HP;
+extern unsigned char flag_mute;
+extern unsigned char flag_filter;
+extern unsigned char flag_headphone_output;
+extern unsigned char eeprom_read_identity_error(void);
+extern unsigned char eeprom_write_identity(char *str);
+extern unsigned char eeprom_write_version (char *str);
+extern unsigned char eeprom_write_revision(char *str);
+extern unsigned char eeprom_write_mode(unsigned char mode);
+extern unsigned char eeprom_write_line_volume(unsigned char line_volume);
+extern unsigned char eeprom_write_headphone_volume(unsigned char headphone_volume);
+extern unsigned char eeprom_write_mute(unsigned char mute);
+extern unsigned char eeprom_write_filter(unsigned char filter);
+extern unsigned char eeprom_write_output_headphone(unsigned char output_headphone);
+extern unsigned char eeprom_save(unsigned char mode,\
+                          unsigned char line_vol, unsigned char headphone_vol,\
+                          unsigned char mute, unsigned char filter, \
+                          unsigned char output_headphone);
+extern unsigned char eeprom_read_mode(char *mode);
+extern unsigned char eeprom_read_line_volume(char *line_volume);
+extern unsigned char eeprom_read_headphone_volume(char *headphone_volume);
+extern unsigned char eeprom_read_mute(char *mute);
+extern unsigned char eeprom_read_filter(char *filter);
+extern unsigned char eeprom_read_output_headphone(char *output_headphone);
+
+
 extern void send_integer(unsigned char ch);
 extern void send_byte2hex(unsigned char ch);
 //extern void phase_ess(void);
+
+
 
 U16 mtime_length = 0;
 U8 mtime_flag = 0;
@@ -196,7 +228,7 @@ void _system_init(void)
     es9038_system_mute(ES9038_ADDR0,1);		//mute
     if(es9038_read_register(ES9038_ADDR0,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U22 Left Mute OK.\r\n");
     else send_string("[I2C] ES9038 U22 Left Mute NG.\r\n");
-     send_string("[I2C] ES9038 U52 Right Mute.\r\n");
+    send_string("[I2C] ES9038 U52 Right Mute.\r\n");
     es9038_system_mute(ES9038_ADDR1,1);		//mute
     if(es9038_read_register(ES9038_ADDR1,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U52 Right Mute OK.\r\n");
     else send_string("[I2C] ES9038 U52 Right Mute NG.\r\n");
@@ -253,6 +285,36 @@ void _system_init(void)
     send_string("[SPI] DOT Matrix Clear.\r\n");
     dot_matrix_clear();
     
+    // Reading EEPROM Settings
+    if (eeprom_read_identity_error()) { // factory reset
+      send_string("[I2C] Factory Reset....\r\n");
+      eeprom_write_identity(EEPROM_STRING_IDENTITY);
+      eeprom_write_version (EEPROM_STRING_VERSION);
+      eeprom_write_revision(EEPROM_STRING_REVISION);
+      eeprom_write_mode(EEPROM_MODE);
+      flag_input_mode=EEPROM_MODE;
+      eeprom_write_line_volume(EEPROM_LINE_VOLUME);
+      vol_dB=EEPROM_LINE_VOLUME;
+      eeprom_write_headphone_volume(EEPROM_HEADPHONE_VOLUME);
+      vol_dB_HP=EEPROM_HEADPHONE_VOLUME;
+      eeprom_write_mute(EEPROM_VOLUME_MUTE);
+      flag_mute=EEPROM_VOLUME_MUTE;
+      eeprom_write_filter(EEPROM_FILTER);
+      flag_filter=EEPROM_FILTER;
+      eeprom_write_output_headphone(EEPROM_OUTPUT_HEADPHONE);
+      flag_headphone_output=EEPROM_OUTPUT_HEADPHONE;
+      send_string("[I2C] Factory Reset Completed.\r\n");
+    }
+    else {
+      send_string("[I2C] Reading from EEPROM....\r\n");
+      eeprom_read_mode(&flag_input_mode);
+      eeprom_read_line_volume(&vol_dB);
+      eeprom_read_headphone_volume(&vol_dB_HP);
+      eeprom_read_mute(&flag_mute);
+      eeprom_read_filter(&flag_filter);
+      eeprom_read_output_headphone(&flag_headphone_output);
+      send_string("[I2C] Reading Complete from EEPROM.\r\n");
+    }
 
 ///////////////////////////////////////////////////////////////////////////////
 //I2C
@@ -497,6 +559,7 @@ test_set_eeprom(0x1e, 0x01);
     }
     else{
         vol_dB=0xff;
+        vol_dB_HP=0xFF;
         ch_led_data=0x00;
         filter_flag=0x00;
         phase_data=0x01;
@@ -504,6 +567,7 @@ test_set_eeprom(0x1e, 0x01);
   }
   else {    
     vol_dB=0xff;
+    vol_dB_HP=0xFF;
     ch_led_data=0x00;
     filter_flag=0x00;
     phase_data=0x01;
@@ -582,7 +646,8 @@ test_set_eeprom(0x1e, 0x01);
   es9038_automute_level(ES9038_ADDR0,120);
   es9038_automute_level(ES9038_ADDR1,120);
   
-  volume_set();
+  if (flag_headphone_output) volume_set(vol_dB_HP);   // set es9038
+  else                       volume_set(vol_dB);
   delay_ms(10);  //5msec
   //phase_ess();
   delay_ms(10);  //5msec

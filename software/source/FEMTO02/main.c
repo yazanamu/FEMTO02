@@ -8,6 +8,7 @@
 #include "main_func.h"          // added by jang 2017.9.19
 #include "dot_matrix_func.h"    // added by jang 2017.9.19
 #include "ak4118a.h"            // added by jang 2017.9.19
+#include "at24c16.h"            // added by jang 2017.10.22
 
 #define AK4118A_I2C_ADDR AK4118A_I2C_ADDRESS(0)
 
@@ -27,8 +28,8 @@ unsigned char flag_mute=0,              flag_mute_before=0;
 enum front_key { KEY_LEFT=1, KEY_VOLUP, KEY_MUTE, KEY_RIGHT, KEY_VOLDOWN, \
                  KEY_INVERSE, KEY_FILTER };
 unsigned char flag_display_update=1;
-char flag_input_mode=0, flag_input_mode_before=0;
-char flag_filter=0, flag_filter_before=0; // Filter mode F1~F7 
+unsigned char flag_input_mode=0, flag_input_mode_before=0;
+unsigned char flag_filter=0, flag_filter_before=0; // Filter mode F1~F7 
                     // F1:Fast Roll-Off, Minimum Phase Filter
                     // F2: Apdizing, Fast Roll-Off, Linear Phase Filter
                     // F3: Fast Roll-Off, Linear Phase Filter
@@ -39,6 +40,7 @@ char flag_filter=0, flag_filter_before=0; // Filter mode F1~F7
 unsigned char flag_headphone_output=0, flag_headphone_output_before=0; // H=Headphone out, L=Line out
 unsigned int flag_sampling_rate=0, flag_sampling_rate_before=0;
 unsigned int flag_first_display=60000;    // delay initial display
+unsigned char flag_first_display_complete=0;
 
 enum input_mode { MODE_COAX1, MODE_COAX2, MODE_AES1, MODE_OPT1, MODE_OPT2, \
                   MODE_OPT3, MODE_OPT4, MODE_USB };
@@ -64,6 +66,13 @@ extern void display_dot_matrix(unsigned char ch, unsigned char sr,unsigned char 
                         unsigned char filter,unsigned char headphone,\
                         unsigned char first_display,\
                         unsigned char mute);
+
+extern unsigned char write_identity(void);
+extern unsigned char eeprom_save(unsigned char mode,\
+                          unsigned char line_vol, unsigned char headphone_vol,\
+                          unsigned char mute, unsigned char filter, \
+                          unsigned char output_headphone);
+
 extern unsigned char need_display_update(char *str1, char *str2);
 extern unsigned int message_delay;
 extern char display_default_strings[17];
@@ -128,15 +137,8 @@ U8 display_num=100;
 //volume
 U8 ess_lch_master_trim=0;
 U8 ess_rch_master_trim=0;
-unsigned char vol_dB=ES9038_MAX_VOLUME, vol_dB_before=ES9038_MAX_VOLUME;
-//U8 ch0_vol_dB=0;
-//U8 ch1_vol_dB=0;
-//U8 ch2_vol_dB=0;
-//U8 ch3_vol_dB=0;
-//U8 ch4_vol_dB=0;
-//U8 ch5_vol_dB=0;
-//U8 ch6_vol_dB=0;
-//U8 ch7_vol_dB=0;
+unsigned char vol_dB=ES9038_MAX_VOLUME, vol_dB_before=0;
+unsigned char vol_dB_HP=ES9038_MAX_VOLUME, vol_dB_HP_before=0;
 
 U8 i2s_flag=1;
 U8 usb_sr=48; 		//USB 48=48kHz affiliation,  44=44.1kHz affiliation
@@ -698,8 +700,10 @@ U8 data=0;
 //U8 non_audio_flag=0;6
 
 
-void main(void){
-  
+void main(void)
+{
+  unsigned char error;
+
   __enable_interrupt();
   Init_UART0(57600);    // added by jang 2017.9.15
   send_string("\r\nSystem started.\r\n");
@@ -709,23 +713,43 @@ void main(void){
   send_string("System init Completed.\r\n");
   _system_init_se();
   send_string("System init se Completed.\r\n");
+  
   tmr_osc_ck=1;
   init_setting_check=1;   //include remocon interrupt,
-  volume_set();
-  dot_vol_hextodeci(vol_dB);
-  
-  
+  if (flag_headphone_output) {
+    volume_set(vol_dB_HP);   // set es9038
+    dot_vol_hextodeci(vol_dB_HP);
+  }
+  else {
+    volume_set(vol_dB);
+    dot_vol_hextodeci(vol_dB);
+  }
   
   while(1){
     if (flag_first_display) flag_first_display--;
+    if (flag_first_display_complete) { flag_display_update=1; flag_first_display_complete=0; }
+    if (flag_first_display==1) flag_first_display_complete=1;
+    
     //if(PINB_Bit6==0) PORTB_Bit7=0;       //Analog Power Disable
     port_scan();
     flag_scan();
     if (flag_display_update) {
       flag_display_update=0;
-      display_dot_matrix(flag_input_mode,sr_led_data,vol_dB,flag_filter,\
-                         flag_headphone_output,flag_first_display,\
-                         flag_mute);
+      send_string("EEPROM Saving.......\r\n");
+      error=eeprom_save(flag_input_mode,vol_dB,vol_dB_HP,flag_mute,flag_filter,flag_headphone_output);
+      if (error!=SUCCESS) {
+        send_string("EEPROM Save Error.......\r\nerror =");
+        send_byte2hex(error); send_string("\r\n");
+      }
+      else send_string("EEPROM Save Complete.\r\n");
+      if (flag_headphone_output) \
+        display_dot_matrix(flag_input_mode,sr_led_data,vol_dB_HP,flag_filter,\
+                           flag_headphone_output,flag_first_display,\
+                           flag_mute);
+      else  \
+        display_dot_matrix(flag_input_mode,sr_led_data,vol_dB,flag_filter,\
+                           flag_headphone_output,flag_first_display,\
+                           flag_mute);
       //dot_string_digit();
     }
   }//end while
@@ -750,9 +774,17 @@ void key_scan(void)
       case KEY_VOLUP:
         flag_voluplongkey = 1;
         if(flag_mute) ess_mute();
-        if(vol_dB>0) vol_dB--;
-        if(vol_dB>199) vol_dB=199;
-        volume_set();   // set es9038
+        if (flag_headphone_output) {
+          if(vol_dB_HP>0) vol_dB_HP--;
+          if(vol_dB_HP>199) vol_dB_HP=199;
+          volume_set(vol_dB_HP);   // set es9038
+        }
+        else {
+          if(vol_dB>0) vol_dB--;
+          if(vol_dB>199) vol_dB=199;
+          volume_set(vol_dB);
+        }
+        dot_vol_hextodeci(vol_dB_HP);
         dot_vol_hextodeci(vol_dB);
         flag_display_update =1;
         break;
@@ -772,9 +804,15 @@ void key_scan(void)
       case KEY_VOLDOWN:
         flag_voldownlongkey = 1;
         if(flag_mute) ess_mute();
-        if(vol_dB<199) vol_dB++;
-        else vol_dB=0xFF;
-        volume_set();     // set es9038
+        if (flag_headphone_output) {
+          if(vol_dB_HP<199) vol_dB_HP++; else vol_dB_HP=0xFF;
+          volume_set(vol_dB_HP);   // set es9038
+        }
+        else {
+          if(vol_dB<199) vol_dB++; else vol_dB=0xFF;
+          volume_set(vol_dB);
+        }
+        dot_vol_hextodeci(vol_dB_HP);
         dot_vol_hextodeci(vol_dB);
         flag_display_update =1;
         break;
@@ -846,7 +884,7 @@ void flag_scan(void)
   }
   if(flag_timer_100ms) {
     flag_timer_100ms=0;
-    flag_display_update=1;
+    //flag_display_update=1;
     //display_dot_matrix();
   }
   if(flag_mute != flag_mute_before) {
@@ -856,11 +894,19 @@ void flag_scan(void)
   }
   if(vol_dB!=vol_dB_before) {
     if (vol_dB>vol_dB_before) send_string("[ES9038] Volume decresed. - ");
-    else send_string("[ES9038] Volume incresed. - "); 
+    else send_string("[ES9038] Line ouput Volume incresed. - "); 
     send_integer(vol_dB); send_string("\r\n");
     vol_dB_before=vol_dB;
     es9038_set_volume(ES9038_ADDR0,vol_dB);
     es9038_set_volume(ES9038_ADDR1,vol_dB);
+  }
+  if(vol_dB_HP!=vol_dB_HP_before) {
+    if (vol_dB_HP>vol_dB_HP_before) send_string("[ES9038] Volume decresed. - ");
+    else send_string("[ES9038] Headphone Volume incresed. - "); 
+    send_integer(vol_dB_HP); send_string("\r\n");
+    vol_dB_HP_before=vol_dB_HP;
+    es9038_set_volume(ES9038_ADDR0,vol_dB_HP);
+    es9038_set_volume(ES9038_ADDR1,vol_dB_HP);
   }
   if(flag_input_mode!=flag_input_mode_before) {
 

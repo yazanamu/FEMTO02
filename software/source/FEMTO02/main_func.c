@@ -7,8 +7,10 @@
 
 extern unsigned char key_func;
 extern unsigned char flag_mute;
+extern unsigned char flag_headphone_output;
 extern unsigned char es9018_reg10;
 extern unsigned char vol_dB;
+extern unsigned char vol_dB_HP;
 extern unsigned char phase_data;
 extern unsigned char flag_mute;
 extern unsigned char ch_led_data;
@@ -25,11 +27,11 @@ extern char *phase_name;
 extern char *normal_name;
 extern unsigned int key_func_tmr;
 extern unsigned char flag_refresh_display;
-extern char flag_input_mode;
+extern unsigned char flag_input_mode;
 
 extern void es9038_system_mute(unsigned char devaddr, unsigned char onoff);
 
-extern void es9038_write_register(unsigned char devaddr, unsigned char regaddr, unsigned char data);
+extern void es9038_write_register(unsigned char devaddr, unsigned char regaddr, char data);
 
 extern void display_dot_matrix(void);
 //////////////////////////////////////////////////////////////////////
@@ -40,6 +42,7 @@ void ess_mute(void){
     flag_mute=!flag_mute;	//0 = mute, 	1 = unmute
     es9038_system_mute(ES9038_ADDR0,flag_mute);
     es9038_system_mute(ES9038_ADDR1,flag_mute);
+    dot_vol_hextodeci(vol_dB_HP);
     dot_vol_hextodeci(vol_dB);
   }
  /*
@@ -51,12 +54,12 @@ void ess_mute(void){
  */
 }
 
-void volume_set(void){		//I2C write, dot-matrix
+void volume_set(unsigned char volume){		//I2C write, dot-matrix
   //ES9018, i2c write
   U8 i;
   for(i=0; i<8; i++){
-    es9038_write_register(ES9038_ADDR0,ES9038_REG_VOLUME1_CONTROL+i,vol_dB);
-    es9038_write_register(ES9038_ADDR1,ES9038_REG_VOLUME1_CONTROL+i,vol_dB);
+    es9038_write_register(ES9038_ADDR0,ES9038_REG_VOLUME1_CONTROL+i,volume);
+    es9038_write_register(ES9038_ADDR1,ES9038_REG_VOLUME1_CONTROL+i,volume);
   }
   //rom_write_multi();
  
@@ -92,7 +95,8 @@ void audio_level_sp_down(void){
     else               vol_dB=0xff;		//-127dB, display num = 00.0
   
     if(temp!=vol_dB) {
-      volume_set();     // set es9038
+      if (flag_headphone_output) volume_set(vol_dB_HP);   // set es9038
+      else                       volume_set(vol_dB);
       dot_vol_hextodeci(vol_dB);
     }
   }
@@ -110,7 +114,8 @@ void audio_level_sp_up(void){
     else vol_dB=0;
   
     if(temp!=vol_dB) {
-      volume_set();     // set es9038
+      if (flag_headphone_output) volume_set(vol_dB_HP);   // set es9038
+      else                       volume_set(vol_dB);
       dot_vol_hextodeci(vol_dB);
     }
   }
@@ -292,7 +297,8 @@ void femto_function(void){
     }
     
     ess_filter();
-    volume_set();
+    if (flag_headphone_output) volume_set(vol_dB_HP);   // set es9038
+    else                       volume_set(vol_dB);
     DelayTime_ms(5);  //5msec
     
     

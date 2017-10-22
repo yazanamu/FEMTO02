@@ -40,6 +40,9 @@ enum PORT128 {PPCA=1,PPCB,PPCC,PPCD,PPCE,PPCF,PPCG};
 #define uint16_t unsigned int
 #define uint32_t unsigned long
 
+#define ERROR 1
+#define SUCCESS (!ERROR)
+
 #define EEPROM_ADDR_VERSION 0x0
 #define EEPROM_ADDR_VOLUME 0x10
 #define EEPROM_ADDR_MODE 0x20
@@ -84,6 +87,40 @@ __eeprom const unsigned char mute @ EEPROM_ADDR_MUTE;
 #define M1_DOT_ENABLE	PORTG_Bit1
 #define DOT_ADDR4	PORTG_Bit0
 
+#ifndef EEPROM_STRING_IDENTITY
+#define EEPROM_STRING_IDENTITY "FEMTO02"
+#endif
 
+#ifndef EEPROM_STRING_VERSION
+#define EEPROM_STRING_VERSION "V0.01 17/10/22"
+#endif
+
+#ifndef EEPROM_STRING_REVISION
+#define EEPROM_STRING_REVISION "Rev. beta"
+#endif
+
+#ifndef EEPROM_MODE
+#define EEPROM_MODE 0
+#endif
+
+#ifndef EEPROM_LINE_VOLUME
+#define EEPROM_LINE_VOLUME 0
+#endif
+
+#ifndef EEPROM_HEADPHONE_VOLUME
+#define EEPROM_HEADPHONE_VOLUME 0
+#endif
+
+#ifndef EEPROM_VOLUME_MUTE
+#define EEPROM_VOLUME_MUTE 0
+#endif
+
+#ifndef EEPROM_FILTER
+#define EEPROM_FILTER 0
+#endif
+
+#ifndef EEPROM_OUTPUT_HEADPHONE
+#define EEPROM_OUTPUT_HEADPHONE 0
+#endif
 
 #endif

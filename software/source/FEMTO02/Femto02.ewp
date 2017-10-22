@@ -2100,6 +2100,9 @@
     <name>$PROJ_DIR$\ak4118a.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\at24c16.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\dot_matrix_func.c</name>
   </file>
   <file>

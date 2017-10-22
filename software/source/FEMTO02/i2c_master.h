@@ -9,10 +9,10 @@ unsigned char i2c_start(unsigned char address);
 unsigned char i2c_write(unsigned char data);
 unsigned char i2c_read_ack(void);
 unsigned char i2c_read_nack(void);
-unsigned char i2c_transmit(unsigned char address, unsigned char* data, unsigned int length);
-unsigned char i2c_receive(unsigned char address, unsigned char* data, unsigned int length);
-unsigned char i2c_writeReg(unsigned char devaddr, unsigned char regaddr, unsigned char* data, unsigned int length);
-unsigned char i2c_readReg(unsigned char devaddr, unsigned char regaddr, unsigned char* data, unsigned int length);
+unsigned char i2c_transmit(unsigned char address, char* data, unsigned int length);
+unsigned char i2c_receive(unsigned char address, char* data, unsigned int length);
+unsigned char i2c_writeReg(unsigned char devaddr, unsigned char regaddr, char* data, unsigned int length);
+unsigned char i2c_readReg(unsigned char devaddr, unsigned char regaddr, char* data, unsigned int length);
 void i2c_stop(void);
 
 #endif // I2C_MASTER_H
