@@ -52,6 +52,14 @@ enum input_select {INPUT_I2S, INPUT_SPDIF, INPUT_DSD=4};
 #define ES9038_VOLUME_CFG_LATCH_VOL     0x01<<0
 #define ES9038_VOLUME_RATE(x)           (((x)&0x07)<<0)
 #define ES9038_FILTER_SHAPE(x)          (((x)&0x07)<<5)
+enum filter_shape { FAST_ROLL_OFF_LINEAR_PHASE_FILTER,\
+                    SLOW_ROLL_OFF_LINEAR_PHASE_FILTER,\
+                    FAST_ROLL_OFF_MIN_PHASE_FILTER,\
+                    SLOW_ROLL_OFF_MIN_PHASE_FILTER,\
+                    RESERVED_FILTER,\
+                    APODIZING_FAST_ROLL_OFF_LINEAR_PHASE_FILTER,\
+                    HYBRID_FAST_ROLL_OFF_MIN_PHASE_FILTER,\
+                    BRICKWALL_FILTER };
 #define ES9038_FILTER_IIR_BW(x)         (((x)&0x03)<<1)
 #define ES9038_DPLL_BW_SERIAL(x)        (((x)&0x0F)<<4)
 #define ES9038_DPLL_BW_DSD(x)           (((x)&0x0F)<<0)

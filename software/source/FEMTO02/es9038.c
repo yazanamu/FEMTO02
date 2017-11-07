@@ -202,21 +202,19 @@ void es9038_18db_channel_gain_control(unsigned char devaddr,unsigned char ch, un
   es9038_write_register(devaddr,ES9038_REG_18DB_CHANNEL_GAIN,reg); 
 }
 
-unsigned int es9038_read_sampling_rate(unsigned char devaddr)
+unsigned long es9038_read_dpll_number(unsigned char devaddr)
 {
   unsigned long dpll_num=0;
   unsigned char reg;
   int i;
   
-  for(i=3;i>=0;i++) {
+  for(i=3;i>=0;i--) {
     reg = es9038_read_register(devaddr,ES9038_REG_DPLL_NUM+i);
+    //send_byte2hex(reg);
     dpll_num |= reg;
     if (i>0) dpll_num <<=8;
   }
-
-  if (es9038_is_dsd_mode(devaddr)) return (unsigned int)(42.95 * dpll_num / 1000);
-  else return (unsigned int)(42.95 * dpll_num / 1000 / 64);
-  
+  return dpll_num;
 }
 
 unsigned char es9038_is_dsd_mode(unsigned char devaddr)
@@ -240,3 +238,12 @@ void es9038_set_volume_rate(unsigned char devaddr, unsigned char volume_rate)
   es9038_write_register(devaddr,ES9038_REG_VOLUME_RAMP_RATE,reg); 
 }
 
+void es9038_set_filter_shape(unsigned char devaddr, unsigned char filter)
+{
+  unsigned char reg;
+  
+  reg  = es9038_read_register(devaddr,ES9038_REG_FILTERBW_MUTE);
+  reg &= ~ES9038_FILTER_SHAPE(0x7);
+  reg |=  ES9038_FILTER_SHAPE(filter);
+  es9038_write_register(devaddr,ES9038_REG_FILTERBW_MUTE,reg); 
+}

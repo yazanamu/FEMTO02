@@ -59,10 +59,6 @@ void send_byte2hex(unsigned char value)
     if ((message[i])>('0'+9)) message[i]+=7;
     value>>=4;
   }
-  //message[2] = '0'+ (value>>4);
-  //if ((value>>4)>9) message[2]+=7;
-  //message[3] = '0'+ (value&0x0F);
-  //if ((value&0x0F)>9) message[3]+=7;
   
   send_string(message);
 }
@@ -73,6 +69,24 @@ void send_int2hex(unsigned int value)
   unsigned char i;
 
   for (i=5;i>3;i--) {
+    message[i] = '0'+ (value&0x0F);
+    if ((message[i])>('0'+9)) message[i]+=7;
+    value>>=4;
+  }
+  //message[2] = '0'+ (value>>4);
+  //if ((value>>4)>9) message[2]+=7;
+  //message[3] = '0'+ (value&0x0F);
+  //if ((value&0x0F)>9) message[3]+=7;
+  
+  send_string(message);
+}
+
+void send_long2hex(unsigned long value)
+{
+  char *message = "0x00000000 ";
+  unsigned char i;
+
+  for (i=9;i>3;i--) {
     message[i] = '0'+ (value&0x0F);
     if ((message[i])>('0'+9)) message[i]+=7;
     value>>=4;

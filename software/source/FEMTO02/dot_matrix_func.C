@@ -41,21 +41,10 @@ char *ch_name[8] = {
   "O4 ",
   "U  "
 };
-char *sr_name[13] = {
-  "    ",
-  " 44 ",
-  " 48 ",
-  " 64 ",
-  " 88 ",
-  " 96 ",
-  "128 ",
-  "176 ",
-  "192 ",
-  "256 ",
-  "352 ",
-  "384 ",
-  "512 "
-};
+char *sr_name="    ";
+
+char *volume_name = "VOLU ";
+
 char *filter_name[7] = {
   "F1 ",
   "F2 ",
@@ -70,9 +59,6 @@ char *ouput_name[2] = {
   "H"
 };
 
-char *volume_name = "VOLU ";
-char *phase_name=" INVERSE";
-char *normal_name="  NORMAL";
 
 void dot_matrix_clear(void){
   DOT_CLR_FLAG = 0;
@@ -270,12 +256,32 @@ unsigned char need_display_update(char *str1, char *str2)
   return 0;  
 }
 
-void display_dot_matrix(unsigned char ch, unsigned char sr,unsigned char volume,\
+void display_dot_matrix(unsigned char ch, unsigned int sr,unsigned char volume,\
                         unsigned char filter,unsigned char headphone,\
                         unsigned char first_display,\
                         unsigned char mute) {
   unsigned char number;
+  char *sr_strings =   "    ";
   char *volume_strings=" VVV ";
+  
+  
+  // Display Sampling Rate
+  if(sr==0){  // if 0
+    sr_strings="    ";
+  }
+  else if(sr>999){  
+    sr_strings="999 ";
+  }
+  else {
+    if (sr>99) {
+      sr_strings[0] = '0'+(sr/100);
+      if (sr_strings[0]=='0') sr_strings[0]=' ';
+      sr%=100;
+    }
+    sr_strings[1] = '0'+(sr/10);
+    if (sr_strings[0]==' ' && sr_strings[1]=='0') sr_strings[1]=' ';
+    sr_strings[2] = '0'+(sr%10);
+  }
   
   if(volume==ES9038_MAX_VOLUME){  //display MAX if 200
     volume_strings=" MAX ";
@@ -305,7 +311,7 @@ void display_dot_matrix(unsigned char ch, unsigned char sr,unsigned char volume,
   }
   else {
     memcpy(dot_strings+COLUMN_CH,ch_name[ch],CH_NUM_CH);
-    memcpy(dot_strings+COLUMN_SR,sr_name[sr],CH_NUM_SR);
+    memcpy(dot_strings+COLUMN_SR,sr_strings,CH_NUM_SR);
     if (mute) volume_strings="MUTE ";
     memcpy(dot_strings+COLUMN_VOL,volume_strings,CH_NUM_VOL);
     memcpy(dot_strings+COLUMN_FLT,filter_name[filter],CH_NUM_FLT);

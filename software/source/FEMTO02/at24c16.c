@@ -28,10 +28,6 @@
 #define EEPROM_ADDRESS_FILTER           0x0070 //
 #define EEPROM_ADDRESS_OUTPUT_HP        0x0080 // Line-out = 0 or Headphone-out = 1 
 
-
-
-
-
 unsigned char eeprom_write_byte(unsigned int u16addr, char u8data)
 {
   begin:

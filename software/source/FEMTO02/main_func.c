@@ -23,8 +23,6 @@ extern unsigned int rom_tmr;
 extern unsigned char key_condition;
 extern char *dot_strings;
 extern char *filter_name[7];
-extern char *phase_name;
-extern char *normal_name;
 extern unsigned int key_func_tmr;
 extern unsigned char flag_refresh_display;
 extern unsigned char flag_input_mode;
@@ -33,7 +31,6 @@ extern void es9038_system_mute(unsigned char devaddr, unsigned char onoff);
 
 extern void es9038_write_register(unsigned char devaddr, unsigned char regaddr, char data);
 
-extern void display_dot_matrix(void);
 //////////////////////////////////////////////////////////////////////
 U8 test_osc=1;
 //ES9018
@@ -280,7 +277,7 @@ void ess_filter(void){
 }
 
 void femto_function(void){
-  U8 i;
+  //U8 i;
   
   if(key_func==1 || key_func==2)  key_condition=1;  //inverse or filter
   
@@ -310,13 +307,13 @@ void femto_function(void){
     //DelayTime_ms(10);  //10msec
   }
   
-  for(i=0; i<16; i++) {
-    if(i<8) dot_strings[i]=filter_name[filter_flag][i];
-    else {
-      if(!phase_data) dot_strings[i]=phase_name[i-8];  //phase on
-      else dot_strings[i]=normal_name[i-8];   //phase off
-    }
-  }
+  //for(i=0; i<16; i++) {
+  //  if(i<8) dot_strings[i]=filter_name[filter_flag][i];
+  //  else {
+  //    if(!phase_data) dot_strings[i]=phase_name[i-8];  //phase on
+  //    else dot_strings[i]=normal_name[i-8];   //phase off
+  //  }
+  //}
   
   key_func_tmr=0;
   flag_refresh_display=1; // refresh display
