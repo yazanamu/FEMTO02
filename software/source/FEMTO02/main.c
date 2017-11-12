@@ -100,6 +100,11 @@ extern char *display_ess_volume;
 extern char *ch_name[8];
 extern char *sr_name[7];
 
+extern unsigned char IR_data_flag;
+extern unsigned char IR_data[20];
+extern int _remocon_data;
+extern unsigned char new_repeat_flag;
+
 
 U16 rom_add_pt=0;
 U32 rom_cnt=0;
@@ -541,19 +546,26 @@ __interrupt void INT7_Handler(void)     // logic edge
   if (flag_input_mode==MODE_USB) {
     if ((UA_EN_READ & UA_EN_PIN)==0) { // Low edge
       HP_MUTE_DDR_INIT;   HP_MUTE_ON;
-      flag_hp_relay_on = 0; flag_hp_relay_on_before =1;       // refresh
+      //flag_hp_relay_on = 0; flag_hp_relay_on_before =1;       // refresh
       LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
-      flag_line_relay_on = 0; flag_line_relay_on_before =1;   // refresh
+      //flag_line_relay_on = 0; flag_line_relay_on_before =1;   // refresh
     }
+    /*
     else {                             // High edge
       if (flag_headphone_output) {      // headphone
         flag_hp_relay_on = 1; flag_hp_relay_on_before =0;     // refresh
         HP_MUTE_DDR_INIT;   HP_MUTE_OFF;
-      } else {                          // line-out
+        DAC_MUTE_OFF;
+        es9038_dac_mute_off();
+      } 
+      else {                          // line-out
         flag_line_relay_on = 1; flag_line_relay_on_before =0; // refresh
         LINE_MUTE_DDR_INIT; LINE_MUTE_OFF;
+        DAC_MUTE_OFF;
+        es9038_dac_mute_off();
       }
     }
+    */
   }
 }
 
@@ -617,6 +629,7 @@ U8 tmr_flag_ck=1;
 #pragma vector = TIMER1_OVF_vect
 __interrupt void TIMER1_OVF_Handler(void)
 {
+  unsigned char test_i;
 //U8 data=0;
 //U16 temp;
   //TCNT1=0xffff-1563; //0.1sec 
@@ -657,9 +670,9 @@ __interrupt void TIMER1_OVF_Handler(void)
     */
     
     
-    /*
+    
     if(tmr_osc_ck){
-      
+      /*
       if(!KEY_FLAG){
         if(key_int_flag==1 && key_tmr>5) key_int_flag=2;
         else if(key_int_flag==2 && key_tmr>6){ //key_tmr=400 : 0.05sec
@@ -688,43 +701,61 @@ __interrupt void TIMER1_OVF_Handler(void)
           rom_tmr=0;
         }
       }
+      */
       ///////////////////////////////////////////////////////////////////
-      //if(IR_data_flag ){
-      //if(IR_data_flag && Time_50ms>1){
-        //Time_50ms=0;
-        //IR_data[IR_data_flag]=_remocon_data;
-
-        //if(IR_data[IR_data_flag]==0x80) {                             //Master Volume Up
-          //if(new_repeat_flag) { for(test_i=0; test_i<3; test_i++) audio_level_up(); }
-          //else audio_level_up();
-          //if(IR_data[IR_data_flag]==0x80 && IR_data[IR_data_flag+1]==0x80) {
-            //audio_level_sp_up();
-            //IR_data_flag--;
-          //}
-          //else audio_level_up();
-        //}
-        //else if(IR_data[IR_data_flag]==0xA8) {                         //Master Volume Down
-          //if(new_repeat_flag) { for(test_i=0; test_i<3; test_i++) audio_level_down();}
-          //else audio_level_down();
-          //if(IR_data[IR_data_flag]==0xA8 && IR_data[IR_data_flag+1]==0xA8) {
-            //audio_level_sp_down();
-            //IR_data_flag--;
-          //}
-          //else audio_level_down();
-        //}
-          
-        //IR_data_flag--;
-      //}
-    //////////////////////////////////////////////////////////////////////  
-      
-    }*/
-  
-  }	
-  
-  Time_50ms++;
-	
+      if(IR_data_flag){
+        if(IR_data_flag && Time_50ms>1){
+          Time_50ms=0;
+          IR_data[IR_data_flag]=_remocon_data;
+          if(IR_data[IR_data_flag]==0x80) {   //Master Volume Up
+            if(new_repeat_flag) { 
+              for(test_i=0; test_i<3; test_i++) {
+                //audio_level_up();
+                send_string("[IR] Remocom Volume up.1\r\n");
+              } 
+            }
+            else {
+              //audio_level_up();
+              send_string("[IR] Remocom Volume up.2\r\n");
+            }
+            if(IR_data[IR_data_flag+1]==0x80) {
+              //audio_level_sp_up();
+              send_string("[IR] Remocom Volume up.3\r\n");
+              IR_data_flag--;
+            }
+            else {
+              //audio_level_up();
+              send_string("[IR] Remocom Volume up.4\r\n");
+            }
+          }
+          else if(IR_data[IR_data_flag]==0xA8) {   //Master Volume Down
+            if(new_repeat_flag) { 
+              for(test_i=0; test_i<3; test_i++) {
+                //audio_level_down();
+                send_string("[IR] Remocom Volume down.1\r\n");
+              }
+            }
+            else {
+              //audio_level_down();
+              send_string("[IR] Remocom Volume down.2\r\n");
+            }
+            if(IR_data[IR_data_flag+1]==0xA8) {
+              //audio_level_sp_down();
+              send_string("[IR] Remocom Volume down.3\r\n");
+              IR_data_flag--;
+            }
+            else {
+              //audio_level_down();
+              send_string("[IR] Remocom Volume down.4\r\n");
+            }
+          }
+          IR_data_flag--;
+        }
+      }
+    }
+    Time_50ms++;
+  }
 }
-
 ///////////////////////////////////////////////////////////////////////////////
 //U8 non_audio_flag=0;6
 
@@ -892,18 +923,16 @@ void key_scan(void)
     case KEY_INVERSE:
         flag_need_display_update =1;
         flag_need_save_eeprom =1;
-        HP_MUTE_OFF;
-        LINE_MUTE_OFF;
-        es9038_set_volume(ES9038_ADDR0,0);
-        es9038_set_volume(ES9038_ADDR1,0);
         if (flag_headphone_output) {
           flag_headphone_output=0;
+          send_string("[MCU] Line out selected.\r\n");
         }
         else {
           flag_headphone_output=1;
+          send_string("[MCU] Headphone out selected.\r\n");
         }
-        send_string("Current Volume = "); send_integer(es9038_read_volume(ES9038_ADDR0));
-        send_string("\r\n");
+        //send_string("Current Volume = "); send_integer(es9038_read_volume(ES9038_ADDR0));
+        //send_string("\r\n");
         
         break;
 
@@ -926,6 +955,7 @@ void flag_scan(void)
       send_string("Headphone out Mode loaded.\r\n");
       flag_hp_relay_on=1; // set relay
       flag_line_relay_on=0; // set relay
+      send_string("[MCU] Headphone out Relay selected.\r\n");
     }
     else {                              // line out
       es9038_set_volume(ES9038_ADDR0,vol_dB);
@@ -934,6 +964,7 @@ void flag_scan(void)
       send_string("Line out Mode loaded.\r\n");
       flag_line_relay_on=1; // set relay
       flag_hp_relay_on=0; // set relay
+      send_string("[MCU] Line out Relay selected.\r\n");
     }
   }
   
@@ -1085,14 +1116,23 @@ void flag_scan(void)
 
   if (flag_hp_relay_on!=flag_hp_relay_on_before){
     if (flag_input_mode==MODE_USB) {
-      if (UA_EN_READ&UA_EN_PIN) {
+      if (UA_EN_READ&UA_EN_PIN) {       // if UA_EN = ON
         flag_hp_relay_on_before = flag_hp_relay_on;
-        if(flag_hp_relay_on) { HP_MUTE_DDR_INIT; HP_MUTE_OFF; }
+        if(flag_hp_relay_on) { 
+          HP_MUTE_DDR_INIT; HP_MUTE_OFF;
+          LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
+          send_string("[MCU] Headphone out Relay changed at USB mode.\r\n");
+        }
       }
     }
-    else {
+    else {                              // ak4118
       flag_hp_relay_on_before = flag_hp_relay_on;
-      if(flag_hp_relay_on)  { HP_MUTE_DDR_INIT; HP_MUTE_OFF; }
+      if(flag_hp_relay_on) { 
+        HP_MUTE_DDR_INIT; HP_MUTE_OFF;
+        LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
+        send_string("[MCU] Headphone out Relay changed at AK4118 mode.\r\n");
+      }
+      
     }
   }
 
@@ -1100,12 +1140,21 @@ void flag_scan(void)
     if (flag_input_mode==MODE_USB) {
       if (UA_EN_READ&UA_EN_PIN) {
         flag_line_relay_on_before = flag_line_relay_on;
-        if(flag_line_relay_on) { LINE_MUTE_DDR_INIT; LINE_MUTE_OFF; }
+        if(flag_line_relay_on) {
+          HP_MUTE_DDR_INIT; HP_MUTE_ON;
+          LINE_MUTE_DDR_INIT; LINE_MUTE_OFF;
+          send_string("[MCU] Line out Relay changed at USB Mode.\r\n");
+        }
+        
       }
     }
     else {                              // ak4118
       flag_line_relay_on_before = flag_line_relay_on;
-      if(flag_line_relay_on)  { LINE_MUTE_DDR_INIT; LINE_MUTE_OFF; }
+      if(flag_line_relay_on) { 
+        HP_MUTE_DDR_INIT; HP_MUTE_ON;
+        LINE_MUTE_DDR_INIT; LINE_MUTE_OFF; 
+        send_string("[MCU] Line out Relay changed at AK4118 mode.\r\n");
+      }
     }
   }
 
@@ -1147,7 +1196,7 @@ void port_scan(void)
   
   ///////////////////////////////////////
   ///////////detect UA_EN
-  /*
+  
   if(UA_EN_READ & UA_EN_PIN) flag_usb_audio=1; else flag_usb_audio=0;
   if(flag_usb_audio!=flag_usb_audio_before) {         // edge detect
     flag_usb_audio_before=flag_usb_audio;
@@ -1180,7 +1229,7 @@ void port_scan(void)
       }
     }
   }
-  */
+  
   
   // detect dsd on
   if(DSD_ON_READ & DSD_ON_PIN) flag_dsd_on=1; else flag_dsd_on=0;
