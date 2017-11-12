@@ -260,16 +260,14 @@ void display_dot_matrix(unsigned char ch, unsigned int sr,unsigned char volume,\
                         unsigned char filter,unsigned char headphone,\
                         unsigned char first_display,\
                         unsigned char mute) {
-  unsigned char number;
+  unsigned char number,i;
   char *sr_strings =   "    ";
   char *volume_strings=" VVV ";
   
   
   // Display Sampling Rate
-  if(sr==0){  // if 0
-    sr_strings="    ";
-  }
-  else if(sr>999){  
+  
+  if(sr>999){  
     sr_strings="999 ";
   }
   else {
@@ -282,6 +280,7 @@ void display_dot_matrix(unsigned char ch, unsigned int sr,unsigned char volume,\
     if (sr_strings[0]==' ' && sr_strings[1]=='0') sr_strings[1]=' ';
     sr_strings[2] = '0'+(sr%10);
   }
+  if(sr<=7) for(i=0;i<4;i++) sr_strings[i]=' ';  // if 0~7
   
   if(volume==ES9038_MAX_VOLUME){  //display MAX if 200
     volume_strings=" MAX ";

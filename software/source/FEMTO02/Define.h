@@ -76,7 +76,7 @@ __eeprom const unsigned char mute @ EEPROM_ADDR_MUTE;
 
 #define AUTOMUTE        PINE_Bit7
 #define ESS_LOCK        PINE_Bit6
-#define I2S_SEL		PORTE_Bit3
+//#define I2S_SEL		PORTE_Bit3
 
 #define DOT_ADDR0	PORTF_Bit0
 #define DOT_ADDR1	PORTF_Bit1

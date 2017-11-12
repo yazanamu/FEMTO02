@@ -40,14 +40,14 @@ void es9038_write_register(unsigned char devaddr, unsigned char regaddr, char da
 
 void es9038_dac_mute_on(void)
 {
-  DAC_MUTE_DDR |= DAC_MUTE_PIN;
-  DAC_MUTE_PORT |= DAC_MUTE_PIN;
+  es9038_system_mute(ES9038_ADDR0,1);
+  es9038_system_mute(ES9038_ADDR1,1);
 }
 
 void es9038_dac_mute_off(void)
 {
-  DAC_MUTE_DDR |= DAC_MUTE_PIN;
-  DAC_MUTE_PORT &= ~DAC_MUTE_PIN;
+  es9038_system_mute(ES9038_ADDR0,0);
+  es9038_system_mute(ES9038_ADDR1,0);
 }
 
 unsigned char Is_there_ES9038(void)
@@ -177,6 +177,9 @@ void es9038_set_volume(unsigned char devaddr,unsigned char volume_db)
   es9038_write_register(devaddr, ES9038_REG_VOLUME1_CONTROL,volume_db);
 }
 
+unsigned char es9038_read_volume(unsigned char devaddr)
+{  return es9038_read_register(devaddr,ES9038_REG_VOLUME1_CONTROL); }
+
 void es9038_soft_reset(unsigned char devaddr)
 {
   es9038_write_register(devaddr,ES9038_REG_SYSTEM,ES9038_SYSTEM_SOFT_RESET);
@@ -246,4 +249,30 @@ void es9038_set_filter_shape(unsigned char devaddr, unsigned char filter)
   reg &= ~ES9038_FILTER_SHAPE(0x7);
   reg |=  ES9038_FILTER_SHAPE(filter);
   es9038_write_register(devaddr,ES9038_REG_FILTERBW_MUTE,reg); 
+}
+
+void es9038_set_soft_start_time(unsigned char devaddr, unsigned char time)
+{
+  unsigned char reg;
+  
+  reg  = es9038_read_register(devaddr,ES9038_REG_SOFT_START_CFG);
+  reg &= ~ES9038_SOFT_START_TIME(0xF);
+  reg |=  ES9038_SOFT_START_TIME(time);
+  es9038_write_register(devaddr,ES9038_REG_SOFT_START_CFG,reg); 
+}
+
+void es9038_set_gpio1(unsigned char devaddr, unsigned char gpio_cfg)
+{
+  unsigned char reg;
+  
+  reg  = es9038_read_register(devaddr,ES9038_REG_GPIO12_CFG);
+  reg &= ~ES9038_GPIO1_CFG(0xF);
+  reg |=  ES9038_GPIO1_CFG(gpio_cfg);
+  es9038_write_register(devaddr,ES9038_REG_GPIO12_CFG,reg); 
+}
+
+unsigned char es9038_read_lock_status(unsigned char devaddr)
+{
+  if (es9038_read_register(devaddr,ES9038_REG_CHIP_ID_STATUS)&ES9038_LOCK_STATUS) return 1;
+  else return 0;
 }

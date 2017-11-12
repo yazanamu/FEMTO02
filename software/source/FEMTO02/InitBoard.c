@@ -45,6 +45,8 @@ extern void es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
 extern void es9038_audio_input_select(unsigned char devaddr, unsigned char select);
 extern void es9038_set_dpll_bw_dsd(unsigned char devaddr,unsigned char bandwidth);
 extern void es9038_set_volume_rate(unsigned char devaddr, unsigned char volume_rate);
+extern void es9038_set_soft_start_time(unsigned char devaddr, unsigned char time);
+extern void es9038_set_gpio1(unsigned char devaddr, unsigned char gpio_cfg);
 
 extern unsigned int AK4118A_read_status(unsigned char devaddr);
 extern void AK4118A_reset(unsigned char devaddr);
@@ -133,14 +135,15 @@ void _system_init(void)
     PORTA= 0x00;    PORTB=0x7f;     PORTC=0xff;      PORTD=0xff;     PORTE=0xff;     PORTF=0xf0;     PORTG=0x1e;
 //PORTA= 0x00;    PORTB=0xff;     PORTC=0xff;      PORTD=0xff;     PORTE=0xff;     PORTF=0xf0;     PORTG=0x1e;
 
-  UA_EN_DDR_INIT; UA_EN_PORT_INIT;
-  DSD128_DDR_INIT; DSD128_PORT_INIT;
-  DSD_ON_DDR_INIT; DSD_ON_PORT_INIT;
-  USB_DET_DDR_INIT; USB_DET_PORT_INIT;
-  I2S_SEL_DDR_INIT; I2S_SEL_PORT_INIT;
-  HP_MUTE_DDR_INIT; HP_MUTE_PORT_INIT;
+  UA_EN_DDR_INIT;     UA_EN_PORT_INIT;
+  DSD128_DDR_INIT;    DSD128_PORT_INIT;
+  DSD_ON_DDR_INIT;    DSD_ON_PORT_INIT;
+  USB_DET_DDR_INIT;   USB_DET_PORT_INIT;
+  HP_MUTE_DDR_INIT;   HP_MUTE_PORT_INIT;
   LINE_MUTE_DDR_INIT; LINE_MUTE_PORT_INIT;
-  DAC_MUTE_DDR_INIT; DAC_MUTE_PORT_INIT;
+  DAC_MUTE_DDR_INIT;  DAC_MUTE_PORT_INIT;
+  AMLI_DDR_INIT;      AMLI_PORT_INIT;
+  I2S_SEL_DDR_INIT;   I2S_SEL_PORT_INIT;
   //AK_INT0_DDR_INIT; AK_INT0_PORT_INIT;
   //AK_INT1_DDR_INIT; AK_INT1_PORT_INIT;
   
@@ -203,23 +206,23 @@ void _system_init(void)
     //	1				1		: The rising edge of INTn generates asynchronously an interrupt request.
     
     //EIFR =  (1<<INTF7) | (1<<INTF6) | (1<<INTF5) | (1<<INTF4) |  (1<<INTF3) | (1<<INTF2) | (1<<INTF1) | (1<<INTF0);
+
+// #define INT_AK_INT1  INT2 // Rising edge  (group A)
+// #define INT_INKEY1   INT3 // Rising edge  (group A)
+// #define INT_AK_INT0  INT4 // Rising edge  (group B)
+// #define INT_IR_TRANS INT5 // Logic  edge  (group B)
+// #define INT_AMLI     INT6 // Rising edge  (group B) (X)
+// #define INT_UA_EN    INT7 // Logic  edge  (group B)
     
-    //INT7~INT2 : SelMCLK(7),	Lock-Lch(6),	REMOCON(5),	USB_Lock(4),	Inkey2(3),	CS8415-AUDIO(2)
-    EIMSK = 0xFC;
-    
-    //  falling&rising edge : Inkey2(3),	rising edge : CS8415-AUDIO(2), 	Reserved : (INT1), (INT0)
-    //EICRA = (1<<ISC31) | (0<<ISC30) | (1<<ISC21) | (0<<ISC20) | (0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
-    EICRA = (0<<ISC31) | (1<<ISC30) | (1<<ISC21) | (0<<ISC20) | (0<<ISC11) | (0<<ISC10) | (0<<ISC01) | (0<<ISC00);
-    
-    // Any logical change :  SelMCLK(7),	Lock-Lch(6),	REMOCON(5),	USB_Lock(4)
-    EICRB =  (0<<ISC41) | (1<<ISC40) | (0<<ISC51) | (1<<ISC50) | (0<<ISC61) | (1<<ISC60) | (0<<ISC71) | (1<<ISC70);
-    
+    EIMSK = (1<<INT_UA_EN) | (1<<INT_AK_INT0) | (1<<INT_AK_INT1) | (1<<INT_IR_TRANS) |\
+            (1<<INT_INKEY1);            // ALMI Removed. 17.11.10
+    EICRA = (1<<ISC31) | (0<<ISC30) | (1<<ISC21) | (1<<ISC20);
+    EICRB = (0<<ISC71) | (1<<ISC70) | (1<<ISC61) | (1<<ISC60) |\
+            (0<<ISC51) | (1<<ISC50) | (1<<ISC41) | (1<<ISC40);
+       
     //INT7~INT2
-    EIFR =  (1<<INTF2) | (1<<INTF3) | (1<<INTF4) | (1<<INTF5) | (1<<INTF6) | (1<<INTF7);
+    EIFR =  (1<<INTF2) | (1<<INTF3) | (1<<INTF4) | (1<<INTF5) | (1<<INTF7); // AMLI Removed. 17.11.10
     
-    send_string("[I2C] AK4118A Searching...\r\n");
-    if (Is_there_AK4118A(AK4118A_IC_ADDR)) send_string("[I2C] AK4118A Found.\r\n");
-    else send_string("[I2C] AK4118A not found.\r\n");
     
     ////////////Initial ES9038 /////////////////////////
     es9038_soft_reset(ES9038_ADDR0); es9038_soft_reset(ES9038_ADDR1);
@@ -227,36 +230,41 @@ void _system_init(void)
 
     send_string("[I2C] ES9038 U22 Left Mute.\r\n");
     es9038_system_mute(ES9038_ADDR0,1);		//mute
-    if(es9038_read_register(ES9038_ADDR0,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U22 Left Mute OK.\r\n");
+    if(es9038_read_register(ES9038_ADDR0,ES9038_REG_FILTERBW_MUTE)==0x41) \
+         send_string("[I2C] ES9038 U22 Left Mute OK.\r\n");
     else send_string("[I2C] ES9038 U22 Left Mute NG.\r\n");
     send_string("[I2C] ES9038 U52 Right Mute.\r\n");
     es9038_system_mute(ES9038_ADDR1,1);		//mute
-    if(es9038_read_register(ES9038_ADDR1,ES9038_REG_FILTERBW_MUTE)==0x41) send_string("[I2C] ES9038 U52 Right Mute OK.\r\n");
+    if(es9038_read_register(ES9038_ADDR1,ES9038_REG_FILTERBW_MUTE)==0x41) \
+         send_string("[I2C] ES9038 U52 Right Mute OK.\r\n");
     else send_string("[I2C] ES9038 U52 Right Mute NG.\r\n");
 
     send_string("[I2C] ES9038PRO Searching...\r\n");
     i=Is_there_ES9038();
-    if (i==0) send_string("[I2C] ES9038PRO x2 not found.\r\n");
-    else if(i==3) send_string("[I2C] ES9038PRO x2 found.\r\n");
-    else if(i==1) send_string("[I2C] ES9038PRO olny left found.\r\n");
-    else if(i==2) send_string("[I2C] ES9038PRO olny right found.\r\n");
+    if (i==0) send_string("[I2C] ES9038 x2 not found.\r\n");
+    else if(i==3) send_string("[I2C] ES9038 x2 found.\r\n");
+    else if(i==1) send_string("[I2C] ES9038 olny left found.\r\n");
+    else if(i==2) send_string("[I2C] ES9038 olny right found.\r\n");
 
     es9038_audio_auto_select(ES9038_ADDR0,AUTO_SEL_DSD_I2S);
     es9038_audio_auto_select(ES9038_ADDR1,AUTO_SEL_DSD_I2S);
-    send_string("[I2C] ES9038PRO Auto Select function DSD/I2S complete.\r\n");
+    send_string("[I2C] ES9038 Auto Select function DSD/I2S complete.\r\n");
     
     for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR0,i,INPUT_CH1);
     for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR1,i,INPUT_CH2);
-    send_string("[I2C] ES9038PRO Channel mapping complete.\r\n");
+    send_string("[I2C] ES9038 Channel mapping complete.\r\n");
     
     es9038_set_volume(ES9038_ADDR0,ES9038_MAX_VOLUME);
     es9038_set_volume(ES9038_ADDR1,ES9038_MAX_VOLUME);
-    send_string("[I2C] ES9038PRO Volume Max complete.\r\n");
+    send_string("[I2C] ES9038 Volume Max complete.\r\n");
     
     es9038_set_volume_rate(ES9038_ADDR0,7);
     es9038_set_volume_rate(ES9038_ADDR1,7);
-    send_string("[I2C] ES9038PRO Volume Ramp Rate = 7.\r\n");
+    send_string("[I2C] ES9038 Volume Ramp Rate = 7.\r\n");
     
+    es9038_set_soft_start_time(ES9038_ADDR0, REG_SOFT_START_TIME);
+    es9038_set_soft_start_time(ES9038_ADDR1, REG_SOFT_START_TIME);
+    send_string("[I2C] ES9038 Soft start time = 11.\r\n");
     
     //send_string("[I2C] CS8416 Input7 to GND.\r\n");
     //I2C_Write(0x20, 0x04, 0xb8);              // CS8416 input7 = gnd
@@ -269,9 +277,19 @@ void _system_init(void)
     es9038_set_dpll_bw_dsd(ES9038_ADDR1,DPLL_HIGHEST);
     send_string("[I2C] ES9038 DSD DPLL Highest.\r\n");
     
+    //es9038_set_gpio1(ES9038_ADDR0, GPIO_AMLI);
+    //es9038_set_gpio1(ES9038_ADDR1, GPIO_AMLI);
+    //send_string("[I2C] ES9038 GPIO1 = AMLI Function.\r\n");
+    
     //////////// AK4118A Initialize ///////////
+    // AK4118 has Reset IC APX809 (200ms delay)
     //AK4118A_power_down(AK4118A_IC_ADDR); // AK4118A power down
     //send_string("[I2C] AK4118A power down.\r\n");
+    delay_ms(200);
+    send_string("[I2C] AK4118A Searching...\r\n");
+    if (Is_there_AK4118A(AK4118A_IC_ADDR)) send_string("[I2C] AK4118A Found.\r\n");
+    else send_string("[I2C] AK4118A not found.\r\n");
+        
     status=AK4118A_read_status(AK4118A_IC_ADDR);
     if (status>>8) {
       send_string("[I2C] AK4118A Error found.\r\n Error code = ");

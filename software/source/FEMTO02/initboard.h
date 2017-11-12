@@ -33,10 +33,14 @@
 #define POWER_EN_PIN 0x01<<6
 #define POWER_EN_DDR_INIT POWER_EN_DDR&=~POWER_EN_PIN
 
-#define UA_EN_PORT PORTB
-#define UA_EN_DDR DDRB
-#define UA_EN_READ PINB
-#define UA_EN_PIN 0x01<<5
+//#define UA_EN_PORT PORTB
+//#define UA_EN_DDR DDRB
+//#define UA_EN_READ PINB
+//#define UA_EN_PIN 0x01<<5
+#define UA_EN_PORT PORTE
+#define UA_EN_DDR DDRE
+#define UA_EN_READ PINE
+#define UA_EN_PIN 0x01<<7
 #define UA_EN_DDR_INIT UA_EN_DDR&=~UA_EN_PIN
 #define UA_EN_PORT_INIT UA_EN_PORT|=UA_EN_PIN
 
@@ -77,14 +81,13 @@
 
 #define INKEY1_PORT PORTD
 #define INKEY1_DDR DDRD
+#define INKEY1_READ PIND
 #define INKEY1_READ_LOC 4
+#define INKEY1_PIN    0x01<<3
 #define INKEY1_A2_PIN 0x01<<(INKEY1_READ_LOC+2)
 #define INKEY1_A1_PIN 0x01<<(INKEY1_READ_LOC+1)
 #define INKEY1_A0_PIN 0x01<<INKEY1_READ_LOC
-#define INKEY1_READ PIND
 #define INKEY1_READ_MASK (INKEY1_A2_PIN | INKEY1_A1_PIN | INKEY1_A0_PIN)
-
-#define INKEY1_PIN    0x01<<3
 #define INKEY1_DDR_INIT INKEY1_DDR&=~(INKEY1_A2_PIN & INKEY1_A1_PIN & INKEY1_A0_PIN & INKEY1_PIN)
 
 #define I2C_PORT PORTD
@@ -95,27 +98,35 @@
 
 #define AK_INT0_PORT PORTE
 #define AK_INT0_DDR DDRE
+#define AK_INT0_READ PIND
 #define AK_INT0_PIN 0x01<<4
 #define AK_INT0_DDR_INIT  AK_INT0_DDR &=~AK_INT0_PIN
 #define AK_INT0_PORT_INIT AK_INT0_PORT&=~AK_INT0_PIN
 
 #define AK_INT1_PORT PORTD
 #define AK_INT1_DDR DDRD
+#define AK_INT1_READ PIND
 #define AK_INT1_PIN 0x01<<2
 #define AK_INT1_DDR_INIT  AK_INT1_DDR &=~AK_INT1_PIN
 #define AK_INT1_PORT_INIT AK_INT1_PORT&=~AK_INT1_PIN
 
-#define DSD_ON_PORT PORTE
-#define DSD_ON_DDR DDRE
-#define DSD_ON_READ PINE
-#define DSD_ON_PIN 0x01<<7
+//#define DSD_ON_PORT PORTE
+//#define DSD_ON_DDR DDRE
+//#define DSD_ON_READ PINE
+//#define DSD_ON_PIN 0x01<<7
+#define DSD_ON_PORT PORTB
+#define DSD_ON_DDR DDRB
+#define DSD_ON_READ PINB
+#define DSD_ON_PIN 0x01<<5
 #define DSD_ON_DDR_INIT DSD_ON_DDR&=~DSD_ON_PIN
 #define DSD_ON_PORT_INIT DSD_ON_PORT|=DSD_ON_PIN
 
 #define AMLI_PORT PORTE
-#define AMLI_DDR DDRE
-#define AMLI_PIN 0x01<<6
-#define AMLI_DDR_INIT AMLI_DDR|=AMLI_PIN
+#define AMLI_DDR  DDRE
+#define AMLI_READ PINE
+#define AMLI_PIN  0x01<<6
+#define AMLI_DDR_INIT  AMLI_DDR&=~AMLI_PIN
+#define AMLI_PORT_INIT AMLI_PORT|=AMLI_PIN
 
 #define R_TRANS_PORT PORTE
 #define R_TRANS_DDR DDRE
@@ -125,16 +136,16 @@
 #define I2S_SEL_PORT PORTE
 #define I2S_SEL_DDR DDRE
 #define I2S_SEL_PIN 0x01<<3
-#define I2S_SEL_OFF I2S_SEL_PORT&=~I2S_SEL_PIN
-#define I2S_SEL_ON  I2S_SEL_PORT|=I2S_SEL_PIN
-#define I2S_SEL_DDR_INIT I2S_SEL_DDR|=I2S_SEL_PIN
+#define I2S_SEL_OFF       I2S_SEL_PORT&=~I2S_SEL_PIN
+#define I2S_SEL_ON        I2S_SEL_PORT|= I2S_SEL_PIN
+#define I2S_SEL_DDR_INIT  I2S_SEL_DDR|=  I2S_SEL_PIN
 #define I2S_SEL_PORT_INIT I2S_SEL_OFF
 
 #define USB_DET_PORT PORTE
 #define USB_DET_DDR DDRE
 #define USB_DET_READ PINE
 #define USB_DET_PIN 0x01<<2
-#define USB_DET_DDR_INIT USB_DET_DDR&=~USB_DET_PIN
+#define USB_DET_DDR_INIT  USB_DET_DDR&=~USB_DET_PIN
 #define USB_DET_PORT_INIT USB_DET_PORT|=USB_DET_PIN
 
 #define DOT_A3_PORT PORTF
@@ -174,6 +185,13 @@
 
 #define SELECT_USB     I2S_SEL_ON
 #define SELECT_AK4118A I2S_SEL_OFF
+
+#define INT_AK_INT1  INT2 // Rising edge  (group A)
+#define INT_INKEY1   INT3 // Rising edge  (group A)
+#define INT_AK_INT0  INT4 // Rising edge  (group B)
+#define INT_IR_TRANS INT5 // Logic edge   (group B)
+//#define INT_AMLI     INT6 // Rising edge  (group B)
+#define INT_UA_EN    INT7 // Logic  edge  (group B)
 
 void _system_init(void);
 void rom_check_sum_error(void);

@@ -119,6 +119,7 @@ void audio_level_sp_up(void){
 }
 
 void channel_change(void){
+  /*
   U8 temp;
   
   if(flag_mute) {			//0 = mute, 	1 = unmute
@@ -148,6 +149,7 @@ void channel_change(void){
   //rom_write_multi();
 
   //dot_vol_hextodeci(vol_dB);
+  */
 }
 
 void audio_level_up(void) {
