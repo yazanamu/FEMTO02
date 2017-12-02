@@ -239,7 +239,7 @@ void _system_init(void)
          send_string("[I2C] ES9038 U52 Right Mute OK.\r\n");
     else send_string("[I2C] ES9038 U52 Right Mute NG.\r\n");
 
-    send_string("[I2C] ES9038PRO Searching...\r\n");
+    send_string("[I2C] ES9038 Searching...\r\n");
     i=Is_there_ES9038();
     if (i==0) send_string("[I2C] ES9038 x2 not found.\r\n");
     else if(i==3) send_string("[I2C] ES9038 x2 found.\r\n");
@@ -280,6 +280,7 @@ void _system_init(void)
     //es9038_set_gpio1(ES9038_ADDR0, GPIO_AMLI);
     //es9038_set_gpio1(ES9038_ADDR1, GPIO_AMLI);
     //send_string("[I2C] ES9038 GPIO1 = AMLI Function.\r\n");
+    
     
     //////////// AK4118A Initialize ///////////
     // AK4118 has Reset IC APX809 (200ms delay)

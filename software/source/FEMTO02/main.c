@@ -72,6 +72,7 @@ extern void es9038_dac_mute_off(void);
 extern void es9038_dac_mute_on(void);
 extern unsigned char es9038_read_lock_status(unsigned char devaddr);
 extern unsigned char es9038_read_volume(unsigned char devaddr);
+extern void es9038_set_soft_start_time(unsigned char devaddr, unsigned char time);
 
 extern void AK4118A_power_down(unsigned char devaddr);
 extern unsigned char AK4118A_input_select(unsigned char devaddr, unsigned char channel);
@@ -81,7 +82,7 @@ extern void AK4118A_BCU_disable(unsigned char devaddr);
 extern void display_dot_matrix(unsigned char ch, unsigned int sr,unsigned char volume,\
                         unsigned char filter,unsigned char headphone,\
                         unsigned char first_display,\
-                        unsigned char mute);
+                        unsigned char mute, unsigned char dsdon);
 
 extern unsigned char write_identity(void);
 extern unsigned char eeprom_save(unsigned char mode,\
@@ -399,6 +400,8 @@ S32 f2_coeff_st2[16]={
 void key_scan(void);
 void port_scan(void);
 void flag_scan(void);
+void es9038_usb_start_playback(void);
+void es9038_usb_stop_playback(void);
 void DelayTime(unsigned int time_end) { while(time_end--); }
 
 void DelayTime_ms(unsigned int time_end){  //msec
@@ -543,6 +546,7 @@ __interrupt void INT6_Handler(void)     // logic edge
 #pragma vector = INT7_vect
 __interrupt void INT7_Handler(void)     // logic edge
 {
+  /*
   if (flag_input_mode==MODE_USB) {
     if ((UA_EN_READ & UA_EN_PIN)==0) { // Low edge
       HP_MUTE_DDR_INIT;   HP_MUTE_ON;
@@ -550,7 +554,7 @@ __interrupt void INT7_Handler(void)     // logic edge
       LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
       //flag_line_relay_on = 0; flag_line_relay_on_before =1;   // refresh
     }
-    /*
+    
     else {                             // High edge
       if (flag_headphone_output) {      // headphone
         flag_hp_relay_on = 1; flag_hp_relay_on_before =0;     // refresh
@@ -565,8 +569,8 @@ __interrupt void INT7_Handler(void)     // logic edge
         es9038_dac_mute_off();
       }
     }
-    */
   }
+*/  
 }
 
 U16 led_tmr=0;
@@ -921,6 +925,7 @@ void key_scan(void)
         break;
         
     case KEY_INVERSE:
+      
         flag_need_display_update =1;
         flag_need_save_eeprom =1;
         if (flag_headphone_output) {
@@ -935,7 +940,7 @@ void key_scan(void)
         //send_string("\r\n");
         
         break;
-
+    
     } // end of switch
 }
 
@@ -1097,15 +1102,21 @@ void flag_scan(void)
         SELECT_AK4118A;
         send_string("[MCU] I2S_SEL LOW.\r\n");
         flag_sampling_rate =0;
-        break;
+      break;
         
       case MODE_USB:
         send_string("[I2C] AK4118A Power down.\r\n");
         AK4118A_input_select(AK4118A_I2C_ADDR, MODE_USB);       // AK4118A Off
         SELECT_USB;
+        DAC_MUTE_OFF;
         AK4118A_BCU_disable(AK4118A_I2C_ADDR);
         send_string("BCU disable.\r\n");
-        break;
+        if (flag_headphone_output) flag_hp_relay_on=1; else flag_line_relay_on=1;
+      break;
+        
+      default:
+        
+      break;
     }
   }
 
@@ -1120,7 +1131,7 @@ void flag_scan(void)
         flag_hp_relay_on_before = flag_hp_relay_on;
         if(flag_hp_relay_on) { 
           HP_MUTE_DDR_INIT; HP_MUTE_OFF;
-          LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
+          //LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
           send_string("[MCU] Headphone out Relay changed at USB mode.\r\n");
         }
       }
@@ -1129,7 +1140,7 @@ void flag_scan(void)
       flag_hp_relay_on_before = flag_hp_relay_on;
       if(flag_hp_relay_on) { 
         HP_MUTE_DDR_INIT; HP_MUTE_OFF;
-        LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
+        //LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
         send_string("[MCU] Headphone out Relay changed at AK4118 mode.\r\n");
       }
       
@@ -1181,11 +1192,11 @@ void flag_scan(void)
     if (flag_headphone_output) \
       display_dot_matrix(flag_input_mode,flag_sampling_rate,vol_dB_HP,flag_filter,\
                          flag_headphone_output,flag_first_display,\
-                         flag_mute);
+                         flag_mute, flag_dsd_on);
     else  \
       display_dot_matrix(flag_input_mode,flag_sampling_rate,vol_dB,flag_filter,\
                          flag_headphone_output,flag_first_display,\
-                         flag_mute);
+                         flag_mute, flag_dsd_on);
   }
 
   
@@ -1200,11 +1211,13 @@ void port_scan(void)
   if(UA_EN_READ & UA_EN_PIN) flag_usb_audio=1; else flag_usb_audio=0;
   if(flag_usb_audio!=flag_usb_audio_before) {         // edge detect
     flag_usb_audio_before=flag_usb_audio;
-    if(flag_usb_audio) {        // USB Audio
+    if(flag_usb_audio) {        // USB Audio Enable High
+      ///*
       if (flag_input_mode==MODE_USB) {
-        send_string("[MCU] DAC Mute disable.\r\n");
-        es9038_dac_mute_off();
-        SELECT_USB;
+        es9038_usb_start_playback();
+        //if (flag_headphone_output) flag_hp_relay_on=1; else flag_line_relay_on=1;
+        if (flag_headphone_output) HP_MUTE_OFF; else LINE_MUTE_OFF;
+        /*
         if (flag_headphone_output) {
           flag_headphone_output_before=0;
           if(UA_EN_READ & UA_EN_PIN) HP_MUTE_OFF;
@@ -1213,13 +1226,14 @@ void port_scan(void)
           flag_headphone_output_before=1;  // refresh
           if(UA_EN_READ & UA_EN_PIN) LINE_MUTE_OFF;
         }
+        */
       }
-      else { 
-        SELECT_AK4118A;
+      else {
+        es9038_usb_stop_playback();
       }
       send_string("[SA9127] USB Audio Activated.\r\n");
     }
-    else {   // no usb audio
+    else {   // usb audio Enable = Low
       if (flag_input_mode==MODE_USB) {
         SELECT_USB;
         if (flag_headphone_output) flag_headphone_output_before=0;
@@ -1227,7 +1241,9 @@ void port_scan(void)
         send_string("[MCU] DAC Mute enable.\r\n");
         es9038_dac_mute_on();
       }
+      //*/  
     }
+    
   }
   
   
@@ -1319,4 +1335,27 @@ unsigned int read_sampling_rate(unsigned char mode, unsigned char dsd_on, unsign
   }
   if (sampling_rate < 10) sampling_rate=0;
   return sampling_rate;
+}
+
+void es9038_usb_start_playback(void)
+{
+  DAC_MUTE_ON;
+  send_string("[MCU] DAC Mute Enable.\r\n");
+  es9038_soft_reset(ES9038_ADDR0);
+  es9038_soft_reset(ES9038_ADDR1);
+  es9038_set_soft_start_time(ES9038_ADDR0,0);
+  es9038_set_soft_start_time(ES9038_ADDR1,0);
+  I2S_SEL_ON;
+  DAC_MUTE_OFF;
+  send_string("[MCU] DAC Mute disable.\r\n");
+}
+void es9038_usb_stop_playback(void)
+{
+  DAC_MUTE_ON;
+  send_string("[MCU] DAC Mute Enable.\r\n");
+  I2S_SEL_ON;
+  es9038_soft_reset(ES9038_ADDR0);
+  es9038_soft_reset(ES9038_ADDR1);
+  DAC_MUTE_OFF;
+  send_string("[MCU] DAC Mute disable.\r\n");
 }
