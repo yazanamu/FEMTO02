@@ -32,7 +32,7 @@ enum front_key { KEY_LEFT=1, KEY_VOLUP, KEY_MUTE, KEY_RIGHT, KEY_VOLDOWN, \
 unsigned char flag_need_display_update=1;
 unsigned char flag_need_save_eeprom=1;
 unsigned char flag_input_mode=0, flag_input_mode_before=0xFF;
-unsigned char flag_filter=0, flag_filter_before=0xFF; // Filter mode F1~F7 
+unsigned char flag_filter=0, flag_filter_before=0xFF; // Filter mode F1~F7
                     // F1:Fast Roll-Off, Minimum Phase Filter
                     // F2: Apdizing, Fast Roll-Off, Linear Phase Filter
                     // F3: Fast Roll-Off, Linear Phase Filter
@@ -47,7 +47,7 @@ unsigned int flag_first_display=60000;    // delay initial display
 unsigned char flag_first_display_complete=0;
 unsigned char flag_amli=0,flag_amli_before=1;
 unsigned char flag_es9038_left_locked=0, flag_es9038_right_locked=0;
-
+unsigned char flag_remote_key=0;
 
 enum input_mode { MODE_COAX1, MODE_COAX2, MODE_AES1, MODE_OPT1, MODE_OPT2, \
                   MODE_OPT3, MODE_OPT4, MODE_USB };
@@ -406,7 +406,7 @@ void DelayTime(unsigned int time_end) { while(time_end--); }
 
 void DelayTime_ms(unsigned int time_end){  //msec
   unsigned int i, k;
-  for(i=0; i<=time_end+1; i++) { k=16000;while(k--); } //1msec
+  for(i=0; i<=time_end+1; i++) { k=160;while(k--); } //1msec
 }
 
 
@@ -784,11 +784,14 @@ void main(void)
   else {
     flag_headphone_output_before=1;
   }
-  //if (flag_input_mode==MODE_USB) {
-  //  I2S_SEL_ON;
-  //  send_string("USB Mode.\r\n");
-  //}
-  //else I2S_SEL_OFF;
+  if (flag_input_mode==MODE_USB) {
+    I2S_SEL_DDR_INIT; I2S_SEL_ON;
+    send_string("USB Mode.\r\n");
+  }
+  else {
+    I2S_SEL_DDR_INIT; I2S_SEL_OFF;
+    send_string("No USB Mode.\r\n");
+  }
   
   while(1){
     if (flag_first_display) flag_first_display--;
@@ -807,9 +810,14 @@ void key_scan(void)
   //unsigned char i;
 
   key_data = (INKEY1_READ & INKEY1_READ_MASK) >> INKEY1_READ_LOC;
-  send_string("Key code = ");
-  send_byte2hex(key_data);
-  send_string("\r\n");
+  if (key_data) {
+    send_string("Key code = "); send_byte2hex(key_data); send_string("\r\n");
+  }
+  if (flag_remote_key) {
+    key_data = flag_remote_key;
+    flag_remote_key=0;
+    send_string("Remote Key code = "); send_byte2hex(key_data); send_string("\r\n");
+  }
     switch(key_data) {
       case KEY_LEFT:
         flag_need_display_update =1;
@@ -823,7 +831,14 @@ void key_scan(void)
         flag_need_display_update =1;
         flag_need_save_eeprom =1;
         flag_voluplongkey = 1;
-        if(flag_mute) ess_mute();
+        if(flag_mute) {
+          flag_mute=0;
+          //ess_mute();
+          es9038_system_mute(ES9038_ADDR0,flag_mute);
+          es9038_system_mute(ES9038_ADDR1,flag_mute);
+          dot_vol_hextodeci(vol_dB_HP);
+          dot_vol_hextodeci(vol_dB);
+        }
         if (flag_headphone_output) {
           if(vol_dB_HP>0) vol_dB_HP--;
           if(vol_dB_HP>199) vol_dB_HP=199;
@@ -844,7 +859,12 @@ void key_scan(void)
       case KEY_MUTE:
         flag_need_display_update =1;
         flag_need_save_eeprom =1;
-        ess_mute();
+        //ess_mute();
+        flag_mute=!flag_mute;	//0 = mute, 	1 = unmute
+        es9038_system_mute(ES9038_ADDR0,flag_mute);
+        es9038_system_mute(ES9038_ADDR1,flag_mute);
+        dot_vol_hextodeci(vol_dB_HP);
+        dot_vol_hextodeci(vol_dB);
       break;
         
       case KEY_RIGHT:
@@ -859,7 +879,14 @@ void key_scan(void)
         flag_need_display_update =1;
         flag_need_save_eeprom =1;
         flag_voldownlongkey = 1;
-        if(flag_mute) ess_mute();
+        if(flag_mute) {
+          flag_mute=0;
+          //ess_mute();
+          es9038_system_mute(ES9038_ADDR0,flag_mute);
+          es9038_system_mute(ES9038_ADDR1,flag_mute);
+          dot_vol_hextodeci(vol_dB_HP);
+          dot_vol_hextodeci(vol_dB);
+        }
         if (flag_headphone_output) {
           if(vol_dB_HP<199) vol_dB_HP++; else vol_dB_HP=0xFF;
           es9038_set_volume(ES9038_ADDR0,vol_dB_HP);   // set es9038
@@ -925,15 +952,12 @@ void key_scan(void)
         break;
         
     case KEY_INVERSE:
-      
-        flag_need_display_update =1;
-        flag_need_save_eeprom =1;
         if (flag_headphone_output) {
-          flag_headphone_output=0;
+          flag_headphone_output=0;      // Line out
           send_string("[MCU] Line out selected.\r\n");
         }
         else {
-          flag_headphone_output=1;
+          flag_headphone_output=1;      // Headphone out
           send_string("[MCU] Headphone out selected.\r\n");
         }
         //send_string("Current Volume = "); send_integer(es9038_read_volume(ES9038_ADDR0));
@@ -957,19 +981,22 @@ void flag_scan(void)
       es9038_set_volume(ES9038_ADDR0,vol_dB_HP);   // set es9038
       es9038_set_volume(ES9038_ADDR1,vol_dB_HP);
       dot_vol_hextodeci(vol_dB_HP);
+      LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
+      HP_MUTE_DDR_INIT; HP_MUTE_OFF;
+      DAC_MUTE_OFF;
       send_string("Headphone out Mode loaded.\r\n");
-      flag_hp_relay_on=1; // set relay
-      flag_line_relay_on=0; // set relay
-      send_string("[MCU] Headphone out Relay selected.\r\n");
     }
     else {                              // line out
       es9038_set_volume(ES9038_ADDR0,vol_dB);
       es9038_set_volume(ES9038_ADDR1,vol_dB);
       dot_vol_hextodeci(vol_dB);
+      HP_MUTE_DDR_INIT; HP_MUTE_ON;
+      LINE_MUTE_DDR_INIT; LINE_MUTE_OFF; PORTB |= 0x04;
+      DAC_MUTE_OFF;
       send_string("Line out Mode loaded.\r\n");
-      flag_line_relay_on=1; // set relay
-      flag_hp_relay_on=0; // set relay
-      send_string("[MCU] Line out Relay selected.\r\n");
+      
+      send_byte2hex(PORTB);
+      send_string("\r\n");
     }
   }
   
@@ -989,12 +1016,12 @@ void flag_scan(void)
    
   if (flag_key_int) {
     flag_key_int=0;
-    send_string("Key interrupted.\r\n");
+    send_string("Key Detected.\r\n");
     if ((INKEY1_READ & INKEY1_PIN)==0) key_scan();
   }
   if (flag_longkey) {
     flag_longkey=0;
-    send_string("Long Key interrupted.\r\n");
+    send_string("Long Key Detected.\r\n");
     if ((INKEY1_READ & INKEY1_PIN)==0) key_scan();
   }
   if (flag_refresh_display) {
@@ -1016,8 +1043,8 @@ void flag_scan(void)
   if(vol_dB!=vol_dB_before) {
     flag_need_display_update =1;
     flag_need_save_eeprom =1;
-    if (vol_dB>vol_dB_before) send_string("[ES9038] Volume decresed. - ");
-    else send_string("[ES9038] Line ouput Volume incresed. - "); 
+    if (vol_dB>vol_dB_before) send_string("[ES9038] Line Volume decresed. - ");
+    else send_string("[ES9038] Line Volume incresed. - "); 
     send_integer(vol_dB); send_string("\r\n");
     vol_dB_before=vol_dB;
     es9038_set_volume(ES9038_ADDR0,vol_dB);
@@ -1026,7 +1053,7 @@ void flag_scan(void)
   if(vol_dB_HP!=vol_dB_HP_before) {
     flag_need_display_update =1;
     flag_need_save_eeprom =1;
-    if (vol_dB_HP>vol_dB_HP_before) send_string("[ES9038] Volume decresed. - ");
+    if (vol_dB_HP>vol_dB_HP_before) send_string("[ES9038] Headphone Volume decresed. - ");
     else send_string("[ES9038] Headphone Volume incresed. - "); 
     send_integer(vol_dB_HP); send_string("\r\n");
     vol_dB_HP_before=vol_dB_HP;
@@ -1124,7 +1151,7 @@ void flag_scan(void)
     flag_sampling_rate_before=flag_sampling_rate;
     flag_need_display_update=1;
   }
-
+/*
   if (flag_hp_relay_on!=flag_hp_relay_on_before){
     if (flag_input_mode==MODE_USB) {
       if (UA_EN_READ&UA_EN_PIN) {       // if UA_EN = ON
@@ -1168,7 +1195,7 @@ void flag_scan(void)
       }
     }
   }
-
+*/
   if (flag_timer_read_sampling_rate==1) {
       flag_timer_read_sampling_rate=0;
       flag_sampling_rate = read_sampling_rate(flag_input_mode, flag_dsd_on, flag_amli);
@@ -1215,8 +1242,16 @@ void port_scan(void)
       ///*
       if (flag_input_mode==MODE_USB) {
         es9038_usb_start_playback();
+        send_string("Start Playing.\r\n");
         //if (flag_headphone_output) flag_hp_relay_on=1; else flag_line_relay_on=1;
-        if (flag_headphone_output) HP_MUTE_OFF; else LINE_MUTE_OFF;
+        if (flag_headphone_output) {
+          LINE_MUTE_DDR_INIT; LINE_MUTE_ON;
+          HP_MUTE_DDR_INIT;   HP_MUTE_OFF;
+        }
+        else {
+          HP_MUTE_DDR_INIT;   HP_MUTE_ON;
+          LINE_MUTE_DDR_INIT; LINE_MUTE_OFF; PORTB |= 0x04;
+        }
         /*
         if (flag_headphone_output) {
           flag_headphone_output_before=0;
@@ -1230,6 +1265,7 @@ void port_scan(void)
       }
       else {
         es9038_usb_stop_playback();
+        send_string("Stop Playing.\r\n");
       }
       send_string("[SA9127] USB Audio Activated.\r\n");
     }
@@ -1251,6 +1287,7 @@ void port_scan(void)
   if(DSD_ON_READ & DSD_ON_PIN) flag_dsd_on=1; else flag_dsd_on=0;
   if(flag_dsd_on!=flag_dsd_on_before) {         // edge detect
     flag_dsd_on_before=flag_dsd_on;
+    flag_need_display_update=1;
     if(flag_dsd_on) {
       send_string("[SA9127] DSD mode detected.\r\n");
       if (flag_input_mode==MODE_USB) {
@@ -1343,9 +1380,10 @@ void es9038_usb_start_playback(void)
   send_string("[MCU] DAC Mute Enable.\r\n");
   es9038_soft_reset(ES9038_ADDR0);
   es9038_soft_reset(ES9038_ADDR1);
+  DelayTime_ms(100);
   es9038_set_soft_start_time(ES9038_ADDR0,0);
   es9038_set_soft_start_time(ES9038_ADDR1,0);
-  I2S_SEL_ON;
+  I2S_SEL_DDR_INIT; I2S_SEL_ON;
   DAC_MUTE_OFF;
   send_string("[MCU] DAC Mute disable.\r\n");
 }
@@ -1353,9 +1391,10 @@ void es9038_usb_stop_playback(void)
 {
   DAC_MUTE_ON;
   send_string("[MCU] DAC Mute Enable.\r\n");
-  I2S_SEL_ON;
+  I2S_SEL_DDR_INIT; I2S_SEL_ON;
   es9038_soft_reset(ES9038_ADDR0);
   es9038_soft_reset(ES9038_ADDR1);
+  DelayTime_ms(100);
   DAC_MUTE_OFF;
   send_string("[MCU] DAC Mute disable.\r\n");
 }

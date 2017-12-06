@@ -8,6 +8,9 @@ extern unsigned int rom_tmr;
 extern unsigned char init_setting_check;
 extern unsigned char key_condition;
 extern unsigned char key_func;
+extern unsigned char flag_remote_key;
+enum remote_key { RE_KEY_LEFT=1,  RE_KEY_VOLUP, RE_KEY_MUTE, RE_KEY_RIGHT, RE_KEY_VOLDOWN, \
+                  RE_KEY_INVERSE, RE_KEY_FILTER };
 
 ///////////////////////////////////////////////////////////////////////////////
 // This represent remocon status.
@@ -182,8 +185,12 @@ void remocon_data(){
               //IR_data_flag++;
               //IR_data[IR_data_flag]=_remocon_data;
             //}
-            if(_remocon_data==0x80) audio_level_up();
-            else if(_remocon_data==0xA8) audio_level_down();
+            if(_remocon_data==0x80) {
+              //audio_level_up();
+            }
+            else if(_remocon_data==0xA8) {
+              //audio_level_down();
+            }
           }
           cnt_remocon=1;
           
@@ -194,29 +201,28 @@ void remocon_data(){
 //CH-DOWN       : 0x88;
 //PHASE           : 0xA0;
 //FILTER           : 0X98;         
-          rom_save_flag=0;
-          
-          if(_remocon_data==0xB0) ess_mute();                                           //Mute
+          //rom_save_flag=0;
+          flag_remote_key=0;
+          if     (_remocon_data==0xB0) {
+            flag_remote_key = RE_KEY_MUTE;
+          }
           else if(_remocon_data==0x80) {                             //Master Volume Up
-            audio_level_up();
+            flag_remote_key = RE_KEY_VOLUP;
           }
           else if(_remocon_data==0xA8) {                         //Master Volume Down
-            audio_level_down();
+            flag_remote_key = RE_KEY_VOLDOWN;
           }
-          else if(_remocon_data==0x90) channel_up();                                //Channel Change
-          else if(_remocon_data==0x88) channel_down();                           //Channel Change
+          else if(_remocon_data==0x90) {
+            flag_remote_key = RE_KEY_RIGHT;
+          }
+          else if(_remocon_data==0x88) {
+            flag_remote_key = RE_KEY_LEFT;
+          }
           else if(_remocon_data==0xA0) {                                                //inverse Change
-            if(!key_condition) key_func=1;
-            else key_func=3;      
-            femto_function(); 
-          }//phase_write();  phase_ess(); }     
-          else if(_remocon_data==0x98) { 
-            if(!key_condition) key_func=2;
-            else key_func=4;     
-            femto_function();
-            //filter_led<<=1;    
-            //if(filter_led>0x04)  filter_led=1;	//filter1
-            //ess_filter(filter_led);                                    //filter Change
+            flag_remote_key = RE_KEY_INVERSE;
+          }
+          else if(_remocon_data==0x98) {        // Filter
+            flag_remote_key = RE_KEY_FILTER;
           }
         }
         //new remocon

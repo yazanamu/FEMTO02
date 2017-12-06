@@ -160,24 +160,24 @@ void audio_level_down(void) {
 
 void channel_up(void){
   //channel_vol_save();
-  if(!key_func){
-    flag_input_mode++;
-    flag_input_mode&=0x07;
+  //if(!key_func){
+  //  flag_input_mode++;
+  //  flag_input_mode&=0x07;
     //if(ch_led_data<7) ch_led_data++;
     //else ch_led_data=0;
-    channel_change();
-  }
+  //  channel_change();
+  //}
 }
 
 void channel_down(void){
   //channel_vol_save();
-  if(!key_func){
-    flag_input_mode--;
-    flag_input_mode&=0x07;
+  //if(!key_func){
+  //  flag_input_mode--;
+  //  flag_input_mode&=0x07;
     //if(ch_led_data) ch_led_data--;
     //else ch_led_data=7;
-    channel_change();
-  }
+  //  channel_change();
+  //}
 }
 
 void ess_filter(void){
