@@ -2,6 +2,7 @@
 #include "define.h"
 #include "main_func.h"
 #include "remocon.h"
+#include "es9038.h"
 
 extern unsigned char rom_save_flag;
 extern unsigned int rom_tmr;
@@ -9,9 +10,16 @@ extern unsigned char init_setting_check;
 extern unsigned char key_condition;
 extern unsigned char key_func;
 extern unsigned char flag_remote_key;
+extern unsigned char flag_mute;
 enum remote_key { RE_KEY_LEFT=1,  RE_KEY_VOLUP, RE_KEY_MUTE, RE_KEY_RIGHT, RE_KEY_VOLDOWN, \
                   RE_KEY_INVERSE, RE_KEY_FILTER };
-
+//extern void es9038_system_mute(unsigned char devaddr, unsigned char onoff);
+//extern void dot_vol_hextodeci(unsigned char volume_db);
+extern unsigned char vol_dB;
+extern unsigned char vol_dB_HP;
+extern unsigned char flag_headphone_output;
+extern unsigned char flag_input_mode;
+extern unsigned char flag_filter;
 ///////////////////////////////////////////////////////////////////////////////
 // This represent remocon status.
 char _flg_on_remocon=0;
@@ -186,10 +194,10 @@ void remocon_data(){
               //IR_data[IR_data_flag]=_remocon_data;
             //}
             if(_remocon_data==0x80) {
-              //audio_level_up();
+              audio_level_up();
             }
             else if(_remocon_data==0xA8) {
-              //audio_level_down();
+              audio_level_down();
             }
           }
           cnt_remocon=1;
@@ -201,28 +209,46 @@ void remocon_data(){
 //CH-DOWN       : 0x88;
 //PHASE           : 0xA0;
 //FILTER           : 0X98;         
-          //rom_save_flag=0;
+          rom_save_flag=0;
           flag_remote_key=0;
           if     (_remocon_data==0xB0) {
-            flag_remote_key = RE_KEY_MUTE;
+            flag_mute=!flag_mute;	//0 = mute, 	1 = unmute
           }
           else if(_remocon_data==0x80) {                             //Master Volume Up
-            flag_remote_key = RE_KEY_VOLUP;
+            if (flag_headphone_output) {
+              if(vol_dB_HP>0) vol_dB_HP--;
+              if(vol_dB_HP>199) vol_dB_HP=199;
+            }
+            else {
+              if(vol_dB>0) vol_dB--;
+              if(vol_dB>199) vol_dB=199;
+            }
           }
           else if(_remocon_data==0xA8) {                         //Master Volume Down
-            flag_remote_key = RE_KEY_VOLDOWN;
+            if (flag_headphone_output) {
+              if(vol_dB_HP<199) vol_dB_HP++; else vol_dB_HP=0xFF;
+            }
+            else {
+              if(vol_dB<199) vol_dB++; else vol_dB=0xFF;
+            }
           }
           else if(_remocon_data==0x90) {
-            flag_remote_key = RE_KEY_RIGHT;
+            //flag_remote_key = RE_KEY_RIGHT;
+            flag_input_mode++;
+            flag_input_mode&=0x07;
           }
           else if(_remocon_data==0x88) {
-            flag_remote_key = RE_KEY_LEFT;
+            //flag_remote_key = RE_KEY_LEFT;
+            flag_input_mode--;
+            flag_input_mode&=0x07;
           }
           else if(_remocon_data==0xA0) {                                                //inverse Change
-            flag_remote_key = RE_KEY_INVERSE;
+            //flag_remote_key = RE_KEY_INVERSE;
+            if (flag_headphone_output) flag_headphone_output=0; else flag_headphone_output=1;
           }
-          else if(_remocon_data==0x98) {        // Filter
-            flag_remote_key = RE_KEY_FILTER;
+          else if(_remocon_data==0x98) { 
+            //flag_remote_key = RE_KEY_FILTER;
+            flag_filter++;
           }
         }
         //new remocon
@@ -354,6 +380,3 @@ __interrupt void INT5_Handler(void)
 	  }
 	else _remocon_processing(); 
 }
-
-
-

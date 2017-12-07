@@ -820,138 +820,56 @@ void key_scan(void)
   }
     switch(key_data) {
       case KEY_LEFT:
-        flag_need_display_update =1;
-        flag_need_save_eeprom =1;
         flag_input_mode--;
         flag_input_mode&=0x07;
-        channel_change();
         break;
+
+      case KEY_RIGHT:
+        flag_input_mode++;
+        flag_input_mode&=0x07;
+      break;
         
       case KEY_VOLUP:
-        flag_need_display_update =1;
-        flag_need_save_eeprom =1;
         flag_voluplongkey = 1;
         if(flag_mute) {
           flag_mute=0;
-          //ess_mute();
-          es9038_system_mute(ES9038_ADDR0,flag_mute);
-          es9038_system_mute(ES9038_ADDR1,flag_mute);
-          dot_vol_hextodeci(vol_dB_HP);
-          dot_vol_hextodeci(vol_dB);
         }
         if (flag_headphone_output) {
           if(vol_dB_HP>0) vol_dB_HP--;
           if(vol_dB_HP>199) vol_dB_HP=199;
-          es9038_set_volume(ES9038_ADDR0,vol_dB_HP);   // set es9038
-          es9038_set_volume(ES9038_ADDR1,vol_dB_HP);
         }
         else {
           if(vol_dB>0) vol_dB--;
           if(vol_dB>199) vol_dB=199;
-          es9038_set_volume(ES9038_ADDR0,vol_dB);
-          es9038_set_volume(ES9038_ADDR1,vol_dB);
         }
         dot_vol_hextodeci(vol_dB_HP);
         dot_vol_hextodeci(vol_dB);
-        
-      break;
-        
-      case KEY_MUTE:
-        flag_need_display_update =1;
-        flag_need_save_eeprom =1;
-        //ess_mute();
-        flag_mute=!flag_mute;	//0 = mute, 	1 = unmute
-        es9038_system_mute(ES9038_ADDR0,flag_mute);
-        es9038_system_mute(ES9038_ADDR1,flag_mute);
-        dot_vol_hextodeci(vol_dB_HP);
-        dot_vol_hextodeci(vol_dB);
-      break;
-        
-      case KEY_RIGHT:
-        flag_need_display_update =1;
-        flag_need_save_eeprom =1;
-        flag_input_mode++;
-        flag_input_mode&=0x07;
-        channel_change();
       break;
 
       case KEY_VOLDOWN:
-        flag_need_display_update =1;
-        flag_need_save_eeprom =1;
         flag_voldownlongkey = 1;
         if(flag_mute) {
           flag_mute=0;
-          //ess_mute();
-          es9038_system_mute(ES9038_ADDR0,flag_mute);
-          es9038_system_mute(ES9038_ADDR1,flag_mute);
-          dot_vol_hextodeci(vol_dB_HP);
-          dot_vol_hextodeci(vol_dB);
         }
         if (flag_headphone_output) {
           if(vol_dB_HP<199) vol_dB_HP++; else vol_dB_HP=0xFF;
-          es9038_set_volume(ES9038_ADDR0,vol_dB_HP);   // set es9038
-          es9038_set_volume(ES9038_ADDR1,vol_dB_HP);
         }
         else {
           if(vol_dB<199) vol_dB++; else vol_dB=0xFF;
-          es9038_set_volume(ES9038_ADDR0,vol_dB_HP);
-          es9038_set_volume(ES9038_ADDR1,vol_dB_HP);
         }
         dot_vol_hextodeci(vol_dB_HP);
         dot_vol_hextodeci(vol_dB);
       break;
         
+      case KEY_MUTE:
+        flag_mute=!flag_mute;	//0 = mute, 	1 = unmute
+      break;
+      
       case KEY_FILTER:
-        flag_need_display_update =1;
-        flag_need_save_eeprom =1;
         flag_filter++;
-        if (flag_filter>6) flag_filter=0;
-        if      (flag_filter==0) {   // Filter No.1
-          es9038_set_filter_shape(ES9038_ADDR0,FAST_ROLL_OFF_MIN_PHASE_FILTER);
-          es9038_set_filter_shape(ES9038_ADDR1,FAST_ROLL_OFF_MIN_PHASE_FILTER);
-          send_string("[I2C] ES9038 Filter 1 \r\n");
-        }
-        else if (flag_filter==1) {   // Filter No.2
-          es9038_set_filter_shape(ES9038_ADDR0,APODIZING_FAST_ROLL_OFF_LINEAR_PHASE_FILTER);
-          es9038_set_filter_shape(ES9038_ADDR1,APODIZING_FAST_ROLL_OFF_LINEAR_PHASE_FILTER);
-          send_string("[I2C] ES9038 Filter 2 \r\n");
-        }
-        else if (flag_filter==2) {   // Filter No.3
-          es9038_set_filter_shape(ES9038_ADDR0,FAST_ROLL_OFF_LINEAR_PHASE_FILTER);
-          es9038_set_filter_shape(ES9038_ADDR1,FAST_ROLL_OFF_LINEAR_PHASE_FILTER);
-          send_string("[I2C] ES9038 Filter 3 \r\n");
-        }
-        else if (flag_filter==3) {   // Filter No.4
-          es9038_set_filter_shape(ES9038_ADDR0,SLOW_ROLL_OFF_LINEAR_PHASE_FILTER);
-          es9038_set_filter_shape(ES9038_ADDR1,SLOW_ROLL_OFF_LINEAR_PHASE_FILTER);
-          send_string("[I2C] ES9038 Filter 4 \r\n");
-        }
-        else if (flag_filter==4) {   // Filter No.5
-          es9038_set_filter_shape(ES9038_ADDR0,SLOW_ROLL_OFF_MIN_PHASE_FILTER);
-          es9038_set_filter_shape(ES9038_ADDR1,SLOW_ROLL_OFF_MIN_PHASE_FILTER);
-          send_string("[I2C] ES9038 Filter 5 \r\n");
-        }
-        else if (flag_filter==5) {   // Filter No.6
-          es9038_set_filter_shape(ES9038_ADDR0,HYBRID_FAST_ROLL_OFF_MIN_PHASE_FILTER);
-          es9038_set_filter_shape(ES9038_ADDR1,HYBRID_FAST_ROLL_OFF_MIN_PHASE_FILTER);
-          send_string("[I2C] ES9038 Filter 6 \r\n");
-        }
-        else if (flag_filter==6) {   // Filter No.7
-          es9038_set_filter_shape(ES9038_ADDR0,BRICKWALL_FILTER);
-          es9038_set_filter_shape(ES9038_ADDR1,BRICKWALL_FILTER);
-          send_string("[I2C] ES9038 Filter 7 \r\n");
-        }
+      break;
         
-        //send_string("AK4118A Resigter =\r\n");
-        //for(i=0;i<=0x28;i++) {
-        //  send_byte2hex(AK4118A_read_register(AK4118A_I2C_ADDR,i));
-        //  if (((i+1)%8)==0) send_string("\r\n"); else send_string(" ");
-        //}
-        //send_int2hex(read_sampling_rate());
-        send_long2hex(es9038_read_dpll_number(ES9038_ADDR0)); send_string("\r\n");
-        break;
-        
-    case KEY_INVERSE:
+      case KEY_INVERSE:
         if (flag_headphone_output) {
           flag_headphone_output=0;      // Line out
           send_string("[MCU] Line out selected.\r\n");
@@ -963,7 +881,7 @@ void key_scan(void)
         //send_string("Current Volume = "); send_integer(es9038_read_volume(ES9038_ADDR0));
         //send_string("\r\n");
         
-        break;
+      break;
     
     } // end of switch
 }
@@ -1037,10 +955,15 @@ void flag_scan(void)
     flag_mute_before=flag_mute;
     flag_need_display_update =1;
     flag_need_save_eeprom =1;
+    es9038_system_mute(ES9038_ADDR0,flag_mute);
+    es9038_system_mute(ES9038_ADDR1,flag_mute);
+    dot_vol_hextodeci(vol_dB_HP);
+    dot_vol_hextodeci(vol_dB);
     if (flag_mute) send_string("[ES9038] Mute on.\r\n");
     else send_string("[ES9038] Mute off.\r\n");
   }
   if(vol_dB!=vol_dB_before) {
+    if (vol_dB>200) vol_dB=ES9038_MIN_VOLUME;
     flag_need_display_update =1;
     flag_need_save_eeprom =1;
     if (vol_dB>vol_dB_before) send_string("[ES9038] Line Volume decresed. - ");
@@ -1051,6 +974,7 @@ void flag_scan(void)
     es9038_set_volume(ES9038_ADDR1,vol_dB);
   }
   if(vol_dB_HP!=vol_dB_HP_before) {
+    if (vol_dB_HP>200) vol_dB_HP=ES9038_MIN_VOLUME;
     flag_need_display_update =1;
     flag_need_save_eeprom =1;
     if (vol_dB_HP>vol_dB_HP_before) send_string("[ES9038] Headphone Volume decresed. - ");
@@ -1065,7 +989,7 @@ void flag_scan(void)
     flag_input_mode_before=flag_input_mode;
     flag_need_display_update =1;
     flag_need_save_eeprom =1;
- 
+    channel_change(); /////////////////////////////////
     switch(flag_input_mode) {
       case MODE_COAX1:
         send_string("[I2C] AK4118A Wake up.\r\n");
@@ -1225,8 +1149,48 @@ void flag_scan(void)
                          flag_headphone_output,flag_first_display,\
                          flag_mute, flag_dsd_on);
   }
-
   
+  if(flag_filter != flag_filter_before) {
+    if (flag_filter>6) flag_filter=0;
+    flag_filter_before=flag_filter;
+    flag_need_display_update =1;
+    flag_need_save_eeprom =1;
+    if      (flag_filter==0) {   // Filter No.1
+      es9038_set_filter_shape(ES9038_ADDR0,FAST_ROLL_OFF_MIN_PHASE_FILTER);
+      es9038_set_filter_shape(ES9038_ADDR1,FAST_ROLL_OFF_MIN_PHASE_FILTER);
+      send_string("[I2C] ES9038 Filter 1 \r\n");
+    }
+    else if (flag_filter==1) {   // Filter No.2
+      es9038_set_filter_shape(ES9038_ADDR0,APODIZING_FAST_ROLL_OFF_LINEAR_PHASE_FILTER);
+      es9038_set_filter_shape(ES9038_ADDR1,APODIZING_FAST_ROLL_OFF_LINEAR_PHASE_FILTER);
+      send_string("[I2C] ES9038 Filter 2 \r\n");
+    }
+    else if (flag_filter==2) {   // Filter No.3
+      es9038_set_filter_shape(ES9038_ADDR0,FAST_ROLL_OFF_LINEAR_PHASE_FILTER);
+      es9038_set_filter_shape(ES9038_ADDR1,FAST_ROLL_OFF_LINEAR_PHASE_FILTER);
+      send_string("[I2C] ES9038 Filter 3 \r\n");
+    }
+    else if (flag_filter==3) {   // Filter No.4
+      es9038_set_filter_shape(ES9038_ADDR0,SLOW_ROLL_OFF_LINEAR_PHASE_FILTER);
+      es9038_set_filter_shape(ES9038_ADDR1,SLOW_ROLL_OFF_LINEAR_PHASE_FILTER);
+      send_string("[I2C] ES9038 Filter 4 \r\n");
+    }
+    else if (flag_filter==4) {   // Filter No.5
+      es9038_set_filter_shape(ES9038_ADDR0,SLOW_ROLL_OFF_MIN_PHASE_FILTER);
+      es9038_set_filter_shape(ES9038_ADDR1,SLOW_ROLL_OFF_MIN_PHASE_FILTER);
+      send_string("[I2C] ES9038 Filter 5 \r\n");
+    }
+    else if (flag_filter==5) {   // Filter No.6
+      es9038_set_filter_shape(ES9038_ADDR0,HYBRID_FAST_ROLL_OFF_MIN_PHASE_FILTER);
+      es9038_set_filter_shape(ES9038_ADDR1,HYBRID_FAST_ROLL_OFF_MIN_PHASE_FILTER);
+      send_string("[I2C] ES9038 Filter 6 \r\n");
+    }
+    else if (flag_filter==6) {   // Filter No.7
+      es9038_set_filter_shape(ES9038_ADDR0,BRICKWALL_FILTER);
+      es9038_set_filter_shape(ES9038_ADDR1,BRICKWALL_FILTER);
+      send_string("[I2C] ES9038 Filter 7 \r\n");
+    }
+  }
 }
 
 void port_scan(void)
