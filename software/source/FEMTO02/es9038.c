@@ -5,6 +5,7 @@
 #include "define.h"
 #include "es9038.h"
 
+unsigned char es9038_read_volume(unsigned char devaddr);
 
 void es9038_set_dpll_bw(unsigned char serial,unsigned char dsd)
 {
@@ -40,14 +41,12 @@ void es9038_write_register(unsigned char devaddr, unsigned char regaddr, char da
 
 void es9038_dac_mute_on(void)
 {
-  es9038_system_mute(ES9038_ADDR0,1);
-  es9038_system_mute(ES9038_ADDR1,1);
+  es9038_system_mute(ES9038_ADDR0,1); es9038_system_mute(ES9038_ADDR1,1);
 }
 
 void es9038_dac_mute_off(void)
 {
-  es9038_system_mute(ES9038_ADDR0,0);
-  es9038_system_mute(ES9038_ADDR1,0);
+  es9038_system_mute(ES9038_ADDR0,0); es9038_system_mute(ES9038_ADDR1,0);
 }
 
 unsigned char Is_there_ES9038(void)
@@ -171,14 +170,22 @@ void es9038_set_ch1_volume_for_all(unsigned char devaddr,unsigned char onoff)
   
 }
 
-void es9038_set_volume(unsigned char devaddr,unsigned char volume_db)
+unsigned char es9038_read_volume(unsigned char devaddr)
+{  return es9038_read_register(devaddr,ES9038_REG_VOLUME1_CONTROL); }
+
+unsigned char es9038_set_volume(unsigned char devaddr,unsigned char volume_db)
 {
   es9038_set_ch1_volume_for_all(devaddr,1);
   es9038_write_register(devaddr, ES9038_REG_VOLUME1_CONTROL,volume_db);
+  //es9038_write_register(devaddr, ES9038_REG_VOLUME2_CONTROL,volume_db);
+  //es9038_write_register(devaddr, ES9038_REG_VOLUME3_CONTROL,volume_db);
+  //es9038_write_register(devaddr, ES9038_REG_VOLUME4_CONTROL,volume_db);
+  //es9038_write_register(devaddr, ES9038_REG_VOLUME5_CONTROL,volume_db);
+  //es9038_write_register(devaddr, ES9038_REG_VOLUME6_CONTROL,volume_db);
+  //es9038_write_register(devaddr, ES9038_REG_VOLUME7_CONTROL,volume_db);
+  es9038_write_register(devaddr, ES9038_REG_VOLUME8_CONTROL,volume_db);
+  if (es9038_read_volume(devaddr)==volume_db) return 1; else return 0;
 }
-
-unsigned char es9038_read_volume(unsigned char devaddr)
-{  return es9038_read_register(devaddr,ES9038_REG_VOLUME1_CONTROL); }
 
 void es9038_soft_reset(unsigned char devaddr)
 {
@@ -202,7 +209,7 @@ void es9038_18db_channel_gain_control(unsigned char devaddr,unsigned char ch, un
   reg=es9038_read_register(devaddr,ES9038_REG_18DB_CHANNEL_GAIN);
   sel_ch<<=(ch-1); // Channel = 1 to 8
   if(onoff) reg|=sel_ch; else reg&=~sel_ch;
-  es9038_write_register(devaddr,ES9038_REG_18DB_CHANNEL_GAIN,reg); 
+  es9038_write_register(devaddr,ES9038_REG_18DB_CHANNEL_GAIN,reg);
 }
 
 unsigned long es9038_read_dpll_number(unsigned char devaddr)

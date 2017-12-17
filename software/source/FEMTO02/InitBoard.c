@@ -41,12 +41,13 @@ extern unsigned char Is_there_ES9038(void);
 extern void es9038_audio_auto_select(unsigned char devaddr, unsigned char select);
 extern void es9038_dac_channel_mapping(unsigned char devaddr,unsigned char dac_ch,unsigned char input_ch);
 extern void es9038_automute_level(unsigned char devaddr, unsigned char level);
-extern void es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
+extern unsigned char es9038_set_volume(unsigned char devaddr,unsigned char volume_db);
 extern void es9038_audio_input_select(unsigned char devaddr, unsigned char select);
 extern void es9038_set_dpll_bw_dsd(unsigned char devaddr,unsigned char bandwidth);
 extern void es9038_set_volume_rate(unsigned char devaddr, unsigned char volume_rate);
 extern void es9038_set_soft_start_time(unsigned char devaddr, unsigned char time);
 extern void es9038_set_gpio1(unsigned char devaddr, unsigned char gpio_cfg);
+extern void es9038_18db_channel_gain_control(unsigned char devaddr,unsigned char ch, unsigned char onoff);
 
 extern unsigned int AK4118A_read_status(unsigned char devaddr);
 extern void AK4118A_reset(unsigned char devaddr);
@@ -254,9 +255,8 @@ void _system_init(void)
     for(i=1;i<=8;i++) es9038_dac_channel_mapping(ES9038_ADDR1,i,INPUT_CH2);
     send_string("[I2C] ES9038 Channel mapping complete.\r\n");
     
-    es9038_set_volume(ES9038_ADDR0,ES9038_MAX_VOLUME);
-    es9038_set_volume(ES9038_ADDR1,ES9038_MAX_VOLUME);
-    send_string("[I2C] ES9038 Volume Max complete.\r\n");
+    if (es9038_set_volume(ES9038_ADDR0,ES9038_MAX_VOLUME)) send_string("[I2C] ES9038 Left Volume Max complete.\r\n");
+    if (es9038_set_volume(ES9038_ADDR1,ES9038_MAX_VOLUME)) send_string("[I2C] ES9038 Right Volume Max complete.\r\n");
     
     es9038_set_volume_rate(ES9038_ADDR0,7);
     es9038_set_volume_rate(ES9038_ADDR1,7);
@@ -280,6 +280,8 @@ void _system_init(void)
     //es9038_set_gpio1(ES9038_ADDR0, GPIO_AMLI);
     //es9038_set_gpio1(ES9038_ADDR1, GPIO_AMLI);
     //send_string("[I2C] ES9038 GPIO1 = AMLI Function.\r\n");
+    
+    
     
     
     //////////// AK4118A Initialize ///////////

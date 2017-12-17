@@ -216,20 +216,20 @@ void remocon_data(){
           }
           else if(_remocon_data==0x80) {                             //Master Volume Up
             if (flag_headphone_output) {
-              if(vol_dB_HP>0) vol_dB_HP--;
-              if(vol_dB_HP>199) vol_dB_HP=199;
+              if(vol_dB_HP>ES9038_MAX_VOLUME) vol_dB_HP--;
+              if(vol_dB_HP>ES9038_MIN_VOLUME) vol_dB_HP=ES9038_MIN_VOLUME;
             }
             else {
-              if(vol_dB>0) vol_dB--;
-              if(vol_dB>199) vol_dB=199;
+              if(vol_dB>ES9038_MAX_VOLUME) vol_dB--;
+              if(vol_dB>ES9038_MIN_VOLUME) vol_dB=ES9038_MIN_VOLUME;
             }
           }
           else if(_remocon_data==0xA8) {                         //Master Volume Down
             if (flag_headphone_output) {
-              if(vol_dB_HP<199) vol_dB_HP++; else vol_dB_HP=0xFF;
+              if(vol_dB_HP<ES9038_MIN_VOLUME) vol_dB_HP++; else vol_dB_HP=ES9038_MIN_VOLUME;
             }
             else {
-              if(vol_dB<199) vol_dB++; else vol_dB=0xFF;
+              if(vol_dB<ES9038_MIN_VOLUME) vol_dB++; else vol_dB=ES9038_MIN_VOLUME;
             }
           }
           else if(_remocon_data==0x90) {
